@@ -296,52 +296,40 @@ public class VFile
      * @param relativeName 相对文件名。
      * @return 寻找到的结果。
      */
-//    private FileMessageContainer.FileMessage findRelative(FileMessageContainer.FileMessage videoStreamMessage,String relativeName)
     private CBORObject findRelative(CBORObject videoStreamMessage,String relativeName)
     {
-//        FileMessageContainer.FileMessage result=null; //结果。
         CBORObject result=null; //结果。
 
         String[] pathSegments=relativeName.split("/"); //以／分割。
 
-
-
         String subFileName=pathSegments[0]; //直接子文件名。
 
         boolean foundSubFile=false; //是否找到了对应的子文件。
-//        FileMessageContainer.FileMessage subFile=null; //找到的直接子文件。
         CBORObject subFile=null; //找到的直接子文件。
 
-//        if (videoStreamMessage.getIsFile()) //本身是文件。
-            if (videoStreamMessage.get("is_file").AsBoolean()) //本身是文件。
+        if (videoStreamMessage.get("is_file").AsBoolean()) //本身是文件。
         {
-//            if (videoStreamMessage.getName().equals(subFileName)) //正是这个文件。
-                if (videoStreamMessage.get("name").AsString().equals(subFileName)) //正是这个文件。
+            if (videoStreamMessage.get("name").AsString().equals(subFileName)) //正是这个文件。
             {
                 foundSubFile=true; //找到了子文件。
                 subFile=videoStreamMessage; //子文件就是自己。
             } //if (videoStreamMessage.getName().equals(subFileName)) //正是这个文件。
-
         } //if (videoStreamMessage.getIsFile()) //本身是文件。
         else //本身是目录。
         {
             Collection<CBORObject> subFilesList=videoStreamMessage.get("sub_files").getValues();
 
-//            for (FileMessageContainer.FileMessage currentSubFile:videoStreamMessage.getSubFilesList()) //一个个子文件地比较其文件名。
-                for (CBORObject currentSubFile: subFilesList) //一个个子文件地比较其文件名。
+            for (CBORObject currentSubFile: subFilesList) //一个个子文件地比较其文件名。
             {
-//                if (currentSubFile.getName().equals(subFileName)) //正是这个文件。
-                    if (currentSubFile.get("name").AsString().equals(subFileName)) //正是这个文件。
+                if (currentSubFile.get("name").AsString().equals(subFileName)) //正是这个文件。
                 {
                     foundSubFile=true; //找到了子文件。
                     subFile=currentSubFile; //记录。
 
                     break; //跳出。
                 } //if (currentSubFile.getName().equals(subFileName)) //正是这个文件。
-            } //for (FileMessageContainer.FileMessage currentSubFile:videoStreamMessage.getSubFilesList()) //一个个子文件地比较其文件名。
-
+            } //for (FileMessageContainer.FileMessage currentSubFile:videoStreamMessage.getSubFilesList()) //一个个子文件地比较其
         } //else //本身是目录。
-
 
         if (foundSubFile) //找到了子文件。
         {
@@ -357,9 +345,7 @@ public class VFile
                 else //不为空白，继续找。
                 {
                     result=findRelative(subFile,pathTail); //让子文件继续按照后面一砣相对文件名来寻找。
-
                 } //else //不为空白，继续找。
-
             } //if (relativeName.contains("/")) //是一个多层的路径，还要继续找。
             else //直接就是子文件名。
             {
@@ -367,9 +353,8 @@ public class VFile
             } //else //直接就是子文件名。
         } //if (foundSubFile) //找到了子文件。
 
-
         return  result;
-    } //private FileMessageContainer.FileMessage findRelative(FileMessageContainer.FileMessage videoStreamMessage,String relativeName)
+    } //private FileMessageContainer.FileMessage findRelative(FileMessageContainer.FileMessage videoStreamMessage,String 
 
     /**
      * 获取子文件列表。
@@ -460,7 +445,7 @@ public class VFile
      */
     private CBORObject loadVfsFile()
     {
-        Log.w(TAG, "loadVfsFile, 463, timestamp: " + System.currentTimeMillis()); //Debug.
+        Log.w(TAG,   "loadVfsFile, 463, timestamp: " + System.currentTimeMillis()); //Debug.
         CBORObject result=null; //结果。
 
         InputStream ins = context.getResources().openRawResource( victoriaFreshIndexFileId); //打开输入流。
@@ -499,9 +484,10 @@ public class VFile
         Log.w(TAG, "loadVfsFile, 499, timestamp: " + System.currentTimeMillis()); //Debug.
         CBORObject videoStreamMessage= CBORObject.DecodeFromBytes(payloadData); //解析消息。
 
+        Log.w(TAG, "loadVfsFile, 502, timestamp: " + System.currentTimeMillis()); //Debug.
         result=findRelative(videoStreamMessage,relativeName); //找到目标文件消息对象。
 
-        Log.w(TAG, "loadVfsFile, 504, timestamp: " + System.currentTimeMillis()); //Debug.
+        Log.w(TAG, "loadVfsFile, 505, timestamp: " + System.currentTimeMillis()); //Debug.
         return  result;
     } //private FileMessageContainer.FileMessage loadVfsFile(String fileName)
 } //public class VFile
