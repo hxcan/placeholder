@@ -385,22 +385,18 @@ public class VFile
      */
     public List<VFile> entryList()
     {
-        ArrayList<VFile> result=new ArrayList<>(); //结果。
+      ArrayList<VFile> result=new ArrayList<>(); //结果。
 
+      Collection<CBORObject> subFilesList=vfsFileMessage.get("sub_files").getValues();
 
-        Collection<CBORObject> subFilesList=vfsFileMessage.get("sub_files").getValues();
+      for (CBORObject currentSubFile: subFilesList) //一个个子文件地比较其文件名。
+      {
+        VFile currentFile=new VFile(context,currentSubFile); //创建一个虚拟文件。
 
-//            for (FileMessageContainer.FileMessage currentSubFile:videoStreamMessage.getSubFilesList()) //一个个子文件地比较其文件名。
-//            for (FileMessageContainer.FileMessage currentSubFile:vfsFileMessage.getSubFilesList()) //一个个子文件地处理。
-        for (CBORObject currentSubFile: subFilesList) //一个个子文件地比较其文件名。
-        {
-            VFile currentFile=new VFile(context,currentSubFile); //创建一个虚拟文件。
+        result.add(currentFile); //加入结果中。
+      } //for (FileMessageContainer.FileMessage currentSubFile:videoStreamMessage.getSubFilesList()) //一个个子文件地比较其文件名。
 
-            result.add(currentFile); //加入结果中。
-        } //for (FileMessageContainer.FileMessage currentSubFile:videoStreamMessage.getSubFilesList()) //一个个子文件地比较其文件名。
-
-
-        return  result;
+      return  result;
     } //public List<VFile> entryList()
 
     /**
@@ -409,21 +405,19 @@ public class VFile
      */
     public String entryListJson()
     {
-        EntryListJsonMessage entryListJsonMessage=new EntryListJsonMessage();
+      EntryListJsonMessage entryListJsonMessage=new EntryListJsonMessage();
 
-        List<VFile> result=entryList(); //结果。
+      List<VFile> result=entryList(); //结果。
 
-        for (VFile currentFile: result) //一个个子文件地处理。
-        {
+      for (VFile currentFile: result) //一个个子文件地处理。
+      {
+        entryListJsonMessage.addEntry(currentFile.getFileName()); //加入结果中。
+      } //for (FileMessageContainer.FileMessage currentSubFile:videoStreamMessage.getSubFilesList()) //一个个子文件地比较其文件名。
 
+      Gson gson=new Gson();
+      String resultJson=gson.toJson(entryListJsonMessage);
 
-            entryListJsonMessage.addEntry(currentFile.getFileName()); //加入结果中。
-        } //for (FileMessageContainer.FileMessage currentSubFile:videoStreamMessage.getSubFilesList()) //一个个子文件地比较其文件名。
-
-    Gson gson=new Gson();
-        String resultJson=gson.toJson(entryListJsonMessage);
-
-        return  resultJson;
+      return  resultJson;
     } //public List<VFile> entryList()
 
     /**
