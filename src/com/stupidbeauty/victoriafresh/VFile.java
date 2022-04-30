@@ -53,10 +53,27 @@ public class VFile
      */
     public byte[] getFileContent()
     {
-        byte[] fileContent=readFileContent(vfsFileMessage); //读取文件内容。
+      byte[] fileContent=readFileContent(vfsFileMessage); //读取文件内容。
 
-        return fileContent;
+      return fileContent;
     } //public String getFileTextContent()
+    
+    /**
+    * 获取起始位置。
+    */
+    public int getStartOffset()
+    {
+      int result=0;
+      
+      if (vfsFileMessage!=null) //有对应的消息对象。
+      {
+        int indexStart=vfsFileMessage.get("file_start_index").AsInt32(); //获取起始位置的下标。
+        
+        result=indexStart;
+      }
+      
+      return result;
+    } // public int getStartOffset()
 
     /**
      * 复制文件内容，并且最多复制这么长。
@@ -65,83 +82,75 @@ public class VFile
      * @param MaxCopyOneTimeFileLength 最多复制的内容长度。
      * @return 复制得到的字节数组。
      */
-//    private byte[] readFileContent(FileMessageContainer.FileMessage vfsFileMessage, int copiedLength , int MaxCopyOneTimeFileLength)
     private byte[] readFileContent(CBORObject vfsFileMessage, int copiedLength , int MaxCopyOneTimeFileLength)
     {
-        byte[] result=null; //结果。
+      byte[] result=null; //结果。
 
-        if (vfsFileMessage!=null) //有对应的消息对象。
+      if (vfsFileMessage!=null) //有对应的消息对象。
+      {
+        int indexStart=vfsFileMessage.get("file_start_index").AsInt32(); //获取起始位置的下标。
+
+        int fileLength=vfsFileMessage.get("file_length").AsInt32(); //获取文件长度。
+
+        InputStream ins = context.getResources().openRawResource( victoriaFreshDataFileId); //打开输入流。
+
+        //跳过前面不需要的字节：
+        int at=indexStart; //要跳过的字节数。
+
+        ByteArrayOutputStream outputStream=new ByteArrayOutputStream();
+
+        byte buf[]=new byte[65536];
+        int len;
+
+        try
         {
-//            int indexStart=vfsFileMessage.getFileStartIndex(); //获取起始位置的下标。
-            int indexStart=vfsFileMessage.get("file_start_index").AsInt32(); //获取起始位置的下标。
+          //跳过整个VFS中这个文件之前的内容：
+          while(at>0) //还没完全跳过。
+          {
+            long amt= ins.skip(at); //做一次跳过动作。
 
+            at-=amt; //记录剩余要跳过的字节数。
+          } //while(at>0) //还没完全跳过。
 
+          //跳过指定的起始位置之前的内容。
+          at=copiedLength; //获取要跳过的本文件内容的长度。
+          while(at>0) //还没完全跳过。
+          {
+            long amt= ins.skip(at); //做一次跳过动作。
 
-//            int fileLength=vfsFileMessage.getFileLength(); //获取文件长度。
-            int fileLength=vfsFileMessage.get("file_length").AsInt32(); //获取文件长度。
+            at-=amt; //记录剩余要跳过的字节数。
+          } //while(at>0) //还没完全跳过。
 
-            InputStream ins = context.getResources().openRawResource( victoriaFreshDataFileId); //打开输入流。
+          //下面是要读取指定长度的数据。
+          int readedFileLength=0; //已经读取的文件内容长度。
+          int tailLength=fileLength-copiedLength; //计算出尾部的剩余文件长度。
+          int thisTimeMaxReadLength=Math.min(tailLength, MaxCopyOneTimeFileLength); //此次的最大读取长度。
 
-            //跳过前面不需要的字节：
-            int at=indexStart; //要跳过的字节数。
+          while (readedFileLength<thisTimeMaxReadLength) //还没读取到指定长度的数据。
+          {
+            int remainLength=thisTimeMaxReadLength-readedFileLength; //还有这么多长度要读取。
 
-            ByteArrayOutputStream outputStream=new ByteArrayOutputStream();
+            int thisTimeReadLength=Math.min(remainLength, buf.length); //这一轮要读取的字节数。
 
-            byte buf[]=new byte[65536];
-            int len;
+            len=ins.read(buf,0,thisTimeReadLength); //继续读取内容。
 
-            try
-            {
-                //跳过整个VFS中这个文件之前的内容：
-                while(at>0) //还没完全跳过。
-                {
-                    long amt= ins.skip(at); //做一次跳过动作。
+            readedFileLength+=len; //记录已经读取的字节数。
 
-                    at-=amt; //记录剩余要跳过的字节数。
-                } //while(at>0) //还没完全跳过。
+            outputStream.write(buf,0,len); //写入到输入流中。
+          } //while ((len=ins.read(buf)) != -1) //还没读取到指定长度的数据。
 
+          outputStream.close();
+          ins.close();
 
-                //跳过指定的起始位置之前的内容。
-                at=copiedLength; //获取要跳过的本文件内容的长度。
-                while(at>0) //还没完全跳过。
-                {
-                    long amt= ins.skip(at); //做一次跳过动作。
+          result=outputStream.toByteArray(); //转换成字节数组。
+        }
+        catch (IOException e)
+        {
+          e.printStackTrace();
+        }
+      } //if (vfsFileMessage!=null) //有对应的消息对象。
 
-                    at-=amt; //记录剩余要跳过的字节数。
-                } //while(at>0) //还没完全跳过。
-
-
-                //下面是要读取指定长度的数据。
-                int readedFileLength=0; //已经读取的文件内容长度。
-                int tailLength=fileLength-copiedLength; //计算出尾部的剩余文件长度。
-                int thisTimeMaxReadLength=Math.min(tailLength, MaxCopyOneTimeFileLength); //此次的最大读取长度。
-
-                while (readedFileLength<thisTimeMaxReadLength) //还没读取到指定长度的数据。
-                {
-                    int remainLength=thisTimeMaxReadLength-readedFileLength; //还有这么多长度要读取。
-
-                    int thisTimeReadLength=Math.min(remainLength, buf.length); //这一轮要读取的字节数。
-
-                    len=ins.read(buf,0,thisTimeReadLength); //继续读取内容。
-
-                    readedFileLength+=len; //记录已经读取的字节数。
-
-                    outputStream.write(buf,0,len); //写入到输入流中。
-                } //while ((len=ins.read(buf)) != -1) //还没读取到指定长度的数据。
-
-                outputStream.close();
-                ins.close();
-
-                result=outputStream.toByteArray(); //转换成字节数组。
-            }
-            catch (IOException e)
-            {
-                e.printStackTrace();
-            }
-        } //if (vfsFileMessage!=null) //有对应的消息对象。
-
-        return  result;
-
+      return  result;
     } //private byte[] readFileContent(FileMessageContainer.FileMessage vfsFileMessage, int copiedLength , int MaxCopyOneTimeFileLength)
 
     /**
@@ -152,20 +161,18 @@ public class VFile
 //    private byte[] readFileContent(FileMessageContainer.FileMessage vfsFileMessage)
     private byte[] readFileContent(CBORObject vfsFileMessage)
     {
-        int startAt0=0; //起始位置，从0字节开始读取。
+      int startAt0=0; //起始位置，从0字节开始读取。
 
-        byte[] result=null; //结果。
+      byte[] result=null; //结果。
 
-        if (vfsFileMessage!=null) //有对应的消息对象。
-        {
-//            int fileLength=vfsFileMessage.getFileLength(); //获取文件长度。
-            int fileLength=vfsFileMessage.get("file_length").AsInt32(); //获取文件长度。
+      if (vfsFileMessage!=null) //有对应的消息对象。
+      {
+          int fileLength=vfsFileMessage.get("file_length").AsInt32(); //获取文件长度。
 
+          result=readFileContent(vfsFileMessage, startAt0, fileLength); //结果。
+      } //if (vfsFileMessage!=null) //有对应的消息对象。
 
-            result=readFileContent(vfsFileMessage, startAt0, fileLength); //结果。
-        } //if (vfsFileMessage!=null) //有对应的消息对象。
-
-        return  result;
+      return  result;
     } //private byte[] readFileContent(FileMessageContainer.FileMessage vfsFileMessage)
 
     /**
@@ -410,13 +417,13 @@ public class VFile
      */
     public VFile(Context context, String fileName)
     {
-        this.fileName = fileName;
-        this.context=context; //记录上下文。
+      this.fileName = fileName;
+      this.context=context; //记录上下文。
 
-        victoriaFreshDataFileId=context.getResources().getIdentifier("victoriafreshdata", "raw", context.getPackageName()); //获取数据文件编号。
-        victoriaFreshIndexFileId=context.getResources().getIdentifier("victoriafresh", "raw", context.getPackageName()); //获取索引文件编号。
+      victoriaFreshDataFileId=context.getResources().getIdentifier("victoriafreshdata", "raw", context.getPackageName()); //获取数据文件编号。
+      victoriaFreshIndexFileId=context.getResources().getIdentifier("victoriafresh", "raw", context.getPackageName()); //获取索引文件编号。
 
-        vfsFileMessage=loadVfsFile(); //载入对应的虚拟文件。
+      vfsFileMessage=loadVfsFile(); //载入对应的虚拟文件。
     } //public VFile(Context context, String fileName)
 
     /**
@@ -428,13 +435,13 @@ public class VFile
      */
     public VFile(Context context, int victoriaFreshIndexFileIdToUse,int victoriaFreshDataFileIdToUse, String fileName)
     {
-        this.fileName = fileName;
-        this.context=context; //记录上下文。
+      this.fileName = fileName;
+      this.context=context; //记录上下文。
 
-        victoriaFreshDataFileId=victoriaFreshDataFileIdToUse; //获取数据文件编号。
-        victoriaFreshIndexFileId=victoriaFreshIndexFileIdToUse; //获取索引文件编号。
+      victoriaFreshDataFileId=victoriaFreshDataFileIdToUse; //获取数据文件编号。
+      victoriaFreshIndexFileId=victoriaFreshIndexFileIdToUse; //获取索引文件编号。
 
-        vfsFileMessage=loadVfsFile(); //载入对应的虚拟文件。
+      vfsFileMessage=loadVfsFile(); //载入对应的虚拟文件。
     } //public VFile(Context context, String fileName)
 
     private int victoriaFreshIndexFileId=0; //!<VictoriaFreSh索引文件编号。
