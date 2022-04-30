@@ -85,7 +85,7 @@ public class VFile
       {
         int fileLength=vfsFileMessage.get("file_length").AsInt32(); //获取文件长度。
         
-        result = fileLegnth;
+        result = fileLength;
       }
       
       return result;
@@ -212,54 +212,44 @@ public class VFile
 
         try //尝试复制，并且捕获可能的异常。
         {
-            Log.d(TAG,"copy, target file name: "+targetFileName); //Debug.
+          boolean fileCreateResult=targetFile.createNewFile(); //创建新文件。
 
-            boolean fileCreateResult=targetFile.createNewFile(); //创建新文件。
+          if (fileCreateResult) //创建成功。
+          {
+            OutputStream targetOutStream=new FileOutputStream(targetFile); //创建输出流。
 
-            if (fileCreateResult) //创建成功。
+            byte[] fileContent; //读取到的文件内容。
+
+            int fileLength=vfsFileMessage.get("file_length").AsInt32(); //获取文件长度。
+
+            int copiedLength=0; //已经复制的长度。
+            int MaxCopyOneTimeFileLength = 28 * 1024 * 1024; //28M，最大一次性复制的文件长度。
+
+            if (fileLength>= MaxCopyOneTimeFileLength) //超过一次性复制的最大长度。
             {
-                OutputStream targetOutStream=new FileOutputStream(targetFile); //创建输出流。
+              while (copiedLength<fileLength) //未复制完。
+              {
+                fileContent=readFileContent(vfsFileMessage, copiedLength , MaxCopyOneTimeFileLength); //复制文件内容，并且最多复制这么长。
 
-                byte[] fileContent; //读取到的文件内容。
+                targetOutStream.write(fileContent); //输出内容。
 
+                copiedLength+=fileContent.length; //记录已经复制的总长度。
+              } //while (copiedLength<fileLength) //未复制完。
+            } //if (fileLength>=MaxCopyOneTimeFileLength) //超过一次性复制的最大长度。
+            else //未超过一次性复制的最大长度。
+            {
+              fileContent=readFileContent(vfsFileMessage); //读取文件内容。
 
-//                int fileLegnth=vfsFileMessage.getFileLength(); //获取文件长度。
-                int fileLegnth=vfsFileMessage.get("file_length").AsInt32(); //获取文件长度。
+              targetOutStream.write(fileContent); //输出内容。
+            } //else //未超过一次性复制的最大长度。
 
-                Log.d(TAG, "copyToAbsolutePath, file length: "+fileLegnth); //Debug.
-
-                int copiedLength=0; //已经复制的长度。
-                int MaxCopyOneTimeFileLength = 28 * 1024 * 1024; //28M，最大一次性复制的文件长度。
-
-                if (fileLegnth>= MaxCopyOneTimeFileLength) //超过一次性复制的最大长度。
-                {
-                    Log.d(TAG, "copyToAbsolutePath, 196"); //Debug.
-                    while (copiedLength<fileLegnth) //未复制完。
-                    {
-                        fileContent=readFileContent(vfsFileMessage, copiedLength , MaxCopyOneTimeFileLength); //复制文件内容，并且最多复制这么长。
-
-                        Log.d(TAG, "copyToAbsolutePath, 201"); //Debug.
-                        targetOutStream.write(fileContent); //输出内容。
-
-
-                        copiedLength+=fileContent.length; //记录已经复制的总长度。
-                        Log.d(TAG, "copyToAbsolutePath, 206, copied length: "+copiedLength); //Debug.
-                    } //while (copiedLength<fileLegnth) //未复制完。
-                } //if (fileLegnth>=MaxCopyOneTimeFileLength) //超过一次性复制的最大长度。
-                else //未超过一次性复制的最大长度。
-                {
-                    fileContent=readFileContent(vfsFileMessage); //读取文件内容。
-
-                    targetOutStream.write(fileContent); //输出内容。
-                } //else //未超过一次性复制的最大长度。
-
-                targetOutStream.close(); //关闭输出文件。
-            } //if (fileCreateResult) //创建成功。
+            targetOutStream.close(); //关闭输出文件。
+          } //if (fileCreateResult) //创建成功。
         } //try //尝试复制，并且捕获可能的异常。
         //catch (FileNotFoundException e) //文件未找到。
         catch (IOException e) //输入输出错误。
         {
-            e.printStackTrace(); //报告错误。
+          e.printStackTrace(); //报告错误。
         } //catch (IOException e) //输入输出错误。
     } //private void copy(String targetFileName)
 
