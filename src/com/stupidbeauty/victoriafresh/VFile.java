@@ -74,6 +74,22 @@ public class VFile
       
       return result;
     } // public int getStartOffset()
+    
+    /**
+    * 获取长度。
+    */ 
+    public int getLength()
+    {
+      int result=0;
+      if (vfsFileMessage!=null) //有对应的消息对象。
+      {
+        int fileLength=vfsFileMessage.get("file_length").AsInt32(); //获取文件长度。
+        
+        result = fileLegnth;
+      }
+      
+      return result;
+    } // public int getLength()
 
     /**
      * 复制文件内容，并且最多复制这么长。
