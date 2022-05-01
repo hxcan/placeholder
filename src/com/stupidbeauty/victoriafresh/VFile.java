@@ -2,11 +2,9 @@ package com.stupidbeauty.victoriafresh;
 
 import android.content.Context;
 import android.util.Log;
-
+import android.media.MediaDataSource;
 import com.google.gson.Gson;
 import com.upokecenter.cbor.CBORObject;
-//import com.google.protobuf.InvalidProtocolBufferException;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -23,29 +21,27 @@ import java.util.List;
  */
 public class VFile
 {
-    private String fileName; //!<文件名。
-    private final Context context; //!<上下文。
+  private String fileName; //!<文件名。
+  private final Context context; //!<上下文。
+  private final CBORObject vfsFileMessage; //!<此虚拟文件对应的虚拟文件消息对象。
+  private static final String TAG="VFile"; //!<输出调试信息时使用的标记。
 
-    private final CBORObject vfsFileMessage; //!<此虚拟文件对应的虚拟文件消息对象。
+  /**
+  * 读取文件全部内容。
+  * @return 文件全部内容，以字符串的形式返回。
+  */
+  public String getFileTextContent()
+  {
+    byte[] fileContent=readFileContent(vfsFileMessage); //读取文件内容。
+    String result=null; //结果。
 
-    private static final String TAG="VFile"; //!<输出调试信息时使用的标记。
-
-    /**
-     * 读取文件全部内容。
-     * @return 文件全部内容，以字符串的形式返回。
-     */
-    public String getFileTextContent()
+    if (fileContent!=null) //不是空指针。
     {
-        byte[] fileContent=readFileContent(vfsFileMessage); //读取文件内容。
-        String result=null; //结果。
+      result=new String(fileContent); //转换成字符串。
+    } //if (fileContent!=null) //不是空指针。
 
-        if (fileContent!=null) //不是空指针。
-        {
-            result=new String(fileContent); //转换成字符串。
-        } //if (fileContent!=null) //不是空指针。
-
-        return result;
-    } //public String getFileTextContent()
+    return result;
+  } //public String getFileTextContent()
 
     /**
      * 读取文件全部内容。
@@ -183,13 +179,25 @@ public class VFile
 
       if (vfsFileMessage!=null) //有对应的消息对象。
       {
-          int fileLength=vfsFileMessage.get("file_length").AsInt32(); //获取文件长度。
+        int fileLength=vfsFileMessage.get("file_length").AsInt32(); //获取文件长度。
 
-          result=readFileContent(vfsFileMessage, startAt0, fileLength); //结果。
+        result=readFileContent(vfsFileMessage, startAt0, fileLength); //结果。
       } //if (vfsFileMessage!=null) //有对应的消息对象。
 
       return  result;
     } //private byte[] readFileContent(FileMessageContainer.FileMessage vfsFileMessage)
+    
+    /**
+    * 向字节数组中复制。
+    */
+    public int copyToByteArray(int size, long position, byte[] buffer, int offset)
+    {
+      byte[] wholeFile=readFileContent(vfsFileMessage); // 全部读取。
+      
+      System.arraycopy(wholeFile, (int)(position), buffer, offset, size); // 复制字节数组。
+      
+      return size;
+    } // public int copyToByteArray(int size, long position, byte[] buffer, int offset)
 
     /**
      * 将文件复制到当前应用的私有目录中去。
@@ -197,9 +205,9 @@ public class VFile
      */
     public void copy(String targetFileName)
     {
-        String absolutePath=context.getFilesDir().getAbsolutePath()+"/"+targetFileName; //绝对路径。
+      String absolutePath=context.getFilesDir().getAbsolutePath()+"/"+targetFileName; //绝对路径。
 
-        copyToAbsolutePath(absolutePath); //复制到绝对路径。
+      copyToAbsolutePath(absolutePath); //复制到绝对路径。
     } //private void copy(String targetFileName)
 
     /**
@@ -208,7 +216,7 @@ public class VFile
      */
     public void copyToAbsolutePath(String targetFileName)
     {
-        File targetFile=new File(targetFileName); //目标文件。
+      File targetFile=new File(targetFileName); //目标文件。
 
         try //尝试复制，并且捕获可能的异常。
         {
@@ -425,6 +433,16 @@ public class VFile
 
       vfsFileMessage=loadVfsFile(); //载入对应的虚拟文件。
     } //public VFile(Context context, String fileName)
+    
+    /**
+    * 获取媒体数据源。
+    */
+    public MediaDataSource getMediaDataSource()
+    {
+      MediaDataSource result=new VictoriaMediaDataSource(this);
+      
+      return result;
+    } // public MediaDataSource getMediaDataSource()
 
     /**
      * 构造函数。
