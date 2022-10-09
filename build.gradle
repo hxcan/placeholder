@@ -14,14 +14,27 @@ buildscript {
     }
 }
 
-allprojects {
-    repositories {
-        jcenter()
-        maven {
-            url 'https://maven.google.com/'
-            name 'Google'
-        }
+allprojects 
+{
+  repositories 
+  {
+    jcenter()
+    maven 
+    {
+      url 'https://maven.google.com/'
+      name 'Google'
     }
+    maven 
+    {
+      url 'https://repo.jenkins-ci.org/incrementals/'
+      name 'JenkinsIncremental'
+    }
+    maven 
+    {
+      url 'https://repo.jenkins-ci.org/releases/'
+      name 'JenkinsReleases'
+    }
+  }
 }
 
 apply plugin: 'com.android.library'
@@ -33,6 +46,9 @@ version="2021.10.30"
 dependencies {
     compile 'com.google.code.gson:gson:2.8.5'
     compile 'com.upokecenter:cbor:4.2.0'
+// https://mvnrepository.com/artifact/org.jenkins-ci.main/jenkins-core
+// implementation group: 'org.jenkins-ci.main', name: 'jenkins-core', version: '2.366-rc32795.df5b_49c75b_0e'
+  implementation 'commons-io:commons-io:2.6'
 
 }
 

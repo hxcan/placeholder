@@ -10,10 +10,13 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.BufferedInputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 
 /**
  * 虚拟文件。
@@ -22,9 +25,11 @@ import java.util.List;
 public class VFile
 {
   private String fileName; //!<文件名。
-  private final Context context; //!<上下文。
+  private Context context; //!< 上下文。 Optional. May deal with totaaly external files.
+  private File externalDataFile; //!< External data file.
   private final CBORObject vfsFileMessage; //!<此虚拟文件对应的虚拟文件消息对象。
   private static final String TAG="VFile"; //!<输出调试信息时使用的标记。
+  private BufferedInputStream ins = null; //!< buffered 输入流。
 
   /**
   * 读取文件全部内容。
@@ -104,7 +109,8 @@ public class VFile
 
         int fileLength=vfsFileMessage.get("file_length").AsInt32(); //获取文件长度。
 
-        InputStream ins = context.getResources().openRawResource( victoriaFreshDataFileId); //打开输入流。
+//         InputStream rawins = context.getResources().openRawResource( victoriaFreshDataFileId); //打开输入流。
+//         BufferedInputStream ins = new BufferedInputStream( rawins); //打开输入流。
 
         //跳过前面不需要的字节：
         int at=indexStart; //要跳过的字节数。
@@ -152,7 +158,7 @@ public class VFile
           } //while ((len=ins.read(buf)) != -1) //还没读取到指定长度的数据。
 
           outputStream.close();
-          ins.close();
+          ins.reset();
 
           result=outputStream.toByteArray(); //转换成字节数组。
         }
@@ -274,12 +280,44 @@ public class VFile
 //    private VFile(Context context, FileMessageContainer.FileMessage vfsFileMessage)
     private VFile(Context context, CBORObject vfsFileMessage)
     {
-        this.context = context;
-        this.vfsFileMessage = vfsFileMessage;
+      this.context = context;
+      this.vfsFileMessage = vfsFileMessage;
 
-        victoriaFreshDataFileId=context.getResources().getIdentifier("victoriafreshdata", "raw", context.getPackageName()); //获取数据文件编号。
-        victoriaFreshIndexFileId=context.getResources().getIdentifier("victoriafresh", "raw", context.getPackageName()); //获取索引文件编号。
+      victoriaFreshDataFileId=context.getResources().getIdentifier("victoriafreshdata", "raw", context.getPackageName()); //获取数据文件编号。
+      victoriaFreshIndexFileId=context.getResources().getIdentifier("victoriafresh", "raw", context.getPackageName()); //获取索引文件编号。
+      
+      InputStream rawins = context.getResources().openRawResource( victoriaFreshDataFileId); //打开输入流。
+      ins = new BufferedInputStream( rawins); //打开输入流。
+      try
+      {
+      ins.mark(ins.available());
+      }
+      catch(IOException e)
+      {
+        e.printStackTrace();
+      }
     }
+
+    public VFile(CBORObject vfsFileMessage, File dataFile)
+    {
+      this.vfsFileMessage = vfsFileMessage;
+      this.externalDataFile= dataFile;
+
+      try
+      {
+      FileInputStream rawins = new FileInputStream( dataFile); //打开输入流。
+      ins = new BufferedInputStream( rawins); //打开输入流。
+      ins.mark(ins.available());
+      }
+      catch(IOException e)
+      {
+        e.printStackTrace();
+      }
+//       catch(FileNotFoundException e)
+//       {
+//         e.printStackTrace();
+//       }
+}
 
     /**
      * 是否存在。
@@ -297,7 +335,48 @@ public class VFile
 
         return result;
     } //private boolean exists()
+    
+    /**
+    * 获取权限数字
+    */
+    public int getPermission() 
+    {
+//           permissionNumber=packagedFile['permission'] #获取权限数字
+      return vfsFileMessage.get("permission").AsInt32();
+    } // public int getPermission()
 
+    public long getTimestamp()
+    {
+      long result=-1;
+      
+      CBORObject timestampObject=vfsFileMessage.get("timestamp");
+      
+      long seconds=timestampObject.get("seconds").AsInt32();
+      long milleseconds=(long)(timestampObject.get("nanos").AsInt32()/ 1000.0 / 1000.0); // Get millescones.
+      
+      result=seconds*1000+milleseconds;
+      
+      return result;
+    }
+    
+    /**
+    * 找到相同文件的编号。
+    */
+    public String getSameFileId() 
+    {
+//           sameFileId=packagedFile['same_file_id'] # 找到相同文件的编号。
+      return vfsFileMessage.get("same_file_id").AsString();
+    } // public String getSameFileId()
+    
+    /**
+    * 获取文件编号。
+    */
+    public String getId() 
+    {
+//         fileId=packagedFile['id'] # 获取文件编号。
+      return vfsFileMessage.get("id").AsString();
+    } // public String getId()
+    
     /**
      * 获取文件名。
      * @return 文件名。
@@ -307,6 +386,24 @@ public class VFile
 //        return vfsFileMessage.getName();
         return vfsFileMessage.get("name").AsString();
     } //public String getFileName()
+    
+    /**
+    * 是否是重复文件。
+    */
+    public boolean isDuplicate() 
+    {
+//         is_duplicate=packagedFile['is_duplicate'] # 是否是重复文件。
+      return vfsFileMessage.get("is_duplicate").AsBoolean();
+    } // public boolean isDuplicate()
+    
+    /**
+    * 是符号链接，则创建符号链接
+    */
+    public boolean isSymlink() 
+    {
+//         elsif packagedFile['is_symlink'] #是符号链接，则创建符号链接
+      return vfsFileMessage.get("is_symlink").AsBoolean();
+    } // public boolean isSymlink()
 
     /**
      * 获取信息，是否是文件。
@@ -397,7 +494,16 @@ public class VFile
 
       for (CBORObject currentSubFile: subFilesList) //一个个子文件地比较其文件名。
       {
-        VFile currentFile=new VFile(context,currentSubFile); //创建一个虚拟文件。
+        VFile currentFile=null; //创建一个虚拟文件。
+        
+        if (context!=null)
+        {
+        currentFile=new VFile(context,currentSubFile); //创建一个虚拟文件。
+        }
+          else
+          {
+        currentFile=new VFile(currentSubFile, externalDataFile); //创建一个虚拟文件。
+          }
 
         result.add(currentFile); //加入结果中。
       } //for (FileMessageContainer.FileMessage currentSubFile:videoStreamMessage.getSubFilesList()) //一个个子文件地比较其文件名。
@@ -438,6 +544,18 @@ public class VFile
 
       victoriaFreshDataFileId=context.getResources().getIdentifier("victoriafreshdata", "raw", context.getPackageName()); //获取数据文件编号。
       victoriaFreshIndexFileId=context.getResources().getIdentifier("victoriafresh", "raw", context.getPackageName()); //获取索引文件编号。
+      
+      InputStream rawins = context.getResources().openRawResource( victoriaFreshDataFileId); //打开输入流。
+      ins = new BufferedInputStream( rawins); //打开输入流。
+      try
+      {
+      ins.mark(ins.available());
+      }
+      catch(IOException e)
+      {
+        e.printStackTrace();
+      }
+
 
       vfsFileMessage=loadVfsFile(); //载入对应的虚拟文件。
     } //public VFile(Context context, String fileName)
@@ -466,6 +584,17 @@ public class VFile
 
       victoriaFreshDataFileId=victoriaFreshDataFileIdToUse; //获取数据文件编号。
       victoriaFreshIndexFileId=victoriaFreshIndexFileIdToUse; //获取索引文件编号。
+
+      InputStream rawins = context.getResources().openRawResource( victoriaFreshDataFileId); //打开输入流。
+      ins = new BufferedInputStream( rawins); //打开输入流。
+      try
+      {
+      ins.mark(ins.available());
+      }
+      catch(IOException e)
+      {
+        e.printStackTrace();
+      }
 
       vfsFileMessage=loadVfsFile(); //载入对应的虚拟文件。
     } //public VFile(Context context, String fileName)
