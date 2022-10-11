@@ -8,7 +8,11 @@ import android.content.pm.ShortcutInfo;
 import java.nio.file.Paths;
 import java.nio.file.Path;
 import java.nio.file.Files;
-// import hudson.FilePath;
+import android.content.Context;
+import android.util.Log;
+import android.media.MediaDataSource;
+import com.google.gson.Gson;
+import com.upokecenter.cbor.CBORObject;
 import java.util.HashMap;
 import android.view.View;
 import android.os.AsyncTask;
@@ -33,6 +37,7 @@ public class VictoriaFresh
 {
   private File externalDataFile=null; // 打开文件
   private HashMap<Integer, String> fileIdPathMap=new HashMap(); //!< file id to file path map.
+  private static final String TAG="VictoriaFresh"; //!< 输出调试信息时使用的标记。
 
 //       def getTimeObject(packagedFile) #构造时间戳对象
 //     Chen xin
@@ -59,7 +64,7 @@ public class VictoriaFresh
   /**
   * 释放各个文件
   */
-  public void releaseFilesExternalDataFile(byte[] victoriaFreshPackagedFileString, String externalDataFileName) 
+  public void releaseFilesExternalDataFile(byte[] victoriaFreshPackagedFileString, String externalDataFileName, Context baseApplication)
   {
 //     packagedFile=CBOR.decode(victoriaFreshPackagedFileString) #解码
     CBORObject packagedFile=CBORObject.DecodeFromBytes(victoriaFreshPackagedFileString); // 解码
@@ -72,7 +77,12 @@ public class VictoriaFresh
 //     releaseFileExternalDataFile('.', packagedFile) #释放一个文件 
       VFile packagedFileObject=new VFile(packagedFile,  externalDataFile);
 
-    releaseFileExternalDataFile(".", packagedFileObject); // 释放一个文件 
+              File downloadFolder = baseApplication.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
+
+    String dataFileNamePrefix =downloadFolder.getPath();
+
+      
+    releaseFileExternalDataFile(dataFileNamePrefix, packagedFileObject); // 释放一个文件 
         
 //     @externalDataFile.close #关闭文件
   } // public void releaseFilesExternalDataFile(byte[] replyByteArray, String victoriaFreshDataFile)
@@ -128,6 +138,9 @@ public class VictoriaFresh
         
 //         pathToMake=pathPrefix + '/' + packagedFile['name'] #构造文件名
         String pathToMake=pathPrefix + '/' + packagedFile.getFileName(); //构造文件名
+        
+            Log.d(TAG, "writeFileExternalDataFile, data file name: " + pathToMake); // Debug.
+
         
 //         @fileIdPathMap[fileId]=pathToMake # 记录文件编号与路径之间的映射。
         fileIdPathMap.put(fileId, pathToMake); // 记录文件编号与路径之间的映射。
