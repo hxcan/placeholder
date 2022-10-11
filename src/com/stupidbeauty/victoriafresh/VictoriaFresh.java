@@ -32,7 +32,7 @@ import com.upokecenter.cbor.CBORException;
 public class VictoriaFresh
 {
   private File externalDataFile=null; // 打开文件
-  private HashMap<String, String> fileIdPathMap=new HashMap(); //!< file id to file path map.
+  private HashMap<Integer, String> fileIdPathMap=new HashMap(); //!< file id to file path map.
 
 //       def getTimeObject(packagedFile) #构造时间戳对象
 //     Chen xin
@@ -87,7 +87,7 @@ public class VictoriaFresh
         boolean is_duplicate=packagedFile.isDuplicate(); // 是否是重复文件。
 
 //         fileId=packagedFile['id'] # 获取文件编号。
-        String fileId=packagedFile.getId(); // 获取文件编号。
+        int fileId=packagedFile.getId(); // 获取文件编号。
 
                   byte[] victoriaFreshData= null; // 读取原始相同文件的内容。
 

@@ -371,10 +371,10 @@ public class VFile
     /**
     * 获取文件编号。
     */
-    public String getId() 
+    public int getId() 
     {
 //         fileId=packagedFile['id'] # 获取文件编号。
-      return vfsFileMessage.get("id").AsString();
+      return vfsFileMessage.get("id").AsInt32();
     } // public String getId()
     
     /**
