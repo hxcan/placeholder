@@ -393,7 +393,15 @@ public class VFile
     public boolean isDuplicate() 
     {
 //         is_duplicate=packagedFile['is_duplicate'] # 是否是重复文件。
-      return vfsFileMessage.get("is_duplicate").AsBoolean();
+      CBORObject isDuplicateObject=vfsFileMessage.get("is_duplicate");
+      boolean result=false;
+      
+      if (isDuplicateObject!=null)
+      {
+        result=isDuplicateObject.AsBoolean();
+      }
+      
+      return result;
     } // public boolean isDuplicate()
     
     /**
@@ -402,7 +410,15 @@ public class VFile
     public boolean isSymlink() 
     {
 //         elsif packagedFile['is_symlink'] #是符号链接，则创建符号链接
-      return vfsFileMessage.get("is_symlink").AsBoolean();
+      CBORObject isDuplicateObject=vfsFileMessage.get("is_symlink");
+      boolean result=false;
+      
+      if (isDuplicateObject!=null)
+      {
+        result=isDuplicateObject.AsBoolean();
+      }
+      
+      return result;
     } // public boolean isSymlink()
 
     /**
@@ -412,7 +428,16 @@ public class VFile
     public boolean isFile()
     {
 //        return vfsFileMessage.getIsFile(); //是否是文件。
-        return vfsFileMessage.get("is_file").AsBoolean(); //是否是文件。
+//         return vfsFileMessage.get("is_file").AsBoolean(); //是否是文件。
+      CBORObject isDuplicateObject=vfsFileMessage.get("is_file");
+      boolean result=false;
+      
+      if (isDuplicateObject!=null)
+      {
+        result=isDuplicateObject.AsBoolean();
+      }
+      
+      return result;
 
     } //public boolean isFile()
 
