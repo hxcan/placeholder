@@ -154,7 +154,14 @@ public class VFile
 
             readedFileLength+=len; //记录已经读取的字节数。
 
-            outputStream.write(buf,0,len); //写入到输入流中。
+            if (len!=-1) // Successfully readed content
+            {
+              outputStream.write(buf,0,len); //写入到输入流中。
+            } // if (len!=-1) // Successfully readed content
+            else // Read failed
+            {
+              break;
+            } // else // Read failed
           } //while ((len=ins.read(buf)) != -1) //还没读取到指定长度的数据。
 
           outputStream.close();
