@@ -205,8 +205,6 @@ public class VFile
     */
     public int copyToByteArray(int size, long position, byte[] buffer, int offset)
     {
-      Log.d(TAG, "copyToByteArray, size: " + size + ", position: " + position + ", offset: " + offset); // Debug.
-      
       int actualSize=size; // 实际尺寸。
       
       byte[] wholeFile=readFileContent(vfsFileMessage); // 全部读取。
