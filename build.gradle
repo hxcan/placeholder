@@ -8,9 +8,10 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.0.1'
-        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.0'
+//         classpath 'com.android.tools.build:gradle:4.0.1'
+        classpath 'com.android.tools.build:gradle:7.4.1'
+//         classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
+//         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.0'
     }
 }
 
@@ -24,49 +25,40 @@ allprojects
       url 'https://maven.google.com/'
       name 'Google'
     }
-    maven 
-    {
-      url 'https://repo.jenkins-ci.org/incrementals/'
-      name 'JenkinsIncremental'
-    }
-    maven 
-    {
-      url 'https://repo.jenkins-ci.org/releases/'
-      name 'JenkinsReleases'
-    }
   }
 }
 
 apply plugin: 'com.android.library'
-apply plugin: 'com.github.dcendents.android-maven'
-apply plugin: 'com.jfrog.bintray'
+// apply plugin: 'com.github.dcendents.android-maven'
+// apply plugin: 'com.jfrog.bintray'
 
 version="2021.10.30"
 
 dependencies {
-    compile 'com.google.code.gson:gson:2.8.5'
-    compile 'com.upokecenter:cbor:4.2.0'
+    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'com.upokecenter:cbor:4.2.0'
 // https://mvnrepository.com/artifact/org.jenkins-ci.main/jenkins-core
 // implementation group: 'org.jenkins-ci.main', name: 'jenkins-core', version: '2.366-rc32795.df5b_49c75b_0e'
   implementation 'commons-io:commons-io:2.6'
 
 }
 
-android {
-    compileSdkVersion 29
+android 
+{
+  compileSdkVersion 29
 
-    resourcePrefix "stupidbeauty__"
+  defaultConfig 
+  {
+    minSdkVersion 9
+    targetSdkVersion 29
+    versionCode 194
+    versionName version
+  }
 
-    defaultConfig {
-
-        minSdkVersion 9
-        targetSdkVersion 29
-        versionCode 194
-        versionName version
-    }
-
-    sourceSets {
-        main {
+  sourceSets 
+  {
+    main 
+    {
             manifest.srcFile 'AndroidManifest.xml'
             java.srcDirs = ['/src', 'src', 'java']
             aidl.srcDirs = ['/src', 'src', 'aidl']
@@ -83,75 +75,3 @@ android {
     }
 }
 
-def siteUrl='http://stupidbeauty.com/Blog/'
-def hgUrl='https://bitbucket.org/hxcan/victoriafresh'
-group="com.stupidbeauty"
-
-install {
-    repositories.mavenInstaller {
-        pom {
-            project {
-                packaging 'aar'
-                name 'victoriafresh'
-                url siteUrl
-
-                licenses {
-                    license {
-                        name 'The Apache Software License, Version 2.0'
-                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                    }
-                }
-
-                developers {
-                    developer {
-                        id 'hxcan'
-                        name 'Hxcan Cai'
-                        email 'caihuosheng@gmail.com'
-                    }
-                }
-
-                scm {
-                    connection hgUrl
-                    developerConnection hgUrl
-                    url siteUrl
-                }
-            }
-        }
-    }
-}
-
-task sourcesJar(type: Jar) {
-    from android.sourceSets.main.java.srcDirs
-    classifier='sources'
-}
-
-task javadoc(type: Javadoc) {
-    source=android.sourceSets.main.java.srcDirs
-    classpath+=project.files(android.getBootClasspath().join(File.pathSeparator))
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier='javadoc'
-    from javadoc.destinationDir
-}
-
-artifacts {
-    archives javadocJar
-    archives sourcesJar
-}
-
-Properties properties=new Properties()
-properties.load(project.rootProject.file('local.properties').newDataInputStream())
-bintray {
-    user=properties.getProperty("bintray.user")
-    key=properties.getProperty("bintray.apikey")
-    configurations=['archives']
-    pkg {
-        repo="maven"
-        name="victoriafresh"
-        websiteUrl=siteUrl
-        vcsUrl=hgUrl
-        licenses=["Apache-2.0"]
-        publish=true
-    }
-}

@@ -324,21 +324,25 @@ public class VFile
 //       }
 }
 
+    protected void finalize() throws Throwable
+    {
+      ins.close(); // Close the input stream.
+    } // protected void finalize() throws Throwable
+
     /**
      * 是否存在。
      * @return 此文件是否存在。
      */
     public boolean exists()
     {
-        boolean result=false; //结果。
+      boolean result=false; //结果。
 
-        if (vfsFileMessage!=null) //确实存在该文件。
-        {
-            result=true; //文件存在。
-        } //if (targetFileMessage!=null) //确实存在该文件。
+      if (vfsFileMessage!=null) //确实存在该文件。
+      {
+        result=true; //文件存在。
+      } //if (targetFileMessage!=null) //确实存在该文件。
 
-
-        return result;
+      return result;
     } //private boolean exists()
     
     /**
