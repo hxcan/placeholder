@@ -307,6 +307,22 @@ public class VFile
         e.printStackTrace();
       }
     }
+    
+    /**
+    * Explicit close.
+    */
+    public void close()
+    {
+      try
+      {
+        Log.d(TAG, CodePosition.newInstance().toString()+ ", closing buffered input stream: "+ ins + ", this: " + this); // Debug.
+        ins.close();
+      }
+      catch(IOException e)
+      {
+        e.printStackTrace();
+      }
+    } // public void close()
 
     public VFile(CBORObject vfsFileMessage, File dataFile)
     {

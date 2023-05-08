@@ -278,89 +278,33 @@ catch(IOException e)
     */
     private void makeDirectory(String pathPrefix, VFile packagedFile)
     {
-//         timeObject=getTimeObject(packagedFile) #构造时间戳对象
-//       chen xin
-        long timeObject=getTimeObject(packagedFile); //构造时间戳对象
-        
-        
-//         #         puts 'mkdir' #Debug
-//         pathToMake=File.join(pathPrefix, packagedFile['name'])
-        String pathToMake=pathPrefix + "/" + packagedFile.getFileName();
-        
-//         #         puts  pathToMake #Debug.
-        
-//         if (Dir.exist?(pathToMake)) #目录已经存在
-        File pathToMakeFile=new File(pathToMake);
-        if (pathToMakeFile.exists()) //目录已经存在
-        {
-        }
-//         else #目录 不存在
-        else // 目录 不存在
-        {
-//             begin
-//             Chen xin
-            pathToMakeFile.mkdir(); //=> 0
-//             rescue Errno::EILSEQ => e # File name invalid
-//             puts "Rescued by Errno::EILSEQ statement. #{pathToMake}" # 报告错误
-// 
-//             end
-        }
+      long timeObject=getTimeObject(packagedFile); //构造时间戳对象
+      
+      
+      String pathToMake=pathPrefix + "/" + packagedFile.getFileName();
+      
+      File pathToMakeFile=new File(pathToMake);
+      if (pathToMakeFile.exists()) //目录已经存在
+      {
+      }
+      else // 目录 不存在
+      {
+        pathToMakeFile.mkdir(); //=> 0
+      }
 
-//         end #if (Dir.exist?(pathToMake)) #目录已经存在
+      pathToMakeFile.setLastModified(timeObject);
 
-//         begin
-//         Chen xin
-//             FileUtils.touch pathToMake, :mtime => timeObject # 设置修改时间
-                        pathToMakeFile.setLastModified(timeObject);
-
-//         rescue Errno::EILSEQ => e # File name invalid
-//             puts "Rescued by Errno::EILSEQ statement. #{pathToMake}" # 报告错误
-// 
-//         end
-
-
-//         permissionNumber=packagedFile['permission'] #获取权限数字
-        int permissionNumber=packagedFile.getPermission(); //获取权限数字
-        
-//         if (permissionNumber.nil?) #不带权限字段
-        if (permissionNumber==-1) //不带权限字段
-        {
-        }
-//         elsif #带权限字段
-        else //带权限字段
-        {
-
-
-//             begin
-//           Chen xin
-//                 File.chmod(permissionNumber, pathToMake) #设置权限
-//             FilePath hudsonFilePath=new FilePath(pathToMakeFile);
-//             try 
-//             {
-//             hudsonFilePath.chmod(permissionNumber);
-//             }
-//             catch(IOException e)
-//             {
-//               e.printStackTrace();
-//             }
-//             catch (InterruptedException e)
-//             {
-//               e.printStackTrace();
-//             }
-
-//             rescue Errno::ENOENT => e # File not exist
-//                 puts "Rescued by Errno::ENOENT statement. #{pathToMake}" # 报告错误
-// 
-//             end
-
-
-        }
-//         end #if (permissionNumber.nil?) #不带权限字段
+      int permissionNumber=packagedFile.getPermission(); //获取权限数字
+      
+      if (permissionNumber==-1) //不带权限字段
+      {
+      }
+      else //带权限字段
+      {
+      }
     }
-//     end #makeDirectory(pathPrefix, packagedFile) #创建目录
 
   
-//       def releaseFileExternalDataFile(pathPrefix, packagedFile) #释放一个文件
     /**
     * 释放一个文件
     */
@@ -368,44 +312,32 @@ catch(IOException e)
     {
       VFile packagedFileObject=(packagedFile);
       
-//         if packagedFile['is_file'] #是文件，则直接写入文件
-        if (packagedFileObject.isFile()) //是文件，则直接写入文件
+      if (packagedFileObject.isFile()) //是文件，则直接写入文件
+      {
+        writeFileExternalDataFile(pathPrefix, packagedFileObject); // 写入文件
+      }
+      else if (packagedFileObject.isSymlink()) //是符号链接，则创建符号链接
+      {
+        makeSymlinkExternalDataFile(pathPrefix, packagedFileObject); // 创建符号链接
+      }
+      else  // 是目录，则创建目录，并递归处理
+      {
+        makeDirectory(pathPrefix, packagedFileObject); //创建目录
+
+        String direcotryPathPrefix=pathPrefix  + '/' + packagedFileObject.getFileName(); // 构造针对该目录的路径前缀
+
+        List<VFile> subFiles=packagedFileObject.entryList(); // 获取子文件列表。
+
+        int subFileCounter=0;
+        
+        for(subFileCounter=0; subFileCounter< subFiles.size(); subFileCounter++)
         {
-//           writeFileExternalDataFile(pathPrefix, packagedFile) #写入文件
-          writeFileExternalDataFile(pathPrefix, packagedFileObject); // 写入文件
+          VFile currentSubFile=subFiles.get(subFileCounter);
+
+          releaseFileExternalDataFile(direcotryPathPrefix, currentSubFile); // 释放子文件
         }
-//         elsif packagedFile['is_symlink'] #是符号链接，则创建符号链接
-        else if (packagedFileObject.isSymlink()) //是符号链接，则创建符号链接
-        {
-//             makeSymlinkExternalDataFile(pathPrefix, packagedFile) #创建符号链接
-          makeSymlinkExternalDataFile(pathPrefix, packagedFileObject); // 创建符号链接
-        }
-//         else #是目录，则创建目录，并递归处理
-        else  // 是目录，则创建目录，并递归处理
-        {
-//           makeDirectory(pathPrefix, packagedFile) #创建目录
-          makeDirectory(pathPrefix, packagedFileObject); //创建目录
+      }
 
-//           direcotryPathPrefix=pathPrefix  + '/' + packagedFile['name'] #构造针对该目录的路径前缀
-          String direcotryPathPrefix=pathPrefix  + '/' + packagedFileObject.getFileName(); // 构造针对该目录的路径前缀
-
-//           subFiles=packagedFile['sub_files'] #获取子文件列表。
-          List<VFile> subFiles=packagedFileObject.entryList(); // 获取子文件列表。
-
-          int subFileCounter=0;
-          
-//           subFiles.each do |currentSubFile| #一个个子文件地释放
-//           subFiles.each do |currentSubFile| #一个个子文件地释放
-          for(subFileCounter=0; subFileCounter< subFiles.size(); subFileCounter++)
-          {
-            VFile currentSubFile=subFiles.get(subFileCounter);
-
-//             releaseFileExternalDataFile(direcotryPathPrefix, currentSubFile) #释放子文件
-            releaseFileExternalDataFile(direcotryPathPrefix, currentSubFile); // 释放子文件
-          }
-//           end #subFiles.each do |currentSubFile| #一个个子文件地释放
-        }
-//         end #if packagedFile.is_file #是文件，则直接写入文件
+      packagedFileObject.close(); // Explicit close.
     }
-//     end #def releaseFileExternalDataFile(pathPrefix, packagedFile) #释放一个文件
 }
