@@ -1,5 +1,10 @@
 package com.stupidbeauty.victoriafresh;
 
+import com.stupidbeauty.codeposition.CodePosition;
+import java.io.FileDescriptor;
+import java.io.FileInputStream;
+import java.io.BufferedReader;
+// import com.stupidbeauty.shutdownat2100.helper.ShutDownAt2100Manager;
 import java.util.List;
 import android.content.pm.PackageItemInfo;
 import android.content.pm.PackageManager;
@@ -66,69 +71,54 @@ public class VictoriaFresh
   */
   public void releaseFilesExternalDataFile(byte[] victoriaFreshPackagedFileString, String externalDataFileName, Context baseApplication)
   {
-//     packagedFile=CBOR.decode(victoriaFreshPackagedFileString) #解码
     CBORObject packagedFile=CBORObject.DecodeFromBytes(victoriaFreshPackagedFileString); // 解码
         
-// #         puts packagedFile #Debug
-        
-//     @externalDataFile=File.open(externalDataFileName, 'rb') #打开文件
     externalDataFile=new File(externalDataFileName); // 打开文件
     
-//     releaseFileExternalDataFile('.', packagedFile) #释放一个文件 
-      VFile packagedFileObject=new VFile(packagedFile,  externalDataFile);
+    VFile packagedFileObject=new VFile(packagedFile,  externalDataFile);
+    Log.d(TAG, CodePosition.newInstance().toString()+ ", created v file: "+ packagedFileObject + ", this: " + this); // Debug.
 
-              File downloadFolder = baseApplication.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
+    File downloadFolder = baseApplication.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
 
     String dataFileNamePrefix =downloadFolder.getPath();
-
       
     releaseFileExternalDataFile(dataFileNamePrefix, packagedFileObject); // 释放一个文件 
-        
-//     @externalDataFile.close #关闭文件
   } // public void releaseFilesExternalDataFile(byte[] replyByteArray, String victoriaFreshDataFile)
   
-//       def writeFileExternalDataFile(pathPrefix, packagedFile) #写入文件
-      private void  writeFileExternalDataFile(String pathPrefix, VFile packagedFile) //写入文件
-      {
-//         timeObject=getTimeObject(packagedFile) #构造时间戳对象
-        long timeObject=getTimeObject(packagedFile); // 构造时间戳对象
+  private void  writeFileExternalDataFile(String pathPrefix, VFile packagedFile) //写入文件
+  {
+    long timeObject=getTimeObject(packagedFile); // 构造时间戳对象
         
-//         is_duplicate=packagedFile['is_duplicate'] # 是否是重复文件。
-        boolean is_duplicate=packagedFile.isDuplicate(); // 是否是重复文件。
+    boolean is_duplicate=packagedFile.isDuplicate(); // 是否是重复文件。
 
-//         fileId=packagedFile['id'] # 获取文件编号。
-        int fileId=packagedFile.getId(); // 获取文件编号。
+    int fileId=packagedFile.getId(); // 获取文件编号。
 
-                  byte[] victoriaFreshData= null; // 读取原始相同文件的内容。
+    byte[] victoriaFreshData= null; // 读取原始相同文件的内容。
 
-//         if is_duplicate # 是重复文件。
-        if (is_duplicate) // 是重复文件。
-        {
-//           sameFileId=packagedFile['same_file_id'] # 找到相同文件的编号。
-          String sameFileId=packagedFile.getSameFileId(); // 找到相同文件的编号。
+    if (is_duplicate) // 是重复文件。
+    {
+      String sameFileId=packagedFile.getSameFileId(); // 找到相同文件的编号。
           
-//           sameFilePath=@fileIdPathMap[sameFileId] # 获取原始相同文件的路径。
-          String sameFilePath=fileIdPathMap.get(sameFileId); // 获取原始相同文件的路径。
+      String sameFilePath=fileIdPathMap.get(sameFileId); // 获取原始相同文件的路径。
           
-//           Chen xin
-//           victoriaFreshData=File.read(sameFilePath) # 读取原始相同文件的内容。
-          File sameFilePathFile=new File(sameFilePath);
-          try
-          {
-            victoriaFreshData= FileUtils.readFileToByteArray(sameFilePathFile); // 读取原始相同文件的内容。
-          }
-          catch(IOException e)
-          {
-            e.printStackTrace();
-          }
-        }
-//         else # 不是重复文件。
-        else // 不是重复文件。
-        {
-//         chen xin
-//           @externalDataFile.seek(packagedFile['file_start_index']) #定位到起始位置
-//           
-//           victoriaFreshData=@externalDataFile.read(packagedFile['file_length']) #读取内容
+      //           Chen xin
+      //           victoriaFreshData=File.read(sameFilePath) # 读取原始相同文件的内容。
+      File sameFilePathFile=new File(sameFilePath);
+      try
+      {
+        victoriaFreshData= FileUtils.readFileToByteArray(sameFilePathFile); // 读取原始相同文件的内容。
+      }
+      catch(IOException e)
+      {
+        e.printStackTrace();
+      }
+    }
+    else // 不是重复文件。
+    {
+      //         chen xin
+      //           @externalDataFile.seek(packagedFile['file_start_index']) #定位到起始位置
+      //           
+      //           victoriaFreshData=@externalDataFile.read(packagedFile['file_length']) #读取内容
 
 //           @externalDataFile.seek(packagedFile['file_start_index']) #定位到起始位置
           

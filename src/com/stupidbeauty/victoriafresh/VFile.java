@@ -1,5 +1,10 @@
 package com.stupidbeauty.victoriafresh;
 
+import com.stupidbeauty.codeposition.CodePosition;
+import java.io.FileDescriptor;
+import java.io.FileInputStream;
+import java.io.BufferedReader;
+// import com.stupidbeauty.shutdownat2100.helper.ShutDownAt2100Manager;
 import android.content.Context;
 import android.util.Log;
 import android.media.MediaDataSource;
@@ -310,22 +315,21 @@ public class VFile
 
       try
       {
-      FileInputStream rawins = new FileInputStream( dataFile); //打开输入流。
-      ins = new BufferedInputStream( rawins); //打开输入流。
-      ins.mark(ins.available());
+        FileInputStream rawins = new FileInputStream( dataFile); //打开输入流。
+        Log.d(TAG, CodePosition.newInstance().toString()+ ", created file input stream: "+ rawins + ", this: " + this); // Debug.
+        ins = new BufferedInputStream( rawins); //打开输入流。
+        Log.d(TAG, CodePosition.newInstance().toString()+ ", created buffered input stream: "+ ins + ", this: " + this); // Debug.
+        ins.mark(ins.available());
       }
       catch(IOException e)
       {
         e.printStackTrace();
       }
-//       catch(FileNotFoundException e)
-//       {
-//         e.printStackTrace();
-//       }
-}
+    }
 
     protected void finalize() throws Throwable
     {
+      Log.d(TAG, CodePosition.newInstance().toString()+ ", closing buffered input stream: "+ ins + ", this: " + this); // Debug.
       ins.close(); // Close the input stream.
     } // protected void finalize() throws Throwable
 

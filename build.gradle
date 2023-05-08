@@ -1,21 +1,4 @@
-buildscript {
-    repositories {
-        jcenter()
-        maven {
-            url 'https://maven.google.com/'
-            name 'Google'
-        }
-    }
-
-    dependencies {
-//         classpath 'com.android.tools.build:gradle:4.0.1'
-        classpath 'com.android.tools.build:gradle:7.4.1'
-//         classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
-//         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.0'
-    }
-}
-
-allprojects 
+buildscript 
 {
   repositories 
   {
@@ -26,21 +9,35 @@ allprojects
       name 'Google'
     }
   }
+
+  dependencies 
+  {
+    classpath 'com.android.tools.build:gradle:7.4.1'
+  }
+}
+
+allprojects 
+{
+  repositories 
+  {
+    maven { url "https://jitpack.io" }
+    jcenter()
+    maven 
+    {
+      url 'https://maven.google.com/'
+      name 'Google'
+    }
+  }
 }
 
 apply plugin: 'com.android.library'
-// apply plugin: 'com.github.dcendents.android-maven'
-// apply plugin: 'com.jfrog.bintray'
 
-version="2021.10.30"
-
-dependencies {
-    implementation 'com.google.code.gson:gson:2.8.5'
-    implementation 'com.upokecenter:cbor:4.2.0'
-// https://mvnrepository.com/artifact/org.jenkins-ci.main/jenkins-core
-// implementation group: 'org.jenkins-ci.main', name: 'jenkins-core', version: '2.366-rc32795.df5b_49c75b_0e'
+dependencies 
+{
+  implementation 'com.google.code.gson:gson:2.8.5'
+  implementation 'com.upokecenter:cbor:4.2.0'
+  implementation 'com.github.hxcan:CodePosition:2022.7.21'
   implementation 'commons-io:commons-io:2.6'
-
 }
 
 android 
@@ -49,29 +46,29 @@ android
 
   defaultConfig 
   {
-    minSdkVersion 9
+    minSdkVersion 14
     targetSdkVersion 29
     versionCode 194
-    versionName version
   }
 
   sourceSets 
   {
     main 
     {
-            manifest.srcFile 'AndroidManifest.xml'
-            java.srcDirs = ['/src', 'src', 'java']
-            aidl.srcDirs = ['/src', 'src', 'aidl']
-            res.srcDirs = ['/res', 'res']
-            resources.srcDirs = ['src']
-            renderscript.srcDirs = ['src']
-            assets.srcDirs = ['assets']
-            jniLibs.srcDirs = ['libs']
-       }
-    }
+      manifest.srcFile 'AndroidManifest.xml'
+      java.srcDirs = ['/src', 'src', 'java']
+      aidl.srcDirs = ['/src', 'src', 'aidl']
+      res.srcDirs = ['/res', 'res']
+      resources.srcDirs = ['src']
+      renderscript.srcDirs = ['src']
+      assets.srcDirs = ['assets']
+      jniLibs.srcDirs = ['libs']
+      }
+  }
 
-    lintOptions {
-        abortOnError false
-    }
+  lintOptions 
+  {
+    abortOnError false
+  }
 }
 
