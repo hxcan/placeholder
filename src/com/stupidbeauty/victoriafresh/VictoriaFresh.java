@@ -83,6 +83,9 @@ public class VictoriaFresh
     String dataFileNamePrefix =downloadFolder.getPath();
       
     releaseFileExternalDataFile(dataFileNamePrefix, packagedFileObject); // 释放一个文件 
+    
+    Log.d(TAG, CodePosition.newInstance().toString()+ ", releasing v file: "+ packagedFileObject + ", this: " + this); // Debug.
+    packagedFileObject=null; // release memory.
   } // public void releaseFilesExternalDataFile(byte[] replyByteArray, String victoriaFreshDataFile)
   
   private void  writeFileExternalDataFile(String pathPrefix, VFile packagedFile) //写入文件
