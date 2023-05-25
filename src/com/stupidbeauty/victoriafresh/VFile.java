@@ -96,6 +96,32 @@ public class VFile
       
       return result;
     } // public int getLength()
+    
+    /**
+    * Skip this amount of bytes.
+    */
+    private void skipBytes(int at, BufferedInputStream ins)
+    {
+      // 05-25 10:21:31.084  8874  8874 D VFile   : com.stupidbeauty.victoriafresh.VFile readFileContent 114, going to skip bytes: 136254771, this: com.stupidbeauty.victoriafresh.VFile@7592882
+
+      int maxSkipAmountOneTime=85945789;
+      int skipAmountThisTime=0;
+
+      while(at>0) //还没完全跳过。
+      {
+        skipAmountThisTime=Math.min(maxSkipAmountOneTime, at); // Do not skip too much.
+        
+        try
+        {
+          long amt= ins.skip(skipAmountThisTime); //做一次跳过动作。
+          at-=amt; //记录剩余要跳过的字节数。
+        }
+        catch (IOException e)
+        {
+          e.printStackTrace();
+        }
+      } //while(at>0) //还没完全跳过。
+    } // private void skipBytes(int at, BufferedInputStream ins)
 
     /**
      * 复制文件内容，并且最多复制这么长。
@@ -127,21 +153,11 @@ public class VFile
         try
         {
           //跳过整个VFS中这个文件之前的内容：
-          while(at>0) //还没完全跳过。
-          {
-            long amt= ins.skip(at); //做一次跳过动作。
-
-            at-=amt; //记录剩余要跳过的字节数。
-          } //while(at>0) //还没完全跳过。
+          skipBytes(at, ins); // Skip this amount of bytes.
 
           //跳过指定的起始位置之前的内容。
           at=copiedLength; //获取要跳过的本文件内容的长度。
-          while(at>0) //还没完全跳过。
-          {
-            long amt= ins.skip(at); //做一次跳过动作。
-
-            at-=amt; //记录剩余要跳过的字节数。
-          } //while(at>0) //还没完全跳过。
+          skipBytes(at, ins); // Skip this amount of bytes.
 
           //下面是要读取指定长度的数据。
           int readedFileLength=0; //已经读取的文件内容长度。
