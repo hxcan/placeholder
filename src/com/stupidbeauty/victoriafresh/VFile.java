@@ -125,6 +125,36 @@ public class VFile
     } // private void skipBytes(int at, BufferedInputStream ins)
 
     /**
+    * Skip this amount of bytes.
+    */
+    private void skipBytesByRead(int at, BufferedInputStream ins)
+    {
+      // 05-25 10:21:31.084  8874  8874 D VFile   : com.stupidbeauty.victoriafresh.VFile readFileContent 114, going to skip bytes: 136254771, this: com.stupidbeauty.victoriafresh.VFile@7592882
+
+      int maxSkipAmountOneTime=10380069;
+      int skipAmountThisTime=0;
+      byte buf[]=new byte[maxSkipAmountOneTime];
+
+      while(at>0) //还没完全跳过。
+      {
+        skipAmountThisTime=Math.min(maxSkipAmountOneTime, at); // Do not skip too much.
+        Log.d(TAG, CodePosition.newInstance().toString()+ ", going to skip bytes: "+ skipAmountThisTime + ", this: " + this); // Debug.
+
+        try
+        {
+          // long amt= ins.skip(skipAmountThisTime); //做一次跳过动作。
+          long amt=ins.read(buf,0,skipAmountThisTime); // Read content.
+
+          at-=amt; //记录剩余要跳过的字节数。
+        }
+        catch (IOException e)
+        {
+          e.printStackTrace();
+        }
+      } //while(at>0) //还没完全跳过。
+    } // private void skipBytes(int at, BufferedInputStream ins)
+
+    /**
      * 复制文件内容，并且最多复制这么长。
      * @param vfsFileMessage 文件内容消息对象。
      * @param copiedLength 复制的文件内容起始偏移位置。
@@ -142,6 +172,8 @@ public class VFile
 
         int fileLength=vfsFileMessage.get("file_length").AsInt32(); //获取文件长度。
         Log.d(TAG, CodePosition.newInstance().toString()+ ", file length: "+ fileLength + ", file name: " + getFileName() + ", this: " + this); // Debug.
+        // 05-25 11:03:11.806 17171 17171 D VFile   : com.stupidbeauty.victoriafresh.VFile readFileContent 141, going to skip bytes: 473185356, this: com.stupidbeauty.victoriafresh.VFile@d39853f
+        // 05-25 11:03:11.806 17171 17171 D VFile   : com.stupidbeauty.victoriafresh.VFile readFileContent 144, file length: 87240855, file name: Grebe.20230521.171932.771.mp4.webm, this: com.stupidbeauty.victoriafresh.VFile@d39853f
 
         //跳过前面不需要的字节：
         int at=indexStart; //要跳过的字节数。
@@ -154,11 +186,11 @@ public class VFile
         try
         {
           //跳过整个VFS中这个文件之前的内容：
-          skipBytes(at, ins); // Skip this amount of bytes.
+          skipBytesByRead(at, ins); // Skip this amount of bytes.
 
           //跳过指定的起始位置之前的内容。
           at=copiedLength; //获取要跳过的本文件内容的长度。
-          skipBytes(at, ins); // Skip this amount of bytes.
+          skipBytesByRead(at, ins); // Skip this amount of bytes.
 
           //下面是要读取指定长度的数据。
           int readedFileLength=0; //已经读取的文件内容长度。
