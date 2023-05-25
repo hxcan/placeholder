@@ -104,13 +104,14 @@ public class VFile
     {
       // 05-25 10:21:31.084  8874  8874 D VFile   : com.stupidbeauty.victoriafresh.VFile readFileContent 114, going to skip bytes: 136254771, this: com.stupidbeauty.victoriafresh.VFile@7592882
 
-      int maxSkipAmountOneTime=85945789;
+      int maxSkipAmountOneTime=10380069;
       int skipAmountThisTime=0;
 
       while(at>0) //还没完全跳过。
       {
         skipAmountThisTime=Math.min(maxSkipAmountOneTime, at); // Do not skip too much.
-        
+        Log.d(TAG, CodePosition.newInstance().toString()+ ", going to skip bytes: "+ skipAmountThisTime + ", this: " + this); // Debug.
+
         try
         {
           long amt= ins.skip(skipAmountThisTime); //做一次跳过动作。
