@@ -111,11 +111,10 @@ public class VFile
       if (vfsFileMessage!=null) //有对应的消息对象。
       {
         int indexStart=vfsFileMessage.get("file_start_index").AsInt32(); //获取起始位置的下标。
+        Log.d(TAG, CodePosition.newInstance().toString()+ ", going to skip bytes: "+ indexStart + ", this: " + this); // Debug.
 
         int fileLength=vfsFileMessage.get("file_length").AsInt32(); //获取文件长度。
-
-//         InputStream rawins = context.getResources().openRawResource( victoriaFreshDataFileId); //打开输入流。
-//         BufferedInputStream ins = new BufferedInputStream( rawins); //打开输入流。
+        Log.d(TAG, CodePosition.newInstance().toString()+ ", file length: "+ fileLength + ", file name: " + getFileName() + ", this: " + this); // Debug.
 
         //跳过前面不需要的字节：
         int at=indexStart; //要跳过的字节数。
