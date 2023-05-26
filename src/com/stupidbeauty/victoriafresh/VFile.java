@@ -35,6 +35,7 @@ public class VFile
   private final CBORObject vfsFileMessage; //!<此虚拟文件对应的虚拟文件消息对象。
   private static final String TAG="VFile"; //!<输出调试信息时使用的标记。
   private BufferedInputStream ins = null; //!< buffered 输入流。
+  private boolean useMultiPartDataFile=false; //!< Whether we should use multipart data file.
 
   /**
   * 读取文件全部内容。
@@ -153,18 +154,175 @@ public class VFile
         }
       } //while(at>0) //还没完全跳过。
     } // private void skipBytes(int at, BufferedInputStream ins)
-
+    
     /**
-     * 复制文件内容，并且最多复制这么长。
-     * @param vfsFileMessage 文件内容消息对象。
-     * @param copiedLength 复制的文件内容起始偏移位置。
-     * @param MaxCopyOneTimeFileLength 最多复制的内容长度。
-     * @return 复制得到的字节数组。
-     */
-    private byte[] readFileContent(CBORObject vfsFileMessage, int copiedLength , int MaxCopyOneTimeFileLength)
+    * Read with multiple data file. victoriafreshdata.v
+    */
+    private byte[] readFileContentMultiDataFile(CBORObject vfsFileMessage, int copiedLength , int MaxCopyOneTimeFileLength)
     {
       byte[] result=null; //结果。
+      
+      try // Read from parts
+      {
+        if (vfsFileMessage!=null) //有对应的消息对象。
+        {
+          int indexStart=vfsFileMessage.get("file_start_index").AsInt32(); //获取起始位置的下标。
+          Log.d(TAG, CodePosition.newInstance().toString()+ ", going to skip bytes: "+ indexStart + ", this: " + this); // Debug.
 
+          int fileLength=vfsFileMessage.get("file_length").AsInt32(); //获取文件长度。
+          Log.d(TAG, CodePosition.newInstance().toString()+ ", file length: "+ fileLength + ", file name: " + getFileName() + ", this: " + this); // Debug.
+          // 05-25 11:03:11.806 17171 17171 D VFile   : com.stupidbeauty.victoriafresh.VFile readFileContent 141, going to skip bytes: 473185356, this: com.stupidbeauty.victoriafresh.VFile@d39853f
+          // 05-25 11:03:11.806 17171 17171 D VFile   : com.stupidbeauty.victoriafresh.VFile readFileContent 144, file length: 87240855, file name: Grebe.20230521.171932.771.mp4.webm, this: com.stupidbeauty.victoriafresh.VFile@d39853f
+          
+          ByteArrayOutputStream outputStream=new ByteArrayOutputStream();
+
+          byte buf[]=new byte[65536];
+
+          int blockSize=32*1024*1024; // 32 MB.
+          
+          int dataFileBlockNumberStart=indexStart/blockSize;
+          int dataFileBlockNumberStop=(indexStart+fileLength)/blockSize;
+          int dataFileBlockOffsetStart=indexStart % blockSize;
+          int dataFileBlockOffsetStop=(indexStart+fileLength) % blockSize;
+          int totalOffset=0; // total offset of byte aray output stream for multi plart data file reading.
+          
+          for(int dataFileBlockNumber= dataFileBlockNumberStart; dataFileBlockNumber<=dataFileBlockNumberStop; dataFileBlockNumber++) // Read from all of the spanning blocks
+          {
+            int currentBlockOffsetStart=0;
+            int currentBlockOffsetStop=blockSize;
+            
+            if (dataFileBlockNumber==dataFileBlockNumberStart) // first block
+            {
+              currentBlockOffsetStart=dataFileBlockOffsetStart;
+            } // if (dataFileBlockNumber==dataFileBlockNumberStart) // first block
+            
+            if (dataFileBlockNumber==dataFileBlockNumberStop) // last block
+            {
+              currentBlockOffsetStop=dataFileBlockOffsetStop;
+            } // if (dataFileBlockNumber==dataFileBlockNumberStop) // last block
+            
+            int currentBlockSize=currentBlockOffsetStop-currentBlockOffsetStart; // The curent block size.
+            
+            byte bufForCurrentBlock[]= readFileContentOneDataFilePart(dataFileBlockNumber, currentBlockOffsetStart, currentBlockSize, vfsFileMessage); // read from one block.
+            
+            outputStream.write(bufForCurrentBlock, totalOffset, currentBlockSize); // Write into the output stream.
+
+            totalOffset+=currentBlockSize;
+          } // for(int dataFileBlockNumber= dataFileBlockNumberStart; dataFileBlockNumber<=dataFileBlockNumberStop; dataFileBlockNumber++) // Read from all of the spanning blocks
+          
+
+          outputStream.close();
+
+          result=outputStream.toByteArray(); //转换成字节数组。
+        } //if (vfsFileMessage!=null) //有对应的消息对象。
+      } // try // Read from parts
+      catch(IOException e)
+      {
+        e.printStackTrace();
+      } // catch(IOException e)
+
+      return  result;
+    } // private byte[] readFileContentMultiDataFile(CBORObject vfsFileMessage, int copiedLength , int MaxCopyOneTimeFileLength)
+    
+    /**
+    * read from one block.
+    */
+    private byte[] readFileContentOneDataFilePart(int dataFileBlockNumber, int currentBlockOffsetStart, int currentBlockSize, CBORObject vfsFileMessage)
+    {
+      byte[] result=null; //结果。
+      
+      if (vfsFileMessage!=null) //有对应的消息对象。
+      {
+        // int indexStart=vfsFileMessage.get("file_start_index").AsInt32(); //获取起始位置的下标。
+        int indexStart=currentBlockOffsetStart; // Get the index of start position.
+        Log.d(TAG, CodePosition.newInstance().toString()+ ", going to skip bytes: "+ indexStart + ", this: " + this); // Debug.
+
+        // int fileLength=vfsFileMessage.get("file_length").AsInt32(); //获取文件长度。
+        int fileLength=currentBlockSize; // Get the part size.
+        Log.d(TAG, CodePosition.newInstance().toString()+ ", file length: "+ fileLength + ", file name: " + getFileName() + ", this: " + this); // Debug.
+        // 05-25 11:03:11.806 17171 17171 D VFile   : com.stupidbeauty.victoriafresh.VFile readFileContent 141, going to skip bytes: 473185356, this: com.stupidbeauty.victoriafresh.VFile@d39853f
+        // 05-25 11:03:11.806 17171 17171 D VFile   : com.stupidbeauty.victoriafresh.VFile readFileContent 144, file length: 87240855, file name: Grebe.20230521.171932.771.mp4.webm, this: com.stupidbeauty.victoriafresh.VFile@d39853f
+        
+        ByteArrayOutputStream outputStream=new ByteArrayOutputStream();
+
+        byte buf[]=new byte[65536];
+
+        
+        int totalOffset=0; // total offset of byte aray output stream for multi plart data file reading.
+        
+        //跳过前面不需要的字节：
+        int at=indexStart; //要跳过的字节数。
+
+        int len;
+        
+        
+        victoriaFreshDataFileId=context.getResources().getIdentifier("victoriafreshdata"+dataFileBlockNumber, "raw", context.getPackageName()); // Get the data file id.
+      // victoriaFreshIndexFileId=context.getResources().getIdentifier("victoriafresh", "raw", context.getPackageName()); //获取索引文件编号。
+      
+        InputStream rawins = context.getResources().openRawResource( victoriaFreshDataFileId); //打开输入流。
+        ins = new BufferedInputStream( rawins); //打开输入流。
+
+        try
+        {
+          ins.mark(ins.available());
+        
+        
+        
+          //跳过整个VFS中这个文件之前的内容：
+          skipBytesByRead(at, ins); // Skip this amount of bytes.
+
+          //跳过指定的起始位置之前的内容。
+          int copiedLength=0; // Copied length.
+          at=copiedLength; //获取要跳过的本文件内容的长度。
+          skipBytesByRead(at, ins); // Skip this amount of bytes.
+
+          //下面是要读取指定长度的数据。
+          int readedFileLength=0; //已经读取的文件内容长度。
+          int tailLength=fileLength-copiedLength; //计算出尾部的剩余文件长度。
+          int thisTimeMaxReadLength=Math.min(tailLength, currentBlockSize); //此次的最大读取长度。
+
+          while (readedFileLength<thisTimeMaxReadLength) //还没读取到指定长度的数据。
+          {
+            int remainLength=thisTimeMaxReadLength-readedFileLength; //还有这么多长度要读取。
+
+            int thisTimeReadLength=Math.min(remainLength, buf.length); //这一轮要读取的字节数。
+
+            len=ins.read(buf,0,thisTimeReadLength); //继续读取内容。
+
+            readedFileLength+=len; //记录已经读取的字节数。
+
+            if (len!=-1) // Successfully readed content
+            {
+              outputStream.write(buf,0,len); //写入到输入流中。
+            } // if (len!=-1) // Successfully readed content
+            else // Read failed
+            {
+              break;
+            } // else // Read failed
+          } //while ((len=ins.read(buf)) != -1) //还没读取到指定长度的数据。
+
+          outputStream.close();
+          ins.reset();
+          ins.close(); // Coose the input stream.
+
+          result=outputStream.toByteArray(); //转换成字节数组。
+        }
+        catch (IOException e)
+        {
+          e.printStackTrace();
+        }
+      } //if (vfsFileMessage!=null) //有对应的消息对象。
+
+      return  result;
+    } // private byte[] readFileContentOneDataFilePart(int dataFileBlockNumber, int currentBlockOffsetStart, int currentBlockSize, CBORObject vfsFileMessage)
+    
+    /**
+    * Read with single data file. victoriafreshdata.v
+    */
+    private byte[] readFileContentSingleDataFile(CBORObject vfsFileMessage, int copiedLength , int MaxCopyOneTimeFileLength)
+    {
+      byte[] result=null; //结果。
+      
       if (vfsFileMessage!=null) //有对应的消息对象。
       {
         int indexStart=vfsFileMessage.get("file_start_index").AsInt32(); //获取起始位置的下标。
@@ -227,6 +385,32 @@ public class VFile
           e.printStackTrace();
         }
       } //if (vfsFileMessage!=null) //有对应的消息对象。
+
+      return  result;
+    } // private byte[] readFileContentSingleDataFile(vfsFileMessage, copiedLength, MaxCopyOneTimeFileLength)
+
+    /**
+     * 复制文件内容，并且最多复制这么长。
+     * @param vfsFileMessage 文件内容消息对象。
+     * @param copiedLength 复制的文件内容起始偏移位置。
+     * @param MaxCopyOneTimeFileLength 最多复制的内容长度。
+     * @return 复制得到的字节数组。
+     */
+    private byte[] readFileContent(CBORObject vfsFileMessage, int copiedLength , int MaxCopyOneTimeFileLength)
+    {
+      
+    
+      byte[] result=null; //结果。
+      
+      if (useMultiPartDataFile) // Should use multi part data file
+      {
+        result=readFileContentMultiDataFile(vfsFileMessage, copiedLength, MaxCopyOneTimeFileLength); // Read with multiple data file. victoriafreshdata.v
+      } // if (useMultiPartDataFile) // Should use multi part data file
+      else // Not use multi plart data file
+      {
+        result=readFileContentSingleDataFile(vfsFileMessage, copiedLength, MaxCopyOneTimeFileLength); // Read with single data file. victoriafreshdata.v
+      } // else // Not use multi plart data file
+      
 
       return  result;
     } //private byte[] readFileContent(FileMessageContainer.FileMessage vfsFileMessage, int copiedLength , int MaxCopyOneTimeFileLength)
@@ -658,8 +842,20 @@ public class VFile
         e.printStackTrace();
       }
 
-
       vfsFileMessage=loadVfsFile(); //载入对应的虚拟文件。
+    } //public VFile(Context context, String fileName)
+    
+    /**
+     * 构造函数。
+     * @param context 上下文。
+     * @param fileName 虚拟文件名。
+     */
+    public VFile(Context context, String fileName, boolean useMultiPartDataFile)
+    {
+      this(context, fileName);
+      this.useMultiPartDataFile=useMultiPartDataFile;
+      
+      close(); // Close
     } //public VFile(Context context, String fileName)
     
     /**
