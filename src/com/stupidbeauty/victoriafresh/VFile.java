@@ -545,11 +545,14 @@ public class VFile
     */
     public void close()
     {
-      try
+      try // Close input stream.
       {
         Log.d(TAG, CodePosition.newInstance().toString()+ ", closing buffered input stream: "+ ins + ", this: " + this); // Debug.
-        ins.close();
-      }
+        if (ins!=null) // The input stream exists
+        {
+          ins.close();
+        } // if (ins!=null) // The input stream exists
+      } // try // Close input stream.
       catch(IOException e)
       {
         e.printStackTrace();
