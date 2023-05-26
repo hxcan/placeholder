@@ -831,16 +831,19 @@ public class VFile
       victoriaFreshDataFileId=context.getResources().getIdentifier("victoriafreshdata", "raw", context.getPackageName()); //获取数据文件编号。
       victoriaFreshIndexFileId=context.getResources().getIdentifier("victoriafresh", "raw", context.getPackageName()); //获取索引文件编号。
       
-      InputStream rawins = context.getResources().openRawResource( victoriaFreshDataFileId); //打开输入流。
-      ins = new BufferedInputStream( rawins); //打开输入流。
-      try
+      if (victoriaFreshDataFileId!=0) // This id exists
       {
-      ins.mark(ins.available());
-      }
-      catch(IOException e)
-      {
-        e.printStackTrace();
-      }
+        InputStream rawins = context.getResources().openRawResource( victoriaFreshDataFileId); //打开输入流。
+        ins = new BufferedInputStream( rawins); //打开输入流。
+        try
+        {
+          ins.mark(ins.available());
+        }
+        catch(IOException e)
+        {
+          e.printStackTrace();
+        }
+      } // if (victoriaFreshDataFileId!=0) // This id exists
 
       vfsFileMessage=loadVfsFile(); //载入对应的虚拟文件。
     } //public VFile(Context context, String fileName)
