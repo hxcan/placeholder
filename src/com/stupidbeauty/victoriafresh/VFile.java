@@ -128,7 +128,7 @@ public class VFile
     /**
     * Skip this amount of bytes.
     */
-    private void skipBytesByRead(int at, BufferedInputStream ins)
+    private void skipBytesByRead(long at, BufferedInputStream ins)
     {
       // 05-25 10:21:31.084  8874  8874 D VFile   : com.stupidbeauty.victoriafresh.VFile readFileContent 114, going to skip bytes: 136254771, this: com.stupidbeauty.victoriafresh.VFile@7592882
 
@@ -138,7 +138,7 @@ public class VFile
 
       while(at>0) //还没完全跳过。
       {
-        skipAmountThisTime=Math.min(maxSkipAmountOneTime, at); // Do not skip too much.
+        skipAmountThisTime=Math.min(maxSkipAmountOneTime, (int)(at)); // Do not skip too much.
         Log.d(TAG, CodePosition.newInstance().toString()+ ", going to skip bytes: "+ skipAmountThisTime + ", this: " + this); // Debug.
 
         try
@@ -166,10 +166,10 @@ public class VFile
       {
         if (vfsFileMessage!=null) //有对应的消息对象。
         {
-          int indexStart=vfsFileMessage.get("file_start_index").AsInt32(); //获取起始位置的下标。
+          long indexStart=vfsFileMessage.get("file_start_index").AsInt64(); //获取起始位置的下标。
           Log.d(TAG, CodePosition.newInstance().toString()+ ", going to skip bytes: "+ indexStart + ", this: " + this); // Debug.
 
-          int fileLength=vfsFileMessage.get("file_length").AsInt32(); //获取文件长度。
+          long fileLength=vfsFileMessage.get("file_length").AsInt64(); //获取文件长度。
           Log.d(TAG, CodePosition.newInstance().toString()+ ", file length: "+ fileLength + ", file name: " + getFileName() + ", this: " + this); // Debug.
           // 05-25 11:03:11.806 17171 17171 D VFile   : com.stupidbeauty.victoriafresh.VFile readFileContent 141, going to skip bytes: 473185356, this: com.stupidbeauty.victoriafresh.VFile@d39853f
           // 05-25 11:03:11.806 17171 17171 D VFile   : com.stupidbeauty.victoriafresh.VFile readFileContent 144, file length: 87240855, file name: Grebe.20230521.171932.771.mp4.webm, this: com.stupidbeauty.victoriafresh.VFile@d39853f
@@ -178,18 +178,18 @@ public class VFile
 
           byte buf[]=new byte[65536];
 
-          int blockSize=32*1024*1024; // 32 MB.
+          long blockSize=32*1024*1024; // 32 MB.
           
-          int dataFileBlockNumberStart=indexStart/blockSize;
-          int dataFileBlockNumberStop=(indexStart+fileLength)/blockSize;
-          int dataFileBlockOffsetStart=indexStart % blockSize;
-          int dataFileBlockOffsetStop=(indexStart+fileLength) % blockSize;
+          long dataFileBlockNumberStart=indexStart/blockSize;
+          long dataFileBlockNumberStop=(indexStart+fileLength)/blockSize;
+          long dataFileBlockOffsetStart=indexStart % blockSize;
+          long dataFileBlockOffsetStop=(indexStart+fileLength) % blockSize;
           int totalOffset=0; // total offset of byte aray output stream for multi plart data file reading.
           
-          for(int dataFileBlockNumber= dataFileBlockNumberStart; dataFileBlockNumber<=dataFileBlockNumberStop; dataFileBlockNumber++) // Read from all of the spanning blocks
+          for(long dataFileBlockNumber= dataFileBlockNumberStart; dataFileBlockNumber<=dataFileBlockNumberStop; dataFileBlockNumber++) // Read from all of the spanning blocks
           {
-            int currentBlockOffsetStart=0;
-            int currentBlockOffsetStop=blockSize;
+            long currentBlockOffsetStart=0;
+            long currentBlockOffsetStop=blockSize;
             
             if (dataFileBlockNumber==dataFileBlockNumberStart) // first block
             {
@@ -201,11 +201,11 @@ public class VFile
               currentBlockOffsetStop=dataFileBlockOffsetStop;
             } // if (dataFileBlockNumber==dataFileBlockNumberStop) // last block
             
-            int currentBlockSize=currentBlockOffsetStop-currentBlockOffsetStart; // The curent block size.
+            long currentBlockSize=currentBlockOffsetStop-currentBlockOffsetStart; // The curent block size.
             
             byte bufForCurrentBlock[]= readFileContentOneDataFilePart(dataFileBlockNumber, currentBlockOffsetStart, currentBlockSize, vfsFileMessage); // read from one block.
             
-            outputStream.write(bufForCurrentBlock, totalOffset, currentBlockSize); // Write into the output stream.
+            outputStream.write(bufForCurrentBlock, totalOffset, (int)(currentBlockSize)); // Write into the output stream.
 
             totalOffset+=currentBlockSize;
           } // for(int dataFileBlockNumber= dataFileBlockNumberStart; dataFileBlockNumber<=dataFileBlockNumberStop; dataFileBlockNumber++) // Read from all of the spanning blocks
@@ -227,18 +227,18 @@ public class VFile
     /**
     * read from one block.
     */
-    private byte[] readFileContentOneDataFilePart(int dataFileBlockNumber, int currentBlockOffsetStart, int currentBlockSize, CBORObject vfsFileMessage)
+    private byte[] readFileContentOneDataFilePart(long dataFileBlockNumber, long currentBlockOffsetStart, long currentBlockSize, CBORObject vfsFileMessage)
     {
       byte[] result=null; //结果。
       
       if (vfsFileMessage!=null) //有对应的消息对象。
       {
         // int indexStart=vfsFileMessage.get("file_start_index").AsInt32(); //获取起始位置的下标。
-        int indexStart=currentBlockOffsetStart; // Get the index of start position.
+        long indexStart=currentBlockOffsetStart; // Get the index of start position.
         Log.d(TAG, CodePosition.newInstance().toString()+ ", going to skip bytes: "+ indexStart + ", this: " + this); // Debug.
 
         // int fileLength=vfsFileMessage.get("file_length").AsInt32(); //获取文件长度。
-        int fileLength=currentBlockSize; // Get the part size.
+        long fileLength=currentBlockSize; // Get the part size.
         Log.d(TAG, CodePosition.newInstance().toString()+ ", file length: "+ fileLength + ", file name: " + getFileName() + ", this: " + this); // Debug.
         // 05-25 11:03:11.806 17171 17171 D VFile   : com.stupidbeauty.victoriafresh.VFile readFileContent 141, going to skip bytes: 473185356, this: com.stupidbeauty.victoriafresh.VFile@d39853f
         // 05-25 11:03:11.806 17171 17171 D VFile   : com.stupidbeauty.victoriafresh.VFile readFileContent 144, file length: 87240855, file name: Grebe.20230521.171932.771.mp4.webm, this: com.stupidbeauty.victoriafresh.VFile@d39853f
@@ -251,7 +251,7 @@ public class VFile
         int totalOffset=0; // total offset of byte aray output stream for multi plart data file reading.
         
         //跳过前面不需要的字节：
-        int at=indexStart; //要跳过的字节数。
+        long at=indexStart; //要跳过的字节数。
 
         int len;
         
@@ -272,14 +272,14 @@ public class VFile
           skipBytesByRead(at, ins); // Skip this amount of bytes.
 
           //跳过指定的起始位置之前的内容。
-          int copiedLength=0; // Copied length.
+          long copiedLength=0; // Copied length.
           at=copiedLength; //获取要跳过的本文件内容的长度。
           skipBytesByRead(at, ins); // Skip this amount of bytes.
 
           //下面是要读取指定长度的数据。
           int readedFileLength=0; //已经读取的文件内容长度。
-          int tailLength=fileLength-copiedLength; //计算出尾部的剩余文件长度。
-          int thisTimeMaxReadLength=Math.min(tailLength, currentBlockSize); //此次的最大读取长度。
+          long tailLength=fileLength-copiedLength; //计算出尾部的剩余文件长度。
+          int thisTimeMaxReadLength=Math.min((int)(tailLength), (int)(currentBlockSize)); //此次的最大读取长度。
 
           while (readedFileLength<thisTimeMaxReadLength) //还没读取到指定长度的数据。
           {
