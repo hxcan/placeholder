@@ -205,12 +205,11 @@ public class VFile
             
             byte bufForCurrentBlock[]= readFileContentOneDataFilePart(dataFileBlockNumber, currentBlockOffsetStart, currentBlockSize, vfsFileMessage); // read from one block.
             
-            outputStream.write(bufForCurrentBlock, totalOffset, (int)(currentBlockSize)); // Write into the output stream.
+            outputStream.write(bufForCurrentBlock, 0, (int)(currentBlockSize)); // Write into the output stream.
 
             totalOffset+=currentBlockSize;
           } // for(int dataFileBlockNumber= dataFileBlockNumberStart; dataFileBlockNumber<=dataFileBlockNumberStop; dataFileBlockNumber++) // Read from all of the spanning blocks
           
-
           outputStream.close();
 
           result=outputStream.toByteArray(); //转换成字节数组。
@@ -581,7 +580,11 @@ public class VFile
     protected void finalize() throws Throwable
     {
       Log.d(TAG, CodePosition.newInstance().toString()+ ", closing buffered input stream: "+ ins + ", this: " + this); // Debug.
-      ins.close(); // Close the input stream.
+      
+      if (ins!=null)
+      {
+        ins.close(); // Close the input stream.
+      } // if (ins!=null)
     } // protected void finalize() throws Throwable
 
     /**
