@@ -166,11 +166,21 @@ public class VFile
       {
         if (vfsFileMessage!=null) //有对应的消息对象。
         {
-          long indexStart=vfsFileMessage.get("file_start_index").AsInt64(); //获取起始位置的下标。
+          long fileindexStart=vfsFileMessage.get("file_start_index").AsInt64(); //获取起始位置的下标。
+          long indexStart=fileindexStart+copiedLength; //获取起始位置的下标。
+          
+          // indexStart+=copiedLength; // these bytes has been read.
+          
           Log.d(TAG, CodePosition.newInstance().toString()+ ", going to skip bytes: "+ indexStart + ", this: " + this); // Debug.
 
           long fileLength=vfsFileMessage.get("file_length").AsInt64(); //获取文件长度。
-          Log.d(TAG, CodePosition.newInstance().toString()+ ", file length: "+ fileLength + ", file name: " + getFileName() + ", this: " + this); // Debug.
+          long remainingfileLength=fileLength-copiedLength; //获取文件长度。
+          
+          remainingfileLength=Math.min(remainingfileLength, MaxCopyOneTimeFileLength); // limit the length of copy.
+          
+          // fileLength-=copiedLength; // Theres bytes has been read.
+          
+          Log.d(TAG, CodePosition.newInstance().toString()+ ", file length: "+ fileLength + ", file name: " + getFileName() + ", this: " + this + ", remaining file length: " + remainingfileLength); // Debug.
           // 05-25 11:03:11.806 17171 17171 D VFile   : com.stupidbeauty.victoriafresh.VFile readFileContent 141, going to skip bytes: 473185356, this: com.stupidbeauty.victoriafresh.VFile@d39853f
           // 05-25 11:03:11.806 17171 17171 D VFile   : com.stupidbeauty.victoriafresh.VFile readFileContent 144, file length: 87240855, file name: Grebe.20230521.171932.771.mp4.webm, this: com.stupidbeauty.victoriafresh.VFile@d39853f
           
@@ -181,9 +191,9 @@ public class VFile
           long blockSize=32*1024*1024; // 32 MB.
           
           long dataFileBlockNumberStart=indexStart/blockSize;
-          long dataFileBlockNumberStop=(indexStart+fileLength)/blockSize;
+          long dataFileBlockNumberStop=(indexStart+remainingfileLength)/blockSize;
           long dataFileBlockOffsetStart=indexStart % blockSize;
-          long dataFileBlockOffsetStop=(indexStart+fileLength) % blockSize;
+          long dataFileBlockOffsetStop=(indexStart+remainingfileLength) % blockSize;
           int totalOffset=0; // total offset of byte aray output stream for multi plart data file reading.
           
           for(long dataFileBlockNumber= dataFileBlockNumberStart; dataFileBlockNumber<=dataFileBlockNumberStop; dataFileBlockNumber++) // Read from all of the spanning blocks
