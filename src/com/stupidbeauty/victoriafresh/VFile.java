@@ -493,7 +493,13 @@ public class VFile
 
             byte[] fileContent; //读取到的文件内容。
 
-            int fileLength=vfsFileMessage.get("file_length").AsInt32(); //获取文件长度。
+            // int fileLength=vfsFileMessage.get("file_length").AsInt32(); //获取文件长度。
+            int fileLength = 0; //获取文件长度。
+            
+            if (vfsFileMessage!=null) // The file exists
+            {
+              fileLength = vfsFileMessage.get("file_length").AsInt32(); //获取文件长度。
+            } // if (vfsFileMessage!=null) // The file exists
 
             int copiedLength=0; //已经复制的长度。
             int MaxCopyOneTimeFileLength = 28 * 1024 * 1024; //28M，最大一次性复制的文件长度。
