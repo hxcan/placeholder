@@ -660,8 +660,14 @@ public class VFile
      */
     public String getFileName()
     {
-//        return vfsFileMessage.getName();
-        return vfsFileMessage.get("name").AsString();
+      String result=null; // Result;
+      
+      if (vfsFileMessage!=null) // The message object exists
+      {
+        result = vfsFileMessage.get("name").AsString();
+      } // if (vfsFileMessage!=null) // The message object exists
+        
+      return result;
     } //public String getFileName()
     
     /**
@@ -669,7 +675,6 @@ public class VFile
     */
     public boolean isDuplicate() 
     {
-//         is_duplicate=packagedFile['is_duplicate'] # 是否是重复文件。
       CBORObject isDuplicateObject=vfsFileMessage.get("is_duplicate");
       boolean result=false;
       
