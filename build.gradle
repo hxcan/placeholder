@@ -8,17 +8,17 @@ buildscript
       url 'https://maven.google.com/'
       name 'Google'
     }
-  }
+  } // repositories 
 
   dependencies 
   {
     classpath 'com.android.tools.build:gradle:7.4.1'
-  }
-}
+  } // dependencies 
+} // buildscript 
 
 allprojects 
 {
-  repositories 
+  repositories
   {
     maven { url "https://jitpack.io" }
     jcenter()
@@ -26,21 +26,21 @@ allprojects
     {
       url 'https://maven.google.com/'
       name 'Google'
-    }
-  }
-}
+    } // maven 
+  } // repositories
+} // allprojects 
 
 apply plugin: 'com.android.library'
 
-dependencies 
+dependencies
 {
   implementation 'com.google.code.gson:gson:2.8.5'
   implementation 'com.upokecenter:cbor:4.2.0'
-  implementation 'com.github.hxcan:CodePosition:2022.7.21'
+  implementation 'com.github.hxcan:CodePosition:2023.9.7'
   implementation 'commons-io:commons-io:2.6'
 }
 
-android 
+android
 {
   compileSdkVersion 29
 
@@ -48,12 +48,12 @@ android
   {
     minSdkVersion 14
     targetSdkVersion 29
-    versionCode 194
-  }
+//     versionCode 194
+  } // defaultConfig 
 
   sourceSets 
   {
-    main 
+    main
     {
       manifest.srcFile 'AndroidManifest.xml'
       java.srcDirs = ['/src', 'src', 'java']
@@ -63,12 +63,11 @@ android
       renderscript.srcDirs = ['src']
       assets.srcDirs = ['assets']
       jniLibs.srcDirs = ['libs']
-      }
-  }
+    } // main
+  } // sourceSets 
 
   lintOptions 
   {
     abortOnError false
-  }
-}
-
+  } // lintOptions 
+} // android
