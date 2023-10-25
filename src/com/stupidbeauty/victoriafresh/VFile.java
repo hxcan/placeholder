@@ -519,7 +519,10 @@ public class VFile
             {
               fileContent=readFileContent(vfsFileMessage); //读取文件内容。
 
-              targetOutStream.write(fileContent); //输出内容。
+              if (fileContent!=null) // The byte array exists
+              {
+                targetOutStream.write(fileContent); //输出内容。
+              } // if (fileContent!=null) // The byte array exists
             } //else //未超过一次性复制的最大长度。
 
             targetOutStream.close(); //关闭输出文件。
