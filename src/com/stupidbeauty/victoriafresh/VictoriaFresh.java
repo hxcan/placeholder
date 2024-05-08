@@ -123,80 +123,54 @@ public class VictoriaFresh
       //           
       //           victoriaFreshData=@externalDataFile.read(packagedFile['file_length']) #读取内容
 
-//           @externalDataFile.seek(packagedFile['file_start_index']) #定位到起始位置
+      //           @externalDataFile.seek(packagedFile['file_start_index']) #定位到起始位置
           
-          victoriaFreshData=packagedFile.getFileContent(); //读取内容
-        }
-//         end # if is_duplicate # 是重复文件。
+      victoriaFreshData=packagedFile.getFileContent(); //读取内容
+    }
+    //         end # if is_duplicate # 是重复文件。
         
-//         pathToMake=pathPrefix + '/' + packagedFile['name'] #构造文件名
-        String pathToMake=pathPrefix + '/' + packagedFile.getFileName(); //构造文件名
+    //         pathToMake=pathPrefix + '/' + packagedFile['name'] #构造文件名
+    String pathToMake=pathPrefix + '/' + packagedFile.getFileName(); //构造文件名
         
-            Log.d(TAG, "writeFileExternalDataFile, data file name: " + pathToMake); // Debug.
+    Log.d(TAG, "writeFileExternalDataFile, data file name: " + pathToMake); // Debug.
 
         
-//         @fileIdPathMap[fileId]=pathToMake # 记录文件编号与路径之间的映射。
-        fileIdPathMap.put(fileId, pathToMake); // 记录文件编号与路径之间的映射。
+    //         @fileIdPathMap[fileId]=pathToMake # 记录文件编号与路径之间的映射。
+    fileIdPathMap.put(fileId, pathToMake); // 记录文件编号与路径之间的映射。
 
-//         begin
+    //         begin
 
-//           victoriaFreshDataFile=File.new(pathToMake , "wb", packagedFile['permission']) #数据文件。
-//           victoriaFreshDataFile.syswrite(victoriaFreshData) #写入文件。
-//           victoriaFreshDataFile.close #关闭文件。
+    //           victoriaFreshDataFile=File.new(pathToMake , "wb", packagedFile['permission']) #数据文件。
+    //           victoriaFreshDataFile.syswrite(victoriaFreshData) #写入文件。
+    //           victoriaFreshDataFile.close #关闭文件。
 
-          File victoriaFreshDataFile=new File(pathToMake ); //数据文件。
+    File victoriaFreshDataFile=new File(pathToMake ); //数据文件。
 
-//           victoriaFreshDataFile.syswrite(victoriaFreshData) #写入文件。
-try 
-{
+    //           victoriaFreshDataFile.syswrite(victoriaFreshData) #写入文件。
+    try // Write to file
+    {
+      if (victoriaFreshData != null) // It is a valid byte array
+      {
         FileUtils.writeByteArrayToFile(victoriaFreshDataFile, victoriaFreshData);
-}
-catch(IOException e)
-{
-  e.printStackTrace();
-}
-//           victoriaFreshDataFile.close #关闭文件。
+      } // if (victoriaFreshData != null) // It is a valid byte array
+    } // try // Write to file
+    catch(IOException e)
+    {
+      e.printStackTrace();
+    }
 
-//           FileUtils.touch pathToMake, :mtime => timeObject #设置修改时间
-//         Chen xin
-            victoriaFreshDataFile.setLastModified(timeObject);
+    victoriaFreshDataFile.setLastModified(timeObject);
 
-//           FileUtils.touch pathToMake, :mtime => timeObject #设置修改时间
+    int permissionNumber=packagedFile.getPermission(); //获取权限数字
 
-//           permissionNumber=packagedFile['permission'] #获取权限数字
-          int permissionNumber=packagedFile.getPermission(); //获取权限数字
-
-//           if (permissionNumber.nil?) #不带权限字段
-          if (permissionNumber==-1) //不带权限字段
-          {
-          }
-//           elsif #带权限字段
-          else //带权限字段
-          {
-//           Chen xin
-//             FilePath hudsonFilePath=new FilePath(victoriaFreshDataFile);
-//             try
-//             {
-//             hudsonFilePath.chmod(permissionNumber);
-//             }
-//             catch(IOException e)
-//             {
-//               e.printStackTrace();
-//             }
-//             catch (InterruptedException e)
-//             {
-//               e.printStackTrace();
-//             }
-//             File.chmod(permissionNumber, pathToMake) #设置权限
-          }
-//           end #if (permissionNumber.nil?) #不带权限字段
-//         rescue Errno::ENOENT # File not exist
-//           puts "Rescued by Errno::ENOENT statement. #{pathToMake}" #报告错误
-//         rescue Errno::EACCES # File permission error
-//             puts "Rescued by Errno::EACCES statement. #{pathToMake}" #报告错误
-//         end
-      }
-//     end #def writeFileExternalDataFile(pathPrefix, packagedFile) #写入文件
+    if (permissionNumber==-1) //不带权限字段
+    {
+    }
+    else //带权限字段
+    {
+    }
+  }
+  //     end #def writeFileExternalDataFile(pathPrefix, packagedFile) #写入文件
 
     /**
     * 创建符号链接

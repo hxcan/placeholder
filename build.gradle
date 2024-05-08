@@ -42,12 +42,12 @@ dependencies
 
 android
 {
-  compileSdkVersion 29
+  compileSdkVersion 33
 
   defaultConfig 
   {
     minSdkVersion 14
-    targetSdkVersion 29
+    targetSdkVersion 33
 //     versionCode 194
   } // defaultConfig 
 
