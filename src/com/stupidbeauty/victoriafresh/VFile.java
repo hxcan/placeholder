@@ -335,10 +335,10 @@ public class VFile
       if (vfsFileMessage!=null) //有对应的消息对象。
       {
         int indexStart=vfsFileMessage.get("file_start_index").AsInt32(); //获取起始位置的下标。
-        Log.d(TAG, CodePosition.newInstance().toString()+ ", going to skip bytes: "+ indexStart + ", this: " + this); // Debug.
+        // Log.d(TAG, CodePosition.newInstance().toString()+ ", going to skip bytes: "+ indexStart + ", this: " + this); // Debug.
 
         int fileLength=vfsFileMessage.get("file_length").AsInt32(); //获取文件长度。
-        Log.d(TAG, CodePosition.newInstance().toString()+ ", file length: "+ fileLength + ", file name: " + getFileName() + ", this: " + this); // Debug.
+        // Log.d(TAG, CodePosition.newInstance().toString()+ ", file length: "+ fileLength + ", file name: " + getFileName() + ", this: " + this); // Debug.
         // 05-25 11:03:11.806 17171 17171 D VFile   : com.stupidbeauty.victoriafresh.VFile readFileContent 141, going to skip bytes: 473185356, this: com.stupidbeauty.victoriafresh.VFile@d39853f
         // 05-25 11:03:11.806 17171 17171 D VFile   : com.stupidbeauty.victoriafresh.VFile readFileContent 144, file length: 87240855, file name: Grebe.20230521.171932.771.mp4.webm, this: com.stupidbeauty.victoriafresh.VFile@d39853f
 
