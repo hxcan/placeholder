@@ -139,7 +139,7 @@ public class VFile
       while(at>0) //还没完全跳过。
       {
         skipAmountThisTime=Math.min(maxSkipAmountOneTime, (int)(at)); // Do not skip too much.
-        Log.d(TAG, CodePosition.newInstance().toString()+ ", going to skip bytes: "+ skipAmountThisTime + ", this: " + this); // Debug.
+        // Log.d(TAG, CodePosition.newInstance().toString()+ ", going to skip bytes: "+ skipAmountThisTime + ", this: " + this); // Debug.
 
         try
         {
