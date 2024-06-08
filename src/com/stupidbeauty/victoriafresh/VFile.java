@@ -459,6 +459,7 @@ public class VFile
       
       actualSize=Math.min(size, (wholeFile.length-positionInt)); // 限制尺寸。
       
+      Log.d(TAG, CodePosition.newInstance().toString()+ ", position: "+ position + ", offset: " + offset + ", actual size: " + actualSize + ", whole length: " + wholeFile.length + ", buffer length: " + buffer.length + ", vfs message: " + vfsFileMessage); // Debug.
       System.arraycopy(wholeFile, positionInt, buffer, offset, actualSize); // 复制字节数组。
       
       return actualSize;

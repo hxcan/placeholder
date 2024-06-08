@@ -24,14 +24,8 @@ public class VictoriaMediaDataSource extends MediaDataSource
   {
   } // public abstract void close ()
 
-
-  public int readAt 
-  (
-    long position, 
-    byte[] buffer, 
-    int offset, 
-    int size
-  )
+  @Override
+  public int readAt ( long position, byte[] buffer, int offset, int size )
   {
     int result=0; // 读取个数。结果。
                 
@@ -39,7 +33,4 @@ public class VictoriaMediaDataSource extends MediaDataSource
                 
     return result;
   } // public abstract int readAt (long position, 
-//                 byte[] buffer, 
-//                 int offset, 
-//                 int size)
 }
