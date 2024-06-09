@@ -33,7 +33,7 @@ public class VFile
   private Context context; //!< 上下文。 Optional. May deal with totaaly external files.
   private File externalDataFile; //!< External data file.
   private final CBORObject vfsFileMessage; //!<此虚拟文件对应的虚拟文件消息对象。
-  private static final String TAG="VFile"; //!<输出调试信息时使用的标记。
+  private static final String TAG = "VFile"; //!<输出调试信息时使用的标记。
   private BufferedInputStream ins = null; //!< buffered 输入流。
   private boolean useMultiPartDataFile=false; //!< Whether we should use multipart data file.
 
@@ -453,14 +453,18 @@ public class VFile
     {
       int actualSize=size; // 实际尺寸。
       
-      byte[] wholeFile=readFileContent(vfsFileMessage); // 全部读取。
+      byte[] wholeFile = readFileContent(vfsFileMessage); // 全部读取。
       
       int positionInt=(int)(position); // 转换成整数型 。
       
-      actualSize=Math.min(size, (wholeFile.length-positionInt)); // 限制尺寸。
+      actualSize = Math.min(size, (wholeFile.length-positionInt)); // 限制尺寸。
       
       Log.d(TAG, CodePosition.newInstance().toString()+ ", position: "+ position + ", offset: " + offset + ", actual size: " + actualSize + ", whole length: " + wholeFile.length + ", buffer length: " + buffer.length + ", vfs message: " + vfsFileMessage); // Debug.
-      System.arraycopy(wholeFile, positionInt, buffer, offset, actualSize); // 复制字节数组。
+      
+      if (actualSize > 0) // Still readable
+      {
+        System.arraycopy(wholeFile, positionInt, buffer, offset, actualSize); // 复制字节数组。
+      } // if (actualSize > 0) // Still readable
       
       return actualSize;
     } // public int copyToByteArray(int size, long position, byte[] buffer, int offset)
