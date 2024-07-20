@@ -1,4 +1,4 @@
-package com.stupidbeauty.victoriafresh;
+package com.stupidbeauty.placeholder;
 
 import java.util.ArrayList;
 import java.util.List;
