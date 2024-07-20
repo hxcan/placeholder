@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="red">#ffff0000</color>
+    <color name="dialer_pad_button_f4f4f4">#F4F4F4</color>
+    <color name="emailRegisterColor">#666666</color>
+    <color name="custom_title_2d2d2d">#2D2D2D</color>
+    <color name="home_cell_color">#F5F5F5</color>
+    <color name="home_cell_value_color">#C5C5C5</color>
+    <color name="home_cell_key_color">#000000</color>
+    <color name="home_items_color">#565656</color>
+    <color name="tab_default_color">#252525</color>
+    <color name="tab_select_color">#5B5B5B</color>
+    <color name="tab_more_sim_card_info_color">#CCCCCC</color>
+    <color name="notification_background">#F3F1F0</color>
+    
+    <color name="dialr_pad_background">#C6C6C6</color>
+    <color name="light_black">#1a1c1d</color>
+    <color name="dimgray">#ff696969</color>
+    <color name="gray">#0099aa</color>
+    <color name="below">#1199aa</color>
+    <color name="blue">#ffffe888</color>
+     <color name="tablecell_select_color">#3ABCFF</color>    
+    <color name="progress_start">#3366CC</color>
+    <color name="progress_end">#00CC00</color>
+    <color name="dark_blue_text_color">#ff39549c</color>
+    <color name="light_white">#BEBEBE</color>
+    <color name="orange">#FF6600</color>
+    <color name="orange2">#FED12D</color>
+    <color name="add_page_bg_color">#EFEFEF</color>
+    
+    <color name="cat_color">#84858C</color>
+    <color name="cat_content_color">#2D78B8</color>
+    <color name="x2bgcolor">#e4e4e4</color>
+    
+
+</resources>

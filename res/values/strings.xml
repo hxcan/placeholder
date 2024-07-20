@@ -1,0 +1,121 @@
+<resources>
+  <string name="startDownload">Start download</string>
+  <string name="chinaPlus86">China +86</string>
+  <string name="pleaseChooseCountry">Please choose your country</string>
+  <string name="inputValidationCode">Enter the validation code</string>
+  <string name="sendValidationCode">Send the validation code</string>
+  <string name="app_name">Bilibili</string>
+  <string name="applicationIcon">Application Icon</string>
+  <string name="empty" translatable="false" />
+  <string name="backgroundImage">Background image</string>
+  <string name="darkBackgroundImage">Dark the background image</string>
+  <string name="hxLauncherSettings">HxLauncher Settings</string>
+  <string name="click">Click</string>
+  <string name="problemExplain">Need log in</string>
+  <string name="problemShortExplain">You need log in with your twitter account to download videos not accessible by anounymous users.</string>
+  <string name="tick">Tick</string>
+  <string name="image">Execute Javascript</string>
+  <string name="rateUs">Rate us</string>
+  <string name="setShutDownTime">Set shutdown time</string>
+  <string name="msg_intent_failed">Sorry, the requested application could not be launched.</string>
+  <string name="button_ok">OK</string>
+  <string name="ime_name">LanIme</string>
+  <string name="word_separators" translatable="false">\u0020.,;:!?\n()[]*&amp;@{}/&lt;&gt;_+=|&quot;</string>
+  <string name="label_go_key">Go</string>
+  <string name="label_next_key">Next</string>
+  <string name="label_send_key">Send</string>
+  <string name="label_subtype_generic">%s</string>
+  <string name="label_subtype_en_GB">English (GB)</string>
+  <string name="settings_name">Sample Soft Keyboard Settings</string>
+  <string name="language_selection_title">Input languages</string>
+  <string name="select_language">Select input languages</string>
+  <string name="msg_camera_framework_bug">Sorry, the Android camera encountered a problem. You may need to restart the device.</string>
+  <string name="barCodeImage">Barcode Image</string>
+  <string name="firstStepEnableLanIme">Auto run</string>
+  <string name="secondStepChooseLanIme">Step 2 Choose LanIme</string>
+  <string name="lanimedotcom" translatable="false">www.lanime.com</string>
+  <string name="applicationFrequency">Application frequency</string>
+  <string name="myAccount">My account</string>
+  <string name="freeCredit">Free speech credit:</string>
+  <string name="paidCredit">Paid speech credit</string>
+  <array name="durationArray">
+    <item>0s</item>
+    <item>30s</item>
+    <item>1m</item>
+    <item>10m</item>
+    <item>30m</item>
+    <item>1h</item>
+    <item>2h</item>
+    <item>∞</item>
+  </array>
+  <string name="emailAddress">User name</string>
+  <string name="shortcutAdded">Shortcut added</string>
+  <string name="prepareInstall">Prepare install</string>
+  <string name="name">Name</string>
+  <string name="country">Country</string>
+  <string name="phoneNumber">Phone number</string>
+  <string name="acceptLicence">Accept the license</string>
+  <string name="nextStep">Next step</string>
+  <string name="startVirtualSim">Start virtual sim</string>
+  <string name="stopVirtualSim">Stop virtual sim</string>
+  <string name="stutasStop">Stopped</string>
+  <string name="sendAtCommand">Send at command</string>
+  <string name="sendAtCommandButton">Send at command</string>
+  <string name="baiduRelay">Relay baidu</string>
+  <string name="loginSuccess">Login success</string>
+  <string name="gpsNotEnbldPlsEnblGpsOrWfLctn">GPS disabled, could not get geometry location, please enable the GPS locationing or WIFI locationing</string>
+  <string name="goAndEnableLocationService">Enable it</string>
+  <string name="noNotEnableLocationService">Do not enable it</string>
+  <string name="startingVirtualSim">Starting virtual sim……</string>
+  <string name="stopWeb">Stop</string>
+  <string name="refreshWeb">Refresh</string>
+  <string name="backWeb">Back</string>
+  <string name="forwardWeb">Forward</string>
+  <string name="working">Working……</string>
+  <string name="crashQ">Crash</string>
+  <string name="register">Register</string>
+  <string name="loginMethods">Email/Phone number/skyroamID</string>
+  <string name="enterPassword">Enter password</string>
+  <string name="emailRegister">Register with email</string>
+  <string name="about_page_info_title">About</string>
+  <string name="about_page_info_version">Version</string>
+  <string name="settings_view_title">Settings</string>
+  <string name="skyroamService">Service</string>
+  <string name="gpsCountry">Updating gps location……</string>
+  <string name="productTypeName">Product type:</string>
+  <string name="usedPrompt">Used:</string>
+  <string name="balance">Balance:</string>
+  <string name="youCanShareWlan">You can share your wlan</string>
+  <string name="queryq">Query</string>
+  <string name="charge">Charge</string>
+  <string name="about">About</string>
+  <string name="loginUsePhoneNumber">Login using phone number</string>
+  <string name="skyroam_version">3.1.4(Beta)</string>
+  <string name="puk_next">Next</string>
+  <string name="puk_enter_sim_puk">Enter SIM PUK</string>
+  <string name="about_info_products">Product Introduction</string>
+  <string name="about_info_coverage">Coverage</string>
+  <string name="about_info_instructions">User Guide</string>
+  <string name="about_online_service">Customer Service</string>
+  <string name="about_email_feedback">E-Mail Feedback</string>
+  <string name="payment_your_account">Account:</string>
+  <string name="payment_account_edit">Edit</string>
+  <string name="payment_account_input_tip">Please input your account: (Cellphone/Email/SN):</string>
+  <string name="payment_account_empty_error">Please connect to 3Gmate to get account information.</string>
+  <string name="payment_connecting_apple">Processing …</string>
+  <string name="wifi_setting_name_too_long">You inputted Wi-Fi name is too long to save, please Re input.</string>
+  <string name="please_connect_3gmate_wifi">Please connect to 3Gmate via Wi-Fi.</string>
+  <string name="please_waiting_connectting">Please wait …</string>
+  <string name="please_reset_admin">3Gmate Admin. right had been occupied by other devices.
+Please go to 3Gmate and click "Menu &gt; Advance &gt; Reset admin" to release current Admin. bundle.</string>
+  <string name="wifi_setting_name">Wi-Fi Name</string>
+  <string name="wifi_setting_password">Wi-Fi Password</string>
+  <string name="wifi_setting_confirm_password">Wi-Fi Password Confirmation</string>
+  <string name="wifi_setting_submit">Submit</string>
+  <string name="nameHint">Wi-Fi name can not be blank</string>
+  <string name="pswHint">Your password must be between 8 and 30 characters long. It can contain letters or numbers.</string>
+  <string name="restart_gmate_notic">After changed the name and password, you have to reboot 3Gmate to take effect.</string>
+  <string name="mSsidNullNotic">Blank Wi-Fi name not accepted</string>
+  <string name="mPswNullNotic">Are you sure password is blank?</string>
+  <string name="mPswVerifyNotic">Password should not less than eight digits ( numbers and capital and small letters accepted only ) .</string>
+</resources>
