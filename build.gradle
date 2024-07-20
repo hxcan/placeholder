@@ -32,6 +32,7 @@ allprojects
 } // allprojects 
 
 apply plugin: 'com.android.library'
+apply plugin: 'maven-publish'
 
 dependencies
 {
@@ -88,7 +89,34 @@ android
   {
     abortOnError false
   } // lintOptions 
+  
+  publishing
+  {
+    singleVariant('release')
+    {
+      withSourcesJar()
+    }
+  }
 } // android
+
+afterEvaluate 
+{
+  publishing 
+  {
+    publications
+    {
+      release(MavenPublication)
+      {
+        from components.release
+        groupId = 'com.github.hxcan'
+        artifactId = 'placeholder'
+        version = '2024.7.27'
+      }
+//         implementation 'com.github.hxcan:placeholder:2024.7.26'
+      
+    }
+  }
+}
 
 // # https://stackoverflow.com/questions/65380359/lomboks-access-to-jdk-compilers-internal-packages-incompatible-with-java-16
 
