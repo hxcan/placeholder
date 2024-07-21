@@ -1,7 +1,11 @@
 package com.stupidbeauty.hxlauncher;
 
 import com.stupidbeauty.placeholder.R;
-// import com.stupidbeauty.placeholder.R2;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.LauncherApps;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageItemInfo;
+import android.content.pm.PackageManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import android.util.Log;
@@ -435,7 +439,7 @@ public class RandomApplicationActivity extends Activity implements  LocalServerL
     /**
     * Smart launch
     */
-    private void launchSmart() 
+    private void launchSmart()
     {
       Log.d(TAG, CodePosition.newInstance().toString()+","+System.currentTimeMillis()); //Debug.
       loadLastPackageName(); // Load the package name launched last time.
@@ -450,7 +454,7 @@ public class RandomApplicationActivity extends Activity implements  LocalServerL
       Log.d(TAG, CodePosition.newInstance().toString()+","+System.currentTimeMillis()); //Debug.
       appendNewPackageScoreList(); // Append default score of new packages into the score list.
 
-      boolean launchResult=launchRandomApplication(); // 启动随机应用．
+      boolean launchResult = launchRandomApplication(); // 启动随机应用．
       
       if (launchResult) // Launch success
       {
@@ -668,35 +672,47 @@ public class RandomApplicationActivity extends Activity implements  LocalServerL
       int intentIndex=random.nextInt(intentAmount); //随机确定一个下标．
       Log.d(TAG, CodePosition.newInstance().toString()+","+System.currentTimeMillis()+", score target: " + intentIndex); //Debug.
       
-      String packageToLaunche=getPackageName(); // Package to launch.
+      String packageToLaunche = getTargetPackageName(); // Package to launch.
       
       Set<String> packageNameList=voicePackageNameMap.keySet(); // Get package name list.
       Log.d(TAG, CodePosition.newInstance().toString()+","+System.currentTimeMillis()+", package name list: " + packageNameList); //Debug.
       
-      for(String packageName: packageNameList) //  Check one by one
-      {
-        int score=voicePackageNameMap.get(packageName); // Get the score.
-        Log.d(TAG, CodePosition.newInstance().toString()+","+System.currentTimeMillis()+", package name : " + packageName + ", score: " + score); //Debug.
-        
-        currntScoreSum+=score; // Sum score.
-        
-        Log.d(TAG, CodePosition.newInstance().toString()+","+System.currentTimeMillis() + ", score current: " + currntScoreSum); //Debug.
-        if (currntScoreSum>=intentIndex) // Enough sum
-        {
-          lastPackageName=packageName; // Remember package name.
-          lastPackageTimeStamp=System.currentTimeMillis()/1000; // Remember last package launch time.
-          
-          packageToLaunche=packageName;
-        
-          break;
-        } // if (currntScoreSum>=intentIndex) // Enough sum
-      } // for(String packageName: packageNameList) //  Check one by one
       Log.d(TAG, CodePosition.newInstance().toString()+","+System.currentTimeMillis() + ", score current: " + currntScoreSum); //Debug.
 
       boolean result=launchApplicationByPackageName(packageToLaunche); //启动应用．
       
       return result;
     } //private void launchRandomApplication()
+    
+    /**
+    * Get the name of the target Package to launch.
+    */
+    private String getTargetPackageName()
+    {
+      String result = null;
+    
+      // 从应用的包信息中获取 meta-data 值
+      try 
+      {
+        ApplicationInfo appInfo = getPackageManager().getApplicationInfo(getPackageName(), PackageManager.GET_META_DATA);
+        String apiKey = appInfo.metaData.getString("com.stupidbeauty.placeholder.TARGET_PACKAGE");
+        
+        
+        result = apiKey;
+        
+        // String serverUrl = appInfo.metaData.getString("com.example.app.server_url");
+
+        // 使用获取到的值...
+        Log.d("ExampleApp", "API Key: " + apiKey);
+        // Log.d("ExampleApp", "Server URL: " + serverUrl);
+      }
+      catch (PackageManager.NameNotFoundException e) 
+      {
+        e.printStackTrace();
+      }
+      
+      return result;
+    } // private String getTargetPackageName()
     
     /**
      * 根据包名启动应用程序。
