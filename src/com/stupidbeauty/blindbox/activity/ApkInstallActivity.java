@@ -276,8 +276,6 @@ public class ApkInstallActivity extends Activity
       
       HxLauncherApplication application=HxLauncherApplication.getInstance(); //获取应用程序对象。
 
-      HashMap<String, Drawable> launchIconMap=application.getLaunchIconMap(); //获取启动图标缓存。
-
       Drawable applicationIcon=hxlauncherApplication.getApplicationIcon(packageName); // 获取图标。 local icon
       
       if (applicationIcon!=null) // The icon exists locally.

@@ -120,7 +120,7 @@ afterEvaluate
         from components.release
         groupId = 'com.github.hxcan'
         artifactId = 'placeholder'
-        version = '2024.7.36'
+        version = '2024.7.37'
       }
     }
   }

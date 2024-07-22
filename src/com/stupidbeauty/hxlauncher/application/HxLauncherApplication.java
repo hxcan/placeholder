@@ -261,17 +261,13 @@ public class HxLauncherApplication extends Application implements PackageNameUrl
      */
     private Drawable getSystemProvidedApplicationIcon(ArticleInfo articleInfo)
     {
-      Drawable result; //结果。
+      Drawable result = null; //结果。
 
       String packageName=articleInfo.getPackageName(); //获取应用程序包名。
 
       String activityName=articleInfo.getActivityName(); //获取活动名字
 
       HxLauncherApplication application=HxLauncherApplication.getInstance(); //获取应用程序对象。
-
-      HashMap<String,Drawable> launchIconMap=application.getLaunchIconMap(); //获取启动图标缓存。
-
-      result=launchIconMap.get(packageName + "/" + activityName); //获取缓存绘图对象。
 
       if (result==null) //未缓存。
       {
@@ -286,14 +282,6 @@ public class HxLauncherApplication extends Application implements PackageNameUrl
           ComponentName componentName=new ComponentName(packageName, activityName); //创建部件名字对象
 
           result=packageManager.getActivityIcon(componentName); //获取活动的图标
-
-          if (iconNoCachePackageNameSet.contains(packageName)) //不应当缓存
-          {
-          } //if (iconNoCachePackageNameSet.contains(packageName)) //不应当缓存
-          else //可以缓存
-          {
-            launchIconMap.put(packageName + "/" + activityName, result); //加入缓存。
-          } //else //可以缓存
         } //try //读取图标内容
         catch (PackageManager.NameNotFoundException e) //未找到该应用程序包。
         {
@@ -307,11 +295,6 @@ public class HxLauncherApplication extends Application implements PackageNameUrl
 
         return result;
     } //private Drawable getSystemProvidedApplicationIcon(ArticleInfo articleInfo)
-
-  public HashMap<String, Drawable> getLaunchIconMap()
-	{
-    return applicationListData.getLaunchIconMap();
-	}
 
 	public HashMap<String, String> getPackageItemAliasMap() 
 	{

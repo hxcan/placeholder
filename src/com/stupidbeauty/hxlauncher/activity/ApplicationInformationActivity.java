@@ -493,11 +493,12 @@ public class ApplicationInformationActivity extends Activity
 
       HxLauncherApplication application=HxLauncherApplication.getInstance(); //获取应用程序对象。
 
-      HashMap<String, Drawable> launchIconMap=application.getLaunchIconMap(); //获取启动图标缓存。
+      // HashMap<String, Drawable> launchIconMap=application.getLaunchIconMap(); //获取启动图标缓存。
 
-      Drawable result=launchIconMap.get(packagename + "/" + activityName); //获取缓存绘图对象。
+      Drawable result = null; //获取缓存绘图对象。
+      String iconUrl=application.getIconForPackage(packagename); // Get icon url.
 
-      Glide.with(application).load("").placeholder(result).into(applicationIconrightimageView2); //显示图标。
+      Glide.with(application).load(iconUrl).placeholder(result).into(applicationIconrightimageView2); //显示图标。
       Map<String, String> packageNameApplicationMap=application.getPackageNameApplicationNameMap(); // 获取包名与应用程序名字的映射
 
       applicationName=""; // 应用程序名字

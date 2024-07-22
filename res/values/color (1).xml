@@ -6,7 +6,7 @@
     <color name="emailRegisterColor">#666666</color>
     <color name="custom_title_2d2d2d">#2D2D2D</color>
     <color name="home_cell_color">#F5F5F5</color>
-    <color name="home_cell_value_color">#C5C5C5</color>
+
     <color name="home_cell_key_color">#000000</color>
     <color name="home_items_color">#565656</color>
     <color name="tab_default_color">#252525</color>
