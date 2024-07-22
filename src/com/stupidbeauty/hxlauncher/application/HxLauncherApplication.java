@@ -593,7 +593,12 @@ public class HxLauncherApplication extends Application implements PackageNameUrl
 	 */
 	public String getAvailableVersionName(String packageName)
 	{
-    String result= packageNameVersionNameMap.get(packageName); // 获取可用 版本号名字。
+    String result = null; // 获取可用 版本号名字。
+    
+    if (packageNameVersionNameMap!=null) // The map exists
+    {
+      result = packageNameVersionNameMap.get(packageName); // 获取可用 版本号名字。
+    } // if (packageNameVersionNameMap!=null) // The map exists
 
     return result;
 	} //public String getAvailableVersionName(String packageName)
