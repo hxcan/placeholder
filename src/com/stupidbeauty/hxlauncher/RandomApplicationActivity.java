@@ -33,7 +33,7 @@ import com.stupidbeauty.hxlauncher.listener.BuiltinFtpServerErrorListener;
 import android.os.Process;
 import com.stupidbeauty.builtinftp.BuiltinFtpServer;
 import com.stupidbeauty.farmingbookapp.PreferenceManagerUtil;
-import com.stupidbeauty.comgooglewidevinesoftwaredrmremover.app.LanImeUncaughtExceptionHandler;
+// import com.stupidbeauty.comgooglewidevinesoftwaredrmremover.app.LanImeUncaughtExceptionHandler;
 import java.util.Timer;
 import java.util.TimerTask;
 import android.Manifest;
@@ -90,7 +90,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.android.volley.RequestQueue;
 import com.huiti.msclearnfootball.AnswerAvailableEvent;
-import com.stupidbeauty.comgooglewidevinesoftwaredrmremover.app.LanImeUncaughtExceptionHandler;
+// import com.stupidbeauty.comgooglewidevinesoftwaredrmremover.app.LanImeUncaughtExceptionHandler;
 import com.stupidbeauty.hxlauncher.application.HxLauncherApplication;
 import com.stupidbeauty.hxlauncher.bean.HxShortcutInfo;
 import com.stupidbeauty.hxlauncher.datastore.LauncherIconType;
@@ -122,7 +122,7 @@ import com.stupidbeauty.hxlauncher.application.HxLauncherApplication;
 import com.stupidbeauty.hxlauncher.service.DownloadNotificationService; 
 import com.stupidbeauty.farmingbookapp.PreferenceManagerUtil;
 // import com.stupidbeauty.hxlauncher.rpc.VoiceCommandHitDataReporter;
-import com.stupidbeauty.comgooglewidevinesoftwaredrmremover.app.LanImeUncaughtExceptionHandler;
+// import com.stupidbeauty.comgooglewidevinesoftwaredrmremover.app.LanImeUncaughtExceptionHandler;
 import com.stupidbeauty.grebe.DownloadRequestor;
 import com.stupidbeauty.hxlauncher.bean.ApplicationNameInternationalizationData;
 import com.stupidbeauty.grebe.DownloadRequestorInterface;
@@ -421,8 +421,6 @@ public class RandomApplicationActivity extends Activity implements  LocalServerL
       setContentView(R.layout.launcher_activity);
 
       ButterKnife.bind(this); //视图注入。
-
-      initLocalLogUtil(); //初始化本地日志工具。
 
       createActiveUserReportManager(); // 创建管理器，活跃用户统计。陈欣
 
@@ -804,14 +802,6 @@ public class RandomApplicationActivity extends Activity implements  LocalServerL
       // mAdapter=new ApplicationInformationAdapter(this); //应用程序信息适配器。
       // mRecyclerView.setAdapter(mAdapter);
     } //private void bindAdapter()
-
-    /**
-     * 初始化本地日志工具。
-     */
-    private void initLocalLogUtil()
-    {
-      Thread.setDefaultUncaughtExceptionHandler(new LanImeUncaughtExceptionHandler()); //设置未捕获的异常处理器。
-    } //private void initLocalLogUtil()
 
     @Override
     /**

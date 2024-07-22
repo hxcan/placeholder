@@ -103,16 +103,10 @@ import com.google.gson.Gson;
 import com.google.protobuf.ByteString;
 import com.huiti.msclearnfootball.AnswerAvailableEvent;
 import com.huiti.msclearnfootball.VoiceRecognizeResult;
-// import com.iflytek.cloud.ErrorCode;
-// import com.iflytek.cloud.RecognizerListener;
-// import com.iflytek.cloud.RecognizerResult;
-// import com.iflytek.cloud.SpeechConstant;
-// import com.iflytek.cloud.SpeechError;
-// import com.iflytek.cloud.SpeechUtility;
 import com.stupidbeauty.builtinftp.BuiltinFtpServer;
 // import com.stupidbeauty.hxlauncher.service.DownloadNotificationService; 
 import com.stupidbeauty.farmingbookapp.PreferenceManagerUtil;
-import com.stupidbeauty.comgooglewidevinesoftwaredrmremover.app.LanImeUncaughtExceptionHandler;
+// import com.stupidbeauty.comgooglewidevinesoftwaredrmremover.app.LanImeUncaughtExceptionHandler;
 // import com.stupidbeauty.grebe.DownloadRequestor;
 import com.stupidbeauty.hxlauncher.application.HxLauncherApplication;
 // import com.stupidbeauty.hxlauncher.asynctask.VoiceAssociationDataSendTask;
@@ -367,14 +361,6 @@ public class ShutDownAt2100Logic
         } // else // Currently, installed.
       } // if (exceededShutDownTime) // Exceeded
     } // public void checkShutDownTime()
-
-    /**
-     * 初始化本地日志工具。
-     */
-    private void initLocalLogUtil()
-    {
-      Thread.setDefaultUncaughtExceptionHandler(new LanImeUncaughtExceptionHandler()); // 设置未捕获的异常处理器。
-    } //private void initLocalLogUtil()
 
     /**
      * 保存应用的启动计数数据。

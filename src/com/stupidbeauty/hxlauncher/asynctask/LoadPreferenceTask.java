@@ -2,7 +2,7 @@ package com.stupidbeauty.hxlauncher.asynctask;
 
 // import com.stupidbeauty.farmingbookapp.PreferenceManagerUtil;
 // import com.stupidbeauty.hxlauncher.asynctask.TranslateRequestSendTask;
-import com.stupidbeauty.comgooglewidevinesoftwaredrmremover.app.LanImeUncaughtExceptionHandler;
+// import com.stupidbeauty.comgooglewidevinesoftwaredrmremover.app.LanImeUncaughtExceptionHandler;
 // import com.stupidbeauty.grebe.DownloadRequestor;
 import com.stupidbeauty.hxlauncher.application.HxLauncherApplication;
 import android.content.Context;
@@ -27,7 +27,6 @@ import android.os.LocaleList;
 import android.os.PowerManager;
 import static android.content.pm.LauncherApps.ShortcutQuery.FLAG_MATCH_PINNED_BY_ANY_LAUNCHER;
 import static com.stupidbeauty.hxlauncher.Constants.Actions.LegacyInstallShortcut;
-// import static com.stupidbeauty.hxlauncher.Constants.LanImeAction.InputtingForPackage;
 import static com.stupidbeauty.hxlauncher.Constants.LanImeAction.PackageNameOfInputting;
 // import static com.stupidbeauty.hxlauncher.Constants.Numbers.IgnoreVoiceResultLength;
 import android.os.Process;

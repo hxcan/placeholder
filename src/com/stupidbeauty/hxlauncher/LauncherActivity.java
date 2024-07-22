@@ -75,14 +75,8 @@ import com.stupidbeauty.builtinftp.BuiltinFtpServer;
 import com.stupidbeauty.hxlauncher.service.DownloadNotificationService; 
 // import com.stupidbeauty.farmingbookapp.PreferenceManagerUtil;
 // import com.stupidbeauty.hxlauncher.asynctask.TranslateRequestSendTask;
-import com.stupidbeauty.comgooglewidevinesoftwaredrmremover.app.LanImeUncaughtExceptionHandler;
+// import com.stupidbeauty.comgooglewidevinesoftwaredrmremover.app.LanImeUncaughtExceptionHandler;
 import com.stupidbeauty.hxlauncher.application.HxLauncherApplication;
-// import com.stupidbeauty.hxlauncher.asynctask.VoiceAssociationDataSendTask;
-// import com.stupidbeauty.hxlauncher.asynctask.VoiceShortcutAssociationDataSendTask;
-// import com.stupidbeauty.hxlauncher.bean.ApplicationNameInternationalizationData;
-// import com.stupidbeauty.hxlauncher.bean.HxShortcutInfo;
-// import com.stupidbeauty.hxlauncher.callback.LauncherAppsCallback;
-// import com.stupidbeauty.hxlauncher.datastore.LauncherIconType;
 import com.stupidbeauty.hxlauncher.external.ShutDownAt2100Manager;
 import com.stupidbeauty.qtdocchinese.ArticleInfo;
 import java.io.File;
@@ -467,8 +461,6 @@ public class LauncherActivity extends Activity implements  LocalServerListLoadLi
 
       checkPermission(); //检查权限。
 
-      initLocalLogUtil(); //初始化本地日志工具。
-        
       scheduleStartBuiltinFtpServer(); // 计划启动内置 FTP 服务器。
 
       registerBroadcastReceiver(); //注册广播事件接收器。
@@ -715,14 +707,6 @@ public class LauncherActivity extends Activity implements  LocalServerListLoadLi
         RecyclerView.LayoutManager mLayoutManager = new StaggeredGridLayoutManager(columnsPerRow,StaggeredGridLayoutManager.VERTICAL); //布局管理器。
         mRecyclerView.setLayoutManager(mLayoutManager);
     }
-
-    /**
-     * 初始化本地日志工具。
-     */
-    private void initLocalLogUtil()
-    {
-        Thread.setDefaultUncaughtExceptionHandler(new LanImeUncaughtExceptionHandler()); //设置未捕获的异常处理器。
-    } //private void initLocalLogUtil()
 
     /**
      * 解除注册广播接收器。
