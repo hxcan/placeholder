@@ -89,7 +89,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.android.volley.RequestQueue;
 import com.huiti.msclearnfootball.AnswerAvailableEvent;
-// import com.stupidbeauty.comgooglewidevinesoftwaredrmremover.app.LanImeUncaughtExceptionHandler;
 import com.stupidbeauty.hxlauncher.application.HxLauncherApplication;
 import com.stupidbeauty.hxlauncher.bean.HxShortcutInfo;
 import com.stupidbeauty.hxlauncher.datastore.LauncherIconType;
@@ -106,7 +105,7 @@ import java.util.Set;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.stupidbeauty.hxlauncher.interfaces.LocalServerListLoadListener;
-import com.stupidbeauty.hxlauncher.interfaces.ShutDownAt2100LogicInterface;
+// import com.stupidbeauty.hxlauncher.interfaces.ShutDownAt2100LogicInterface;
 // import com.stupidbeauty.hxlauncher.logic.ShutDownAt2100Logic;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -124,9 +123,8 @@ import com.stupidbeauty.grebe.DownloadRequestor;
 import com.stupidbeauty.hxlauncher.bean.ApplicationNameInternationalizationData;
 import com.stupidbeauty.grebe.DownloadRequestorInterface;
 
-public class RandomApplicationActivity extends Activity implements  LocalServerListLoadListener , ShutDownAt2100LogicInterface, DownloadRequestorInterface
+public class RandomApplicationActivity extends Activity implements  LocalServerListLoadListener, DownloadRequestorInterface
 {
-  // private ShutDownAt2100Logic shutDownAt2100Logic= null; //!< Logic with shutdownat2100.
   private int scoreSum; //!< The score sum of installed packages.
   private ArrayList<String> installedPackageNameList; //!< Installed package name list.
   private static final int DefaultScore=10; //!< Default score.
@@ -262,37 +260,6 @@ public class RandomApplicationActivity extends Activity implements  LocalServerL
       } // else // 该应用尚未安装。
     } //private void requestDownloadPackage(String internationalizationName)
 
-    @Override
-    /**
-    * Request to download and install package apk.
-    */
-    public boolean requestDownloadApk(String foundPackageName) 
-    {
-      boolean foundUrl=false;
-      HxLauncherApplication application=HxLauncherApplication.getInstance(); //获取应用程序对象。
-
-      Map<String,String> internationalizationData=application.getPackageNameUrlMap(); //获取国际化数据对象。
-      Map<String, String> packageNameApplicationMap=application.getPackageNameApplicationNameMap(); //获取包名与应用程序名字的映射
-
-      if (internationalizationData!=null) //数据存在。
-      {
-        String internationalizationName=internationalizationData.get(foundPackageName); //获取国际化名字。
-
-        Log.d(TAG,"tryDownloadApkAssociatedToPackage, package url: "+ internationalizationName+ ", package name: " + foundPackageName); //Debug.
-
-        if (internationalizationName!=null) //有国际化名字。
-        {
-          foundUrl=true;
-
-          String applicationName=packageNameApplicationMap.get(foundPackageName); //应用程序名字
-
-          requestDownloadPackage(internationalizationName, applicationName, foundPackageName); //下载应用程序安装包。
-        } //if (internationalizationName!=null) //有国际化名字。
-      } //if (internationalizationData!=null) //数据存在。
-
-      return foundUrl;
-    } // public boolean requestDownloadApk(String shutDownAt2100PackageName)
-
   /**
   * Check whether one package is installed.
   */
@@ -315,17 +282,6 @@ public class RandomApplicationActivity extends Activity implements  LocalServerL
 
     return result;
   } // private bool checkInstalled(String internationalizationName)
-
-  @Override
-  /**
-    * Get context
-    */
-  public Context getContext()
-  {
-    Context result=this; //结果
-
-    return result;
-  } //private String findVoiceTargetMapPackageName(HashMap<String, PackageItemInfo> voicePackageNameMap)
 
   private boolean sentVoiceShortcutAssociationData=false; //!<是否已经成功发送语音指令关联快捷方式的数据。
   private static final int PERMISSIONS_REQUEST = 1;
