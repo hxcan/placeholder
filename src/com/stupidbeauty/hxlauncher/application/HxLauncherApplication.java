@@ -1,5 +1,10 @@
 package com.stupidbeauty.hxlauncher.application;
 
+import com.stupidbeauty.hxlauncher.asynctask.LoadVoicePackageUrlMapTask;
+// import com.stupidbeauty.hxlauncher.asynctask.LoadApplicationLockSetTask;
+// import com.stupidbeauty.hxlauncher.asynctask.LoadApplicationNameInternationalFileTask;
+// import com.stupidbeauty.hxlauncher.asynctask.LoadPackageItemAliasMapTask;
+import com.google.gson.Gson;
 import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Context;
@@ -825,37 +830,48 @@ public class HxLauncherApplication extends Application implements PackageNameUrl
 	 */
 	public void onCreate() 
 	{
-      super.onCreate(); //创建超类。
+    super.onCreate(); //创建超类。
 
-      mInstance = this;
+    mInstance = this;
 
-      mContext = getApplicationContext(); //获取应用程序上下文。
+    mContext = getApplicationContext(); //获取应用程序上下文。
 
-      //启用严格模式：
-      StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
-        .detectDiskReads()
-        .detectDiskWrites()
-        .detectNetwork()
-        .penaltyLog()
-        .build()
-      );
+    //启用严格模式：
+    StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+      .detectDiskReads()
+      .detectDiskWrites()
+      .detectNetwork()
+      .penaltyLog()
+      .build()
+    );
 
-      StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
-        .detectLeakedSqlLiteObjects()
-        .detectLeakedClosableObjects()
-        .penaltyLog()
-        .penaltyDeath()
-        .build()
-      );
+    StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+      .detectLeakedSqlLiteObjects()
+      .detectLeakedClosableObjects()
+      .penaltyLog()
+      .penaltyDeath()
+      .build()
+    );
 
-      loadPackageItemLaunchCoolDownMap(); //载入包条目的启动冷却时间数据。
+		loadVoicePackageUrlMap(); //载入语音识别结果与包下载地址之间的映射。
+    loadPackageItemLaunchCoolDownMap(); //载入包条目的启动冷却时间数据。
 
-      initializeSeekBarValueCoolDownTimeMap(); //初始化映射。
+    initializeSeekBarValueCoolDownTimeMap(); //初始化映射。
 
-      scheduleStartBuiltinFtpServer(); // 计划启动内置 FTP 服务器。
+    scheduleStartBuiltinFtpServer(); // 计划启动内置 FTP 服务器。
       
-      startCheckUpgrade(); // Start check upgrade.
+    startCheckUpgrade(); // Start check upgrade.
 	} //public void onCreate()
+
+	/**
+	 * 载入语音识别结果与包下载地址之间的映射。
+	 */
+	private void loadVoicePackageUrlMap()
+	{
+    LoadVoicePackageUrlMapTask translateRequestSendTask =new LoadVoicePackageUrlMapTask(); //创建异步任务。
+
+    translateRequestSendTask.execute(this); //执行任务。
+	} //private void loadVoicePackageUrlMap()
 
     /**
     * 选择随机端口。

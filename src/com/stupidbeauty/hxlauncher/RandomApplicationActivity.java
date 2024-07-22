@@ -20,7 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.KeyEvent;
-import com.stupidbeauty.hxlauncher.logic.ShutDownAt2100Logic;
+// import com.stupidbeauty.hxlauncher.logic.ShutDownAt2100Logic;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -33,7 +33,6 @@ import com.stupidbeauty.hxlauncher.listener.BuiltinFtpServerErrorListener;
 import android.os.Process;
 import com.stupidbeauty.builtinftp.BuiltinFtpServer;
 import com.stupidbeauty.farmingbookapp.PreferenceManagerUtil;
-// import com.stupidbeauty.comgooglewidevinesoftwaredrmremover.app.LanImeUncaughtExceptionHandler;
 import java.util.Timer;
 import java.util.TimerTask;
 import android.Manifest;
@@ -108,7 +107,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.stupidbeauty.hxlauncher.interfaces.LocalServerListLoadListener;
 import com.stupidbeauty.hxlauncher.interfaces.ShutDownAt2100LogicInterface;
-import com.stupidbeauty.hxlauncher.logic.ShutDownAt2100Logic;
+// import com.stupidbeauty.hxlauncher.logic.ShutDownAt2100Logic;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -121,15 +120,13 @@ import com.stupidbeauty.grebe.DownloadRequestor;
 import com.stupidbeauty.hxlauncher.application.HxLauncherApplication;
 import com.stupidbeauty.hxlauncher.service.DownloadNotificationService; 
 import com.stupidbeauty.farmingbookapp.PreferenceManagerUtil;
-// import com.stupidbeauty.hxlauncher.rpc.VoiceCommandHitDataReporter;
-// import com.stupidbeauty.comgooglewidevinesoftwaredrmremover.app.LanImeUncaughtExceptionHandler;
 import com.stupidbeauty.grebe.DownloadRequestor;
 import com.stupidbeauty.hxlauncher.bean.ApplicationNameInternationalizationData;
 import com.stupidbeauty.grebe.DownloadRequestorInterface;
 
 public class RandomApplicationActivity extends Activity implements  LocalServerListLoadListener , ShutDownAt2100LogicInterface, DownloadRequestorInterface
 {
-  private ShutDownAt2100Logic shutDownAt2100Logic= null; //!< Logic with shutdownat2100.
+  // private ShutDownAt2100Logic shutDownAt2100Logic= null; //!< Logic with shutdownat2100.
   private int scoreSum; //!< The score sum of installed packages.
   private ArrayList<String> installedPackageNameList; //!< Installed package name list.
   private static final int DefaultScore=10; //!< Default score.
@@ -429,8 +426,6 @@ public class RandomApplicationActivity extends Activity implements  LocalServerL
       launchSmart(); // Smart launch
       
       buildActivityLabelPackageItemInfoMap(); //构造映射，活动的标签，与活动的包条目信息之间的映射。用于语音识别之后快速命中活动。
-      
-      shutDownAt2100Logic=new ShutDownAt2100Logic(this);
     } //protected void onCreate(Bundle savedInstanceState)
  
     @Override
@@ -438,8 +433,6 @@ public class RandomApplicationActivity extends Activity implements  LocalServerL
     {
       Log.d(TAG, "onNewIntent"); //Debug.
       super.onNewIntent(intent);
-      //   setIntent(intent);//must store the new intent unless getIntent() will return the old one
-      //   processExtraData();
 
       launchSmart(); // Smart launch
     }
@@ -794,10 +787,6 @@ public class RandomApplicationActivity extends Activity implements  LocalServerL
       int columnsPerRow= getResources().getInteger(  R.integer.columnsPerRow); //每行的列数。
 
       RecyclerView.LayoutManager mLayoutManager = new StaggeredGridLayoutManager(columnsPerRow,StaggeredGridLayoutManager.VERTICAL); //布局管理器。
-      // mRecyclerView.setLayoutManager(mLayoutManager);
-
-      // mAdapter=new ApplicationInformationAdapter(this); //应用程序信息适配器。
-      // mRecyclerView.setAdapter(mAdapter);
     } //private void bindAdapter()
 
     @Override
@@ -809,8 +798,6 @@ public class RandomApplicationActivity extends Activity implements  LocalServerL
       super.onResume(); //超类继续工作。
 
       activityHasBeenResumed=true; //处于正常运行状态。
-      
-      shutDownAt2100Logic.checkShutDownTime(); // Check shut down time.
     } //protected void onResume()
 
     /**
