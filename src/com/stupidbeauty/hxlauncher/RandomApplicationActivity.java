@@ -497,8 +497,6 @@ public class RandomApplicationActivity extends Activity implements  LocalServerL
 
       HxLauncherApplication hxLauncherApplication=HxLauncherApplication.getInstance();
 
-      TextView itemApplicationIconText=(TextView)itemView.findViewById(R.id.rightTextoperationMethodactTitletextView2);
-
       startActivity(launchIntent); //启动活动。
     } //public void showApplicationInformation(View itemView, String packageName)
 
@@ -509,7 +507,6 @@ public class RandomApplicationActivity extends Activity implements  LocalServerL
     {
       for(String packageName: installedPackageNameList) // Check package one by one
       {
-//         checn inx
         if (voicePackageNameMap.containsKey(packageName)) // Contains the package name.
         {
         } // if (voicePackageNameMap.contains(packageName)) // Contains the package name.
