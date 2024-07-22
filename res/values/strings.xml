@@ -118,4 +118,23 @@ Please go to 3Gmate and click "Menu &gt; Advance &gt; Reset admin" to release cu
   <string name="mSsidNullNotic">Blank Wi-Fi name not accepted</string>
   <string name="mPswNullNotic">Are you sure password is blank?</string>
   <string name="mPswVerifyNotic">Password should not less than eight digits ( numbers and capital and small letters accepted only ) .</string>
+  <string name="querying">Querying ...</string>
+  <string name="downloadFailed">Download failed</string>
+  <string name="copyingTextAndOpenBlindBox">Copy this text and then open BlindBox</string>
+  <string name="slash">/</string>
+  <string name="startCheckUpgrade">Start check upgrade</string>
+  <string name="doNotGrantPermissionEasily">Do not grant any permission to any application easily. The core functionality of most of the applications can work correctly without requesting any permissions.</string>
+  <string name="blindBoxCanBeDownloadedAtPrompt">ThreeUpgrade can be downloaded at: </string>
+  <string name="sharing_application">You can upgrade this application with ThreeUpgrade: </string>
+  <string name="blindBoxCanBeDownloadedAt">ThreeUpgrade can be downloaded at: https://stupidbeauty.com/ArticleImages/1920/threeupgrade.12894.2023.4.12.e.apk</string>
+  <string name="done">Done</string>
+  <string name="installing">Installing</string>
+  <string name="installFinished">Install finished</string>
+  <string name="clickTheIconToGetRandomApplication">Click icon to get a blind box</string>
+  <string name="changeApplication">Change Application</string>
+  <string name="installFailed">Install failed</string>
+  <string name="mb">MB</string>
+  <string name="openApplication">Open application</string>
+
+
 </resources>

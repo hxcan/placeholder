@@ -1,5 +1,15 @@
 package com.stupidbeauty.hxlauncher;
 
+import com.stupidbeauty.hxlauncher.activity.ApplicationInformationActivity;
+// import com.stupidbeauty.hxlauncher.adapter.FlipAnimationAdapter;
+
+import com.android.volley.RequestQueue;
+import com.google.gson.Gson;
+import static android.content.Intent.EXTRA_COMPONENT_NAME;
+import static android.content.Intent.EXTRA_PACKAGE_NAME;
+import static android.content.pm.LauncherApps.ShortcutQuery.FLAG_MATCH_DYNAMIC;
+import static android.content.pm.LauncherApps.ShortcutQuery.FLAG_MATCH_MANIFEST;
+import static android.content.pm.LauncherApps.ShortcutQuery.FLAG_MATCH_PINNED;
 import com.stupidbeauty.placeholder.R;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.LauncherApps;
@@ -46,7 +56,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import com.stupidbeauty.hxlauncher.asynctask.VoicePackageNameMapSaveTask;
 import com.stupidbeauty.farmingbookapp.PreferenceManagerUtil;
-import com.stupidbeauty.hxlauncher.AndroidApplicationMessage;
+// import com.stupidbeauty.hxlauncher.AndroidApplicationMessage;
 // import com.stupidbeauty.hxlauncher.BuildConfig;
 import com.upokecenter.cbor.CBORException;
 import com.android.volley.RequestQueue;
@@ -462,16 +472,38 @@ public class RandomApplicationActivity extends Activity implements  LocalServerL
         saveLastPackageName(); // Save last package name launched.
 
         savePackageScoreList(); // Save package score list.
-
       } // if (launchResult) // Launch success
       else // launch failed. usually, that package got removed
       {
-        launchSmart(); // Try to launch again.
+        // launchSmart(); // Try to launch again.
+        // Chen xin.
+        String targetPackageName = getTargetPackageName(); // Get the target package name.
+        
+        showApplicationInformation(null, targetPackageName, null); // Show the application information activity.
       } // else // launch failed. usually, that package got removed
 
       Log.d(TAG, CodePosition.newInstance().toString()+","+System.currentTimeMillis()); //Debug.
     } // private void launchSmart()
     
+    /**
+     * 显示应用程序信息活动
+     * @param itemView 视图对象
+     * @param packageName 包名
+     */
+    public void showApplicationInformation(View itemView, String packageName, String activityName)
+    {
+      Intent launchIntent=new Intent(this, ApplicationInformationActivity.class); //启动意图。
+
+      launchIntent.putExtra(EXTRA_PACKAGE_NAME, packageName);
+      launchIntent.putExtra(EXTRA_COMPONENT_NAME, activityName); // 设置部件名字。
+
+      HxLauncherApplication hxLauncherApplication=HxLauncherApplication.getInstance();
+
+      TextView itemApplicationIconText=(TextView)itemView.findViewById(R.id.rightTextoperationMethodactTitletextView2);
+
+      startActivity(launchIntent); //启动活动。
+    } //public void showApplicationInformation(View itemView, String packageName)
+
     /**
     * Append default score of new packages into the score list.
     */
@@ -679,7 +711,7 @@ public class RandomApplicationActivity extends Activity implements  LocalServerL
       
       Log.d(TAG, CodePosition.newInstance().toString()+","+System.currentTimeMillis() + ", score current: " + currntScoreSum); //Debug.
 
-      boolean result=launchApplicationByPackageName(packageToLaunche); //启动应用．
+      boolean result = launchApplicationByPackageName(packageToLaunche); //启动应用．
       
       return result;
     } //private void launchRandomApplication()

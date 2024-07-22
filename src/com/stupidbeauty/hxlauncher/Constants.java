@@ -10,6 +10,26 @@ import java.io.File;
  */
 public class Constants 
 {
+  public final class InstallerType
+  {
+    public static final String XAPK="XAPK"; //!< XAPK installer type.
+  }
+
+  /**
+    * Operations。
+    * @author root 蔡火胜。
+    *
+    */
+  public final class VersionNameType
+  {
+    public static final String TestShutDown = "com.stupidbeauty.shutdownat2100.testShutDown"; //!<测试关机。
+    public static final String ReportMessage="com.stupidbeauty.shutdownat2100.reportMessage"; //!<报告消息到来。
+    public static final String PinShortcut="com.stupidbeauty.hxlauncher.pinShortcut"; //!<钉住快捷方式。
+    public static final String ToggleBuiltinShortcuts="com.stupidbeauty.hxlauncher.toggleBuiltinShortcutss"; //!<切换是否显示内置快捷方式。
+    public static final String Available="com.stupidbeauty.threeupgrade.versionnametype.available"; //!< Verion name type, available.
+    public static final String Existing="com.stupidbeauty.threeupgrade.versionnametype.existing"; //!<  Verion name type, existing.
+  } //public final class FAQLangKey
+
   /**
   * 文件路径。
   * @author root 蔡火胜。

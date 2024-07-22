@@ -52,4 +52,19 @@
   <string name="charge">充值</string>
   <string name="about">关于</string>
   <string name="loginUsePhoneNumber">使用手机号登录</string>
+  <string name="querying">查询中……</string>
+  <string name="startCheckUpgrade">开始检查更新</string>
+  <string name="blindBoxCanBeDownloadedAtPrompt">三更可在此下载： </string>
+  <string name="downloadFailed">下载失败</string>
+  <string name="installing">安装中</string>
+  <string name="blindBoxCanBeDownloadedAt">三更可在此下载： https://stupidbeauty.com/ArticleImages/1920/threeupgrade.12894.2023.4.12.e.apk</string>
+  <string name="done">完成</string>
+  <string name="copyingTextAndOpenBlindBox">复制文字内容再打开盲盒</string>
+  <string name="openApplication">打开应用</string>
+  <string name="applicationAlias">应用别名</string>
+  <string name="builtinShortcuts">内置快捷方式</string>
+  <string name="installFinished">安装完成</string>
+
+
+
 </resources>

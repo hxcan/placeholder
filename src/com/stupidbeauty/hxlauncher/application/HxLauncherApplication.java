@@ -1,10 +1,37 @@
 package com.stupidbeauty.hxlauncher.application;
 
-import com.stupidbeauty.hxlauncher.bean.ApplicationListData;
-// import com.stupidbeauty.victoriafresh.VFile;
+import android.content.ActivityNotFoundException;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import com.stupidbeauty.victoriafresh.VFile;
 import org.apache.commons.io.FileUtils;
-// import com.stupidbeauty.hxlauncher.bean.ApplicationLockInformation;
-
+import com.stupidbeauty.qtdocchinese.ArticleInfo;
+import java.io.ByteArrayInputStream;
+import java.util.ArrayList;
+import java.util.HashSet;
+import com.stupidbeauty.blindbox.asynctask.StorageCleanerTask;
+import com.stupidbeauty.hxlauncher.Constants;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.ComponentName;
+import com.stupidbeauty.hxlauncher.PackageItemLaunchCoolDownMapItemMessageProtos;
+import com.stupidbeauty.hxlauncher.PackageItemLaunchCoolDownMapMessageProtos;
+import com.stupidbeauty.hxlauncher.bean.ApplicationListData;
+import java.util.HashSet;
+import com.stupidbeauty.blindbox.asynctask.StorageCleanerTask;
+import io.github.g00fy2.versioncompare.Version;
+import com.stupidbeauty.hxlauncher.interfaces.LocalServerListLoadListener;
+import org.apache.commons.collections4.MultiMap;
+import org.apache.commons.io.FileUtils;
+import com.stupidbeauty.upgrademanager.logic.VersionComparator;
+import io.github.g00fy2.versioncompare.Version;
+import com.stupidbeauty.hxlauncher.interfaces.LocalServerListLoadListener;
+import org.apache.commons.collections4.MultiMap;
+import org.apache.commons.collections4.map.MultiValueMap;
 import com.stupidbeauty.upgrademanager.UpgradeManager;
 import com.stupidbeauty.hxlauncher.listener.BuiltinFtpServerErrorListener; 
 import android.os.Process;
@@ -83,6 +110,326 @@ public class HxLauncherApplication extends Application implements PackageNameUrl
   private HashMap<String, String> packageNameInformationUrlMap; //!< 包名与信息页面地址之间的映射关系。
   private HashMap<String, List<String> > packageNameExtraPackageNamesMap; //!< Map of packge name to extra package names.
   private HashMap<String, String> packageNameInstallerTypeMap; //!< Map of package name to installer type.
+	private HashMap<String, String> packageItemAliasMap=null; //!<映射。包条目信息字符串与别名之间的映射。
+  private String installingPackageName = null; //!< The currently instaling package name.
+  private HashSet<String> iconNoCachePackageNameSet = new HashSet<>(); //!<不应当缓存其图标的软件包名集合
+
+  /**
+    * 获取图标。
+    * @param articleInfo 应用程序信息。
+    * @return 应用程序的启动图标。
+    */
+  public Drawable getApplicationIcon(String packageName)
+  {
+    ArticleInfo articleInfo=null; //创建应用程序信息对象。
+    PackageManager packageManager=getPackageManager(); //获取软件包管理器。
+
+    Intent launchIntent= packageManager.getLaunchIntentForPackage(packageName); //获取当前软件包的启动意图。
+
+    if (launchIntent!=null) //意图存在。
+    {
+      try //尝试启动活动，并且捕获可能的异常。
+      {
+        ArticleInfo currentApplication=new ArticleInfo(); //创建应用程序信息对象。
+
+        String activityName=launchIntent.getComponent().getClassName(); //获取活动的类名。
+
+        currentApplication.setPackageName(packageName); //设置包名。
+        currentApplication.setActivityName(activityName); // 设置活动名字。
+
+        articleInfo=currentApplication;
+      } //try //尝试启动活动，并且捕获可能的异常。
+      catch (ActivityNotFoundException exception)
+      {
+        exception.printStackTrace(); //报告错误。
+      } //catch (ActivityNotFoundException exception)
+    } //if (launchIntent!=null) //意图存在。
+  
+    Drawable result; //结果。
+
+    result=getBuiltinApplicationIcon(articleInfo); //尝试载入内置的应用程序图标。
+
+    if (result==null) //没有内置的应用程序图标。
+    {
+      result=getSystemProvidedApplicationIcon(articleInfo); //获取由系统提供的应用程序图标。
+    } //if (result==null) //没有内置的应用程序图标。
+
+    return result;
+  } //private Drawable getApplicationIcon(ArticleInfo articleInfo)
+
+	/**
+	* Start the storage cleaner.
+	*/
+	public void startStorageCleaner() 
+	{
+    StorageCleanerTask translateRequestSendTask =new StorageCleanerTask(); // 创建异步任务。
+
+    translateRequestSendTask.execute(this); // 执行任务。
+	} // private void startStorageCleaner()
+
+  /**
+  * The set of package name to ignore new versions.
+  */
+  public HashSet<String> getIconNoCachePackageNameSet()
+  {
+    return iconNoCachePackageNameSet;
+  } // public HashSet<String> getIconNoCachePackageNameSet()
+
+  public void deleteApkFile(String packageName)
+  {
+    HashMap<String, String> apkFilePathMap = getApkFilePathMap(); // 获取 APK 安装包路径映射。
+
+    String apkFilePath=apkFilePathMap.get(packageName); // 获取安装包文件路径。
+
+    // 陈欣
+    File targetApkFile=new File(apkFilePath); // Find the file.
+    targetApkFile.delete(); // Delete the cache file.
+    
+    // forgetApkFilePath(); // Forget apk file path.
+  } // private void deleteApkFile(String apkFilePath)
+	
+  /**
+  * Get the installing package name.
+  */
+  public String getInstallingPackageName()
+  {
+    return installingPackageName;
+  } // public String getInstallingPackageName()
+  
+  /**
+  * SEt the installing package name.
+  */
+  public void setInstallingPackageName(String packageName)
+  {
+    installingPackageName = packageName; // Remember the installing package name.
+  } // public void setInstallingPackageName(String packageName)
+  
+    /**
+     * 尝试载入内置的应用程序图标。
+     * @param articleInfo 应用程序信息。
+     * @return 内置的应用程序图标。
+     */
+    private  Drawable getBuiltinApplicationIcon(ArticleInfo articleInfo)
+    {
+      Drawable result=null; //结果。
+
+      if (articleInfo!=null) // The packag einformation exists
+      {
+        String packageName = articleInfo.getPackageName(); //获取包名。
+        String qrcFileName=packageName; //文件名。
+        String fullQrcFileName=":/ApplicationIcon/"+qrcFileName; //构造完整的qrc文件名。
+
+        VFile qrcHtmlFile=new VFile(this, fullQrcFileName); // qrc网页文件。
+
+        if (qrcHtmlFile.exists()) //文件存在。
+        {
+          byte[] photoBytes= qrcHtmlFile.getFileContent(); //将照片文件内容全部读取。
+
+          ByteArrayInputStream byteArrayInputStream=new ByteArrayInputStream(photoBytes);
+
+          result= Drawable.createFromStream(byteArrayInputStream, "JPEG"); //从文件中解码。
+        } //if (qrcHtmlFile.exists()) //文件存在。
+
+      } // if (articleInfo!=null) // The packag einformation exists
+      
+      return result;
+    } //private  Drawable getBuiltinApplicationIcon(ArticleInfo articleInfo)
+
+    /**
+    * 获取图标。
+    * @param articleInfo 应用程序信息。
+    * @return 应用程序的启动图标。
+    */
+  public Drawable getApplicationIcon(ArticleInfo articleInfo)
+  {
+    Drawable result; //结果。
+
+    result=getBuiltinApplicationIcon(articleInfo); //尝试载入内置的应用程序图标。
+
+    if (result==null) //没有内置的应用程序图标。
+    {
+        result=getSystemProvidedApplicationIcon(articleInfo); //获取由系统提供的应用程序图标。
+    } //if (result==null) //没有内置的应用程序图标。
+
+    return result;
+  } //private Drawable getApplicationIcon(ArticleInfo articleInfo)
+
+    /**
+     * 获取由系统提供的应用程序图标。
+     * @param articleInfo 应用程序信息。
+     * @return 由系统提供的应用程序图标。
+     */
+    private Drawable getSystemProvidedApplicationIcon(ArticleInfo articleInfo)
+    {
+      Drawable result; //结果。
+
+      String packageName=articleInfo.getPackageName(); //获取应用程序包名。
+
+      String activityName=articleInfo.getActivityName(); //获取活动名字
+
+      HxLauncherApplication application=HxLauncherApplication.getInstance(); //获取应用程序对象。
+
+      HashMap<String,Drawable> launchIconMap=application.getLaunchIconMap(); //获取启动图标缓存。
+
+      result=launchIconMap.get(packageName + "/" + activityName); //获取缓存绘图对象。
+
+      if (result==null) //未缓存。
+      {
+        PackageManager packageManager=getPackageManager(); //获取软件包管理器。
+
+        try //读取图标内容
+        {
+          PackageInfo packageInfo=packageManager.getPackageInfo(packageName,0); //获取应用程序信息。
+
+          ApplicationInfo applicationInfo=packageInfo.applicationInfo; //获取应用程序信息。
+
+          ComponentName componentName=new ComponentName(packageName, activityName); //创建部件名字对象
+
+          result=packageManager.getActivityIcon(componentName); //获取活动的图标
+
+          if (iconNoCachePackageNameSet.contains(packageName)) //不应当缓存
+          {
+          } //if (iconNoCachePackageNameSet.contains(packageName)) //不应当缓存
+          else //可以缓存
+          {
+            launchIconMap.put(packageName + "/" + activityName, result); //加入缓存。
+          } //else //可以缓存
+        } //try //读取图标内容
+        catch (PackageManager.NameNotFoundException e) //未找到该应用程序包。
+        {
+          e.printStackTrace(); //报告错误。
+        } //catch (PackageManager.NameNotFoundException e) //未找到该应用程序包。
+            catch (OutOfMemoryError outOfMemoryError)
+            {
+                outOfMemoryError.printStackTrace(); //报告错误。
+            } //catch (OutOfMemoryError outOfMemoryError)
+        } //if (result==null) //未缓存。
+
+        return result;
+    } //private Drawable getSystemProvidedApplicationIcon(ArticleInfo articleInfo)
+
+  public HashMap<String, Drawable> getLaunchIconMap()
+	{
+    return applicationListData.getLaunchIconMap();
+	}
+
+	public HashMap<String, String> getPackageItemAliasMap() 
+	{
+		return packageItemAliasMap;
+	}
+	
+	/**
+	 * 将对象加入到本地服务器载入完毕的回调列表中。
+	 * @param localServerListLoadListener 要加入的回调对象。
+	 */
+	public void addLocalServerListLoadListener(LocalServerListLoadListener localServerListLoadListener)
+	{
+    applicationListData.addLocalServerListLoadListener(localServerListLoadListener); //加入列表。
+	} //public void addLocalServerListLoadListener(LocalServerListLoadListener localServerListLoadListener)
+
+  /**
+  * 获取 map of package name to installyer type.
+  */
+  public HashMap<String, String> getPackageNameInstallyerTypeMap() 
+  {
+    return packageNameInstallerTypeMap;
+  } // public getPackageNameInstallyerTypeMap()
+
+  /**
+  * 获取数据对象。包名与信息页面地址之间的映射。
+  */
+  public HashMap<String, String> getPackageNameInformationUrlMap() 
+  {
+    return packageNameInformationUrlMap;
+  } // public HashMap<String, String> getPackageNameInformationUrlMap()
+
+	/**
+	 *  // 获取可用的版本名字。
+	 * @param packageName
+	 * @return
+	 */
+	public String getHighestVersionNameByType(String packageName, String typeToGet)
+	{
+    String versionName=getVersionNameByType(packageName,  typeToGet); // Get the version name.
+      
+    if (packageNameExtraPackageNamesMap!=null) // The map exists
+    {
+      List<String> extraPackageNames = packageNameExtraPackageNamesMap.get(packageName);
+      
+      if (extraPackageNames!=null) // Has extra packgae names.
+      {
+        for(String extraPackage: extraPackageNames) // Check one by one
+        {
+          String extraPackageVersion= getVersionNameByType(extraPackage,  typeToGet); // Get version name of extra package.
+          
+          VersionComparator versionComparator=new VersionComparator(); // Create version comparator.
+
+          if (versionComparator.isHigerVersion(extraPackageVersion, versionName)) // There is a higher version.
+          {
+            versionName = extraPackageVersion; // This is the highest version name so far.
+          } //if (availableVersonName > currentVersionName) // 有新版本
+        } // for(String extraPackage: extraPackageNames) // Check one by one
+      } // if (extraPackageNames!=null) // Has extra packgae names.
+    } // if (packageNameExtraPackageNamesMap!=null) // The map exists
+
+    return versionName;
+  } //public String getAvailableVersionName(String packageName)
+
+	/**
+	 * 获取版本名字。
+	 * @param packageName 包名。陈欣
+	 * @return 这个软件包现在的版本名字。
+	 */
+	public String getVersionName(String packageName)
+	{
+    String versionName=null;
+    try
+    {
+      PackageManager packageManager=getPackageManager(); //获取软件包管理器。
+      PackageInfo packageInfo=packageManager.getPackageInfo(packageName,0); //获取对应的软件包信息。
+
+      versionName= packageInfo.versionName; // 获取版本号名字。
+    }
+    catch (PackageManager.NameNotFoundException e) //未找到该软件包。
+    {
+      // e.printStackTrace(); //报告错误。
+    } //catch (PackageManager.NameNotFoundException e) //未找到该软件包。
+
+    return versionName;
+	} //public String getVersionName(String packageName)
+
+	/**
+	 *  // 获取可用的版本名字。
+	 * @param packageName
+	 * @return
+	 */
+	public String getVersionNameByType(String packageName, String typeToGet)
+	{
+    String result= null; // 获取可用 版本号名字。
+    
+    if (typeToGet.equals(Constants.VersionNameType.Existing)) // Existing.
+    {
+      result= getVersionName(packageName);
+    } // if (typeToGet.equals(Constants.VersionNameType.Existing)) // Existing.
+    else // Available
+    {
+      result=getAvailableVersionName(packageName);
+    } // else // Available
+    
+    return result;
+	} //public String getAvailableVersionName(String packageName)
+
+  /**
+  * Package is in whitelist.
+  */
+  public boolean isPackageInWhiteList(String packageName)
+  {
+    HashSet<String> whilteListSet=new HashSet<>();
+    
+//     whilteListSet.add("com.lilithgames.xgame.gp");
+    
+    return whilteListSet.contains(packageName);
+  } // private boolean isPackageInWhiteList(String packageName)
 
   @Override
 	/**

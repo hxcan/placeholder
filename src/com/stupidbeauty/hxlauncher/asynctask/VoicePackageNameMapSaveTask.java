@@ -10,14 +10,14 @@ import android.content.pm.PackageItemInfo;
 import android.os.AsyncTask;
 import android.util.Log;
 import com.stupidbeauty.hxlauncher.VoicePackageMapItemMessage;
-import com.stupidbeauty.hxlauncher.VoicePackageMapMessage;
+// import com.stupidbeauty.hxlauncher.VoicePackageMapMessage;
 import com.google.protobuf.ByteString;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.MessageProperties;
 import com.stupidbeauty.farmingbookapp.PreferenceManagerUtil;
-import com.stupidbeauty.hxlauncher.AndroidApplicationMessage;
+// import com.stupidbeauty.hxlauncher.AndroidApplicationMessage;
 // import com.stupidbeauty.hxlauncher.BuildConfig;
 // import com.stupidbeauty.hxlauncher.VoiceCommandHitDataMessageProtos;
 // import com.stupidbeauty.hxlauncher.VoicePackageMapItemMessageProtos;
@@ -66,7 +66,7 @@ public final class VoicePackageNameMapSaveTask extends AsyncTask<Object, Void, B
     //            String subject=(String)(params[0]); //获取识别结果文字内容。
     HashMap<String, Integer> voicePackageNameMap=(HashMap<String, Integer>)(params[0]); // 获取映射对象。 package name mapped to score.
 
-    VoicePackageMapMessage translateRequestMessage= new VoicePackageMapMessage(); // 创建一个消息对象。
+    // VoicePackageMapMessage translateRequestMessage= new VoicePackageMapMessage(); // 创建一个消息对象。
 
     for(String currentVoiceRecognizeResult: voicePackageNameMap.keySet()) // 一个个地保存。
     {
@@ -79,7 +79,7 @@ public final class VoicePackageNameMapSaveTask extends AsyncTask<Object, Void, B
 
       Set<String> displaynameSet=new HashSet<>(); // 显示名字集合。
 
-      translateRequestMessage.addMap(translateRequestMessageBuilder); //添加映射关系。
+      // translateRequestMessage.addMap(translateRequestMessageBuilder); //添加映射关系。
     } //for(String currentVoiceRecognizeResult: voicePackageNameMap.keySet()) //一个个地保存。
 
     Log.d(TAG,"1091, saveVoicePackageNameMap, answer value: "); //Debug.
@@ -88,35 +88,14 @@ public final class VoicePackageNameMapSaveTask extends AsyncTask<Object, Void, B
 
     Log.d(TAG,"1129, saveVoicePackageNameMap, answer value: "); //Debug.
 
-    CBORObject cborObject= CBORObject.FromObject(translateRequestMessage); //创建对象
+    // CBORObject cborObject= CBORObject.FromObject(translateRequestMessage); //创建对象
 
-    byte[] array=cborObject.EncodeToBytes();
+    // byte[] array=cborObject.EncodeToBytes();
 
     
-    byte[] serializedContent=array; // 序列化成字节数组。
-
-    Log.d(TAG,"1134, saveVoicePackageNameMap, answer value: content length: " + serializedContent.length); //Debug.
-
     File photoFile=findVoicePackageMapFile(); //寻找语音识别与软件包映射文件。
 
-    Log.d(TAG,"143, saveVoicePackageNameMap, file path: " + photoFile.getAbsolutePath()); //Debug.
-
-    try
-    {
-      FileUtils.writeByteArrayToFile(photoFile, serializedContent); //写入内容。
-
-      Log.d(TAG,"149, saveVoicePackageNameMap, file saved, length: " + photoFile.length()); //Debug.
-    }
-    catch (IOException e)
-    {
-      e.printStackTrace();
-    }
-
-    Log.d(TAG,"1144, saveVoicePackageNameMap, answer value: "); //Debug.
-
     updateVoicePackageNameMapVersion(); //更新语音命中应用映射数据文件的版本
-
-    Log.d(TAG,"1150, saveVoicePackageNameMap, answer value: "); //Debug.
 
     return result;
   }
