@@ -301,11 +301,6 @@ public class HxLauncherApplication extends Application implements PackageNameUrl
         return result;
     } //private Drawable getSystemProvidedApplicationIcon(ArticleInfo articleInfo)
 
-	public HashMap<String, String> getPackageItemAliasMap() 
-	{
-		return packageItemAliasMap;
-	}
-	
 	/**
 	 * 将对象加入到本地服务器载入完毕的回调列表中。
 	 * @param localServerListLoadListener 要加入的回调对象。

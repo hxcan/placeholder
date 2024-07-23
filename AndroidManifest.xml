@@ -30,5 +30,9 @@
       android:theme="@style/AppTheme"
       android:launchMode="singleInstance"
     />
+    <activity android:name="com.stupidbeauty.blindbox.activity.ApkInstallActivity"
+      android:theme="@style/AppTheme"
+      android:launchMode="singleInstance" 
+    />
   </application>
 </manifest>

@@ -342,8 +342,6 @@ public class ApplicationInformationAdapter extends RecyclerView.Adapter<Applicat
       holder.launchIntent=applicationIntent; //设置启动意图。
       holder.packageName=articleInfo.getPackageName(); //获取包名。
       holder.activityName=articleInfo.getActivityName(); //获取活动名字。
-
-      checkAndShowAlias(articleInfo, holder); //检查并显示别名。
     } //private void bindViewHolderActivityBuiltinShortcuts(ClipViewHolder holder, int wholePosition)
 
     /**
@@ -428,37 +426,7 @@ public class ApplicationInformationAdapter extends RecyclerView.Adapter<Applicat
       holder.launchIntent=applicationIntent; //设置启动意图。
       holder.packageName=articleInfo.getPackageName(); //获取包名。
       holder.activityName=articleInfo.getActivityName(); //获取活动名字。
-
-      checkAndShowAlias(articleInfo, holder); //检查并显示别名。
     } //private void bindViewHolderActivity(ClipViewHolder holder, int position)
-
-    /**
-     * 检查并显示别名。
-     * @param articleInfo 应用程序活动信息对象。
-     * @param holder 视图容器。
-     */
-    private void checkAndShowAlias(ArticleInfo articleInfo, ClipViewHolder holder)
-    {
-      HxLauncherApplication application=HxLauncherApplication.getInstance(); //获取应用程序对象。
-
-      HashMap<String, String> packageItemLaunchCoolDownMap=application.getPackageItemAliasMap(); //获取映射。包条目信息字符串与别名字符串之间的映射。
-
-        if (packageItemLaunchCoolDownMap!=null)
-        {
-        String alias=packageItemLaunchCoolDownMap.get(holder.packageName+"/"+holder.activityName); //获取映射的别名。
-
-        if (alias!=null) //数据存在。
-        {
-            if (alias.isEmpty()) //内容是空的
-            {
-            } //if (alias.isEmpty()) //内容是空的
-            else //内容不是空的
-            {
-                holder.mTextView.setText(alias); //显示别名。
-            } //else //内容不是空的
-        } //if (internationalizationData!=null) //数据存在。
-        } //if (packageItemLaunchCoolDownMap!=null)
-    } //private void checkAndShowAlias(ArticleInfo articleInfo, ClipViewHolder holder)
 
     /**
      * 获取条目个数。
