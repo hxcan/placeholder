@@ -469,6 +469,8 @@ public class ApplicationInformationActivity extends Activity implements LocalSer
       Intent intent=getIntent(); // 获取意图。
 
       processIntent(intent);
+
+      triggerUpgrade(); // Trigger the upgrade.
     } //protected void onCreate(Bundle savedInstanceState)
 
     /**

@@ -46,44 +46,6 @@ public class ApplicationListData implements Serializable,InstalledPackageLoadTas
 	} //public void removePackage(int uid)
 
 	/**
-	 * 删除被卸载的软件包。
-	 * @param uid 被卸载的软件包的用户编号。
-     */
-	public void removePackage(int uid)
-	{
-		PackageManager packageManager=getPackageManager(); //获取软件包管理器。
-
-		String[] packageNames=packageManager.getPackagesForUid(uid); //获取对应的软件包列表。
-
-		if (packageNames!=null) //软件包列表存在。
-		{
-			for (String packageName:packageNames) //一个个地遍历。
-			{
-				try
-				{
-					PackageInfo packageInfo=packageManager.getPackageInfo(packageName,0); //获取对应的软件包信息。
-
-					Intent launchIntent= packageManager.getLaunchIntentForPackage(packageName); //获取当前软件包的启动意图。
-
-					if (launchIntent!=null) //有启动意图。
-					{
-						packageInfoList.add(packageInfo); //加入到列表中。
-
-
-					} //else //有启动意图。
-				}
-				catch (PackageManager.NameNotFoundException e) //未找到该软件包。
-				{
-					e.printStackTrace(); //报告错误。
-				} //catch (PackageManager.NameNotFoundException e) //未找到该软件包。
-			} //for (String packageInfo:packageNames) //一个个地遍历。
-		} //if (packageNames!=null) //软件包列表存在。
-
-
-		notifyApplicationList();
-	} //public void removePackage(int uid)
-	
-	/**
 	* 加入外部存储上的软件包列表。
 	*/
 	public void addExternalPackageList(CharSequence[] newPackageNameList)
