@@ -24,15 +24,4 @@ public class Constants
     public static final String LastPackageTime="com.stupidbeauty.randomapplication.lastPackageTime"; //!< Last time of launching a package.
     public static final String LastPackageName="com.stupidbeauty.randomapplication.lastPackageName"; //!< Last launched package name.
   } //public final class Common
-
-  /**
-  * 基本的一些键。
-  * @author root
-  *
-  */
-  public final class Url
-  {
-    public static final String TwitterLoginUrl = "https://mobile.twitter.com/login/"; //!<推特的登录网页。
-    public static final String TwitterHomeUrl="https://mobile.twitter.com/home"; //!<推特的主页网页。
-  } //public final class Url
 } //public class Constants

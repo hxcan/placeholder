@@ -346,7 +346,7 @@ public class ApkInstallActivity extends Activity
             
         Log.d(TAG, "processIntent, status: " + status + ", message: " + message + ", extra: " + extras); // Debug.
 
-        statustextView.setText(R2.string.installing); // Show install finished.
+        statustextView.setText(R.string.installing); // Show install finished.
 
         switch (status) 
         {
