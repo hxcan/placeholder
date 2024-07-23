@@ -849,7 +849,7 @@ public class HxLauncherApplication extends Application implements PackageNameUrl
       .detectLeakedSqlLiteObjects()
       .detectLeakedClosableObjects()
       .penaltyLog()
-      .penaltyDeath()
+      // .penaltyDeath()
       .build()
     );
 
