@@ -363,7 +363,7 @@ public class ApkInstallActivity extends Activity
             statustextView.setText(R.string.installFinished); // Show install finished.
             changeApplicationButtonion.setVisibility(View.VISIBLE);
             doneButtonn.setVisibility(View.VISIBLE);
-            String mWordSeparators = getResources().getString(R2.string.installFinished); // 读取 说明 字符串。download failed
+            String mWordSeparators = getResources().getString(R.string.installFinished); // 读取 说明 字符串。download failed
 
             voiceUi.say(mWordSeparators); // 说话，prepare install
             requestCleanStorage(); // Request clean storage.
