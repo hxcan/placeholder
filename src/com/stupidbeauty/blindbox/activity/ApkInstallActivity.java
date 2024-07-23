@@ -272,17 +272,10 @@ public class ApkInstallActivity extends Activity
       
       HxLauncherApplication application=HxLauncherApplication.getInstance(); //获取应用程序对象。
 
-      Drawable applicationIcon=hxlauncherApplication.getApplicationIcon(packageName); // 获取图标。 local icon
-      
-      if (applicationIcon!=null) // The icon exists locally.
-      {
-        Glide.with(application).load("").placeholder(applicationIcon).into(applicationIconrightimageView2); // 显示图标。
-      } // if (applicationIcon!=null) // The icon exists locally.
-      else // Show online icon
       {
         String iconUrl=application.getIconForPackage(packageName); // Get icon url.
         
-        Glide.with(application).load(iconUrl).placeholder(R2.drawable.adfed9a77be62c3c43a203c1305).into(applicationIconrightimageView2); //显示图标。
+        Glide.with(application).load(iconUrl).placeholder(R.drawable.adfed9a77be62c3c43a203c1305).into(applicationIconrightimageView2); //显示图标。
         //       Glide.with(application).load(iconUrl).into(applicationIconrightimageView2); // 显示图标。
       } // else // Show online icon
       

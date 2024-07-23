@@ -267,38 +267,41 @@ public class HxLauncherApplication extends Application implements PackageNameUrl
     private Drawable getSystemProvidedApplicationIcon(ArticleInfo articleInfo)
     {
       Drawable result = null; //结果。
-
-      String packageName=articleInfo.getPackageName(); //获取应用程序包名。
-
-      String activityName=articleInfo.getActivityName(); //获取活动名字
-
-      HxLauncherApplication application=HxLauncherApplication.getInstance(); //获取应用程序对象。
-
-      if (result==null) //未缓存。
+      
+      if (articleInfo!=null) // The information exists
       {
-        PackageManager packageManager=getPackageManager(); //获取软件包管理器。
+        String packageName = articleInfo.getPackageName(); //获取应用程序包名。
 
-        try //读取图标内容
+        String activityName=articleInfo.getActivityName(); //获取活动名字
+
+        HxLauncherApplication application=HxLauncherApplication.getInstance(); //获取应用程序对象。
+
+        if (result==null) //未缓存。
         {
-          PackageInfo packageInfo=packageManager.getPackageInfo(packageName,0); //获取应用程序信息。
+          PackageManager packageManager=getPackageManager(); //获取软件包管理器。
 
-          ApplicationInfo applicationInfo=packageInfo.applicationInfo; //获取应用程序信息。
+          try //读取图标内容
+          {
+            PackageInfo packageInfo=packageManager.getPackageInfo(packageName,0); //获取应用程序信息。
 
-          ComponentName componentName=new ComponentName(packageName, activityName); //创建部件名字对象
+            ApplicationInfo applicationInfo=packageInfo.applicationInfo; //获取应用程序信息。
 
-          result=packageManager.getActivityIcon(componentName); //获取活动的图标
-        } //try //读取图标内容
-        catch (PackageManager.NameNotFoundException e) //未找到该应用程序包。
-        {
-          e.printStackTrace(); //报告错误。
-        } //catch (PackageManager.NameNotFoundException e) //未找到该应用程序包。
-            catch (OutOfMemoryError outOfMemoryError)
-            {
-                outOfMemoryError.printStackTrace(); //报告错误。
-            } //catch (OutOfMemoryError outOfMemoryError)
+            ComponentName componentName=new ComponentName(packageName, activityName); //创建部件名字对象
+
+            result=packageManager.getActivityIcon(componentName); //获取活动的图标
+          } //try //读取图标内容
+          catch (PackageManager.NameNotFoundException e) //未找到该应用程序包。
+          {
+            e.printStackTrace(); //报告错误。
+          } //catch (PackageManager.NameNotFoundException e) //未找到该应用程序包。
+          catch (OutOfMemoryError outOfMemoryError)
+          {
+              outOfMemoryError.printStackTrace(); //报告错误。
+          } //catch (OutOfMemoryError outOfMemoryError)
         } //if (result==null) //未缓存。
+      } // if (articleInfo!=null) // The information exists
 
-        return result;
+      return result;
     } //private Drawable getSystemProvidedApplicationIcon(ArticleInfo articleInfo)
 
 	/**
@@ -867,8 +870,6 @@ public class HxLauncherApplication extends Application implements PackageNameUrl
 	private void loadApplicationList()
 	{
 		applicationListData =new ApplicationListData(this); //创建数据对象。
-
-		applicationListData.loadApplicationList(); //载入本地服务器列表。
 	} //private void loadApplicationList()
 
 	/**

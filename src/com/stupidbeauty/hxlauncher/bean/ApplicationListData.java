@@ -6,7 +6,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
-import com.stupidbeauty.hxlauncher.asynctask.InstalledPackageLoadTask;
+// import com.stupidbeauty.hxlauncher.asynctask.InstalledPackageLoadTask;
 import com.stupidbeauty.hxlauncher.InstalledPackageLoadTaskInterface;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -189,16 +189,6 @@ public class ApplicationListData implements Serializable,InstalledPackageLoadTas
 	public ApplicationListData(Context context) {
 		mContext=context;
 	}
-
-	/**
-	 * 载入应用程序列表。
-	 */
-	public void loadApplicationList()
-	{
-		InstalledPackageLoadTask translateRequestSendTask =new InstalledPackageLoadTask(this); //创建异步任务。
-
-		translateRequestSendTask.execute(); //执行任务。
-	} //private void loadApplicationList()
 
 	private final List<PackageInfo> packageInfoList = new ArrayList<>(); //!<软件包列表。
 
