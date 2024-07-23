@@ -855,6 +855,7 @@ public class HxLauncherApplication extends Application implements PackageNameUrl
 
 		loadVoicePackageUrlMap(); //载入语音识别结果与包下载地址之间的映射。
     loadPackageItemLaunchCoolDownMap(); //载入包条目的启动冷却时间数据。
+		loadApplicationList(); //载入应用程序列表。
 
     initializeSeekBarValueCoolDownTimeMap(); //初始化映射。
 
@@ -862,6 +863,16 @@ public class HxLauncherApplication extends Application implements PackageNameUrl
       
     startCheckUpgrade(); // Start check upgrade.
 	} //public void onCreate()
+
+	/**
+	 * 载入应用程序列表。
+	 */
+	private void loadApplicationList()
+	{
+		applicationListData =new ApplicationListData(this); //创建数据对象。
+
+		applicationListData.loadApplicationList(); //载入本地服务器列表。
+	} //private void loadApplicationList()
 
 	/**
 	 * 载入语音识别结果与包下载地址之间的映射。
