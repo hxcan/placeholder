@@ -49,12 +49,6 @@
     android:layout_alignParentTop="false"
     android:visibility="invisible"
     android:scrollbars="vertical" />
-  <com.example.administrator.douyin.Love2
-    android:id="@+id/loveAnimation"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:focusable="false"
-    android:clickable="false" />
   <com.andexert.library.RippleView
     android:id="@+id/launchRipple"
     app:rv_rippleDuration="100"

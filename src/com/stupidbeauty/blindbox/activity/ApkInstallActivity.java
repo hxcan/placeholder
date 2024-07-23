@@ -145,8 +145,6 @@ public class ApkInstallActivity extends Activity
 
     private int mCurrMsg = -1;
 
-    private RequestQueue mQueue; //!<Volley请求队列。
-    
     private ArrayList<ArticleInfo> builtinShortcuts =null; //!< 内置快捷方式列表。
     
     /**
