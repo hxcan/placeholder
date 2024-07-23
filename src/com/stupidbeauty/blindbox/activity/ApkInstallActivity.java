@@ -367,6 +367,7 @@ public class ApkInstallActivity extends Activity
 
             voiceUi.say(mWordSeparators); // 说话，prepare install
             requestCleanStorage(); // Request clean storage.
+            launchApplicationByPackageName(packageName); // Launcher the application.
 
             break;
 
