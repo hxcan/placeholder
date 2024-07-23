@@ -12,7 +12,7 @@ import android.content.pm.ResolveInfo;
 import com.stupidbeauty.hxlauncher.LauncherActivity;
 import android.widget.Button;
 import com.bumptech.glide.Glide;
-import com.stupidbeauty.placeholder.R2;
+import com.stupidbeauty.placeholder.R;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.LauncherApps;
 import android.content.pm.PackageInfo;
@@ -25,8 +25,6 @@ import android.content.pm.PackageInstaller;
 import android.os.Bundle;
 import android.view.View;
 import com.stupidbeauty.hxlauncher.manager.ActiveUserReportManager;
-// import android.os.Debug;
-// import com.stupidbeauty.hxlauncher.asynctask.LoadBuiltinVoicePackageNameMapTask;
 import com.stupidbeauty.hxlauncher.asynctask.LoadVoicePackageNameMapTask;
 import 	java.util.Timer;
 // import android.Manifest;
@@ -327,7 +325,7 @@ public class ApkInstallActivity extends Activity
 
       requestWindowFeature(Window.FEATURE_NO_TITLE); //不显示标题栏。
 
-      setContentView(R2.layout.apk_install_activity); // 显示界面。
+      setContentView(R.layout.apk_install_activity); // 显示界面。
 
       ButterKnife.bind(this); //视图注入。
       
