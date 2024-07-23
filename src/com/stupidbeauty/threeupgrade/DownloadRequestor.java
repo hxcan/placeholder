@@ -64,7 +64,7 @@ import com.koushikdutta.ion.Ion;
 import com.koushikdutta.ion.ProgressCallback;
 import java.io.DataInputStream;
 import com.stupidbeauty.hxlauncher.LauncherActivity;
-import com.stupidbeauty.placeholder.R2;
+import com.stupidbeauty.placeholder.R;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -615,7 +615,7 @@ public class DownloadRequestor implements DownloadConnectCallbackInterface
 
         Log.d(TAG, "requestDownloadUrl, url scheme: " + uri.getScheme()); //debug.
 
-        String mWordSeparators = baseApplication.getResources().getString(R2.string.startDownload); // 读取 说明 字符串。
+        String mWordSeparators = baseApplication.getResources().getString(R.string.startDownload); // 读取 说明 字符串。
     
         voiceUi.say(mWordSeparators); // 说话，需要解锁。
 

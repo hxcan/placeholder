@@ -34,7 +34,7 @@
   <string name="firstStepEnableLanIme">Auto run</string>
   <string name="secondStepChooseLanIme">Step 2 Choose LanIme</string>
   <string name="lanimedotcom" translatable="false">www.lanime.com</string>
-  <string name="applicationFrequency">Application frequency</string>
+
   <string name="myAccount">My account</string>
   <string name="freeCredit">Free speech credit:</string>
   <string name="paidCredit">Paid speech credit</string>
