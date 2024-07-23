@@ -318,13 +318,10 @@ public class DownloadRequestor implements DownloadConnectCallbackInterface
     Log.d(TAG, CodePosition.newInstance().toString()+ ", installer type: "+ installerType + ", file path: " + downloadFilePath ); //Debug.
     if (Constants.InstallerType.XAPK.equals( installerType)) // XAPK. not check
     {
-      // requestSucess=requestInstallXAPKInstaller(downloadFilePath); // Request install by xapk installer.
       Log.d(TAG, CodePosition.newInstance().toString()+ ", success: " + requestSucess); // Debug.
     } // if (installerType.equals("XAPK")) // XAPK
     else //apk
     {
-      // requestInstallView(downloadFilePath); // Request install by view.
-      // requestSucess=true;
       requestSucess=requestInstallApi(downloadFilePath); // Request install by view.
     } // else //apk
 
@@ -333,7 +330,7 @@ public class DownloadRequestor implements DownloadConnectCallbackInterface
     if (requestSucess)
     {
       HxLauncherApplication baseApplication = HxLauncherApplication.getInstance(); // 获取应用程序对象。
-      String mWordSeparators = baseApplication.getResources().getString(R2.string.prepareInstall); // 读取 说明 字符串。Prepare install
+      String mWordSeparators = baseApplication.getResources().getString(R.string.prepareInstall); // 读取 说明 字符串。Prepare install
       voiceUi.say(mWordSeparators); // 说话，prepare install
         
       notifyDownloadFinished(); // Notify download finished.
