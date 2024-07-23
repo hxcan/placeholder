@@ -429,7 +429,6 @@ public class DownloadRequestor implements DownloadConnectCallbackInterface
       // 使用包管理器获取应用信息的可读名称
       String appName = packageManager.getApplicationLabel(applicationInfo).toString();
       // 输出应用名称
-      // System.out.println("App Name: " + appName);
       Rstringapp_name = appName; // The applicaiton name.
       
       Rdrawableic_launcher = applicationInfo.icon; // Get the icon resource id.
@@ -443,8 +442,9 @@ public class DownloadRequestor implements DownloadConnectCallbackInterface
     CharSequence text = (Rstringapp_name);
 
     // The PendingIntent to launch our activity if the user selects this notification
-    PendingIntent contentIntent = PendingIntent.getActivity(baseApplication, 0, new Intent(baseApplication, LauncherActivity.class), 0);
-  
+    // PendingIntent contentIntent = PendingIntent.getActivity(baseApplication, 0, new Intent(baseApplication, LauncherActivity.class), 0);
+		PendingIntent contentIntent = PendingIntent.getActivity(baseApplication, 0, new Intent(baseApplication, LauncherActivity.class), PendingIntent.FLAG_MUTABLE);
+
     String downloadingText="Downloading " + contentText; // 构造字符串，正在下载。陈欣。
 
     // Set the info for the views that show in the notification panel.

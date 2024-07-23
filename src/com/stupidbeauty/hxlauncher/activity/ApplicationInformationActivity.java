@@ -206,7 +206,6 @@ public class ApplicationInformationActivity extends Activity
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) // java.io.File toPath
         {
           triggerDownload(packageNameUrlMap, intalleryTye, packageNameApplicationMap); // Trigger download
-//           changeApplicationButtonion.setVisibility(View.INVISIBLE); // Show change application button.
         } // if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) // java.io.File toPath
         else // Old version
         {
@@ -219,18 +218,6 @@ public class ApplicationInformationActivity extends Activity
       else // not xapk
       {
         triggerDownload(packageNameUrlMap, intalleryTye, packageNameApplicationMap); // Trigger download
-//         if (packageNameUrlMap!=null) // 数据存在。
-//         {
-//           String installerUrl=packageNameUrlMap.get(packagename); // 获取国际化名字。
-// 
-//           Log.d(TAG,"triggerUpgrade, installerUrl: "+ installerUrl+ ", package name: " + packagename); // Debug.
-// 
-//           if (installerUrl!=null) // 有 installer url.
-//           {
-//             Log.d(TAG,"triggerUpgrade, 183, package url: "+ installerUrl+ ", package name: " + packagename); // Debug.
-// 
-//             String applicationName=packageNameApplicationMap.get(packagename); // 应用程序名字
-// 
       } // else // not xapk
     } // public void manualStartVoiceRecognize()
     
