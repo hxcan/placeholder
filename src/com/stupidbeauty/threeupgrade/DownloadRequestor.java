@@ -357,11 +357,13 @@ public class DownloadRequestor implements DownloadConnectCallbackInterface
   private IntentSender constructInstallStatusReceiver()
   {
     HxLauncherApplication baseApplication = HxLauncherApplication.getInstance(); // 获取应用程序对象。
-    // Create an install status receiver.
-    //                     Context context = InstallApkSessionApi.this;
+
     Intent intent = new Intent(baseApplication, ApkInstallActivity.class);
     intent.setAction(PACKAGE_INSTALLED_ACTION);
-    PendingIntent pendingIntent = PendingIntent.getActivity(baseApplication, 0, intent, 0);
+
+    PendingIntent pendingIntent = PendingIntent.getActivity(baseApplication, 0, intent, PendingIntent.FLAG_MUTABLE);
+		// PendingIntent contentIntent = PendingIntent.getActivity(baseApplication, 0, new Intent(baseApplication, LauncherActivity.class), PendingIntent.FLAG_MUTABLE);
+    
     IntentSender statusReceiver = pendingIntent.getIntentSender();
     
     return statusReceiver;
