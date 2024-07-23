@@ -176,7 +176,7 @@ public class ApplicationListData implements Serializable,InstalledPackageLoadTas
 	/**
 	 * 设置显示数据。
 	 */
-	private void notifyApplicationList()
+	public void notifyApplicationList()
 	{
 		for(LocalServerListLoadListener localServerListLoadListener:localServerListLoadListenerList) //一个个地通知。
 		{

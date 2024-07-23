@@ -103,11 +103,11 @@ import static android.content.Intent.EXTRA_PACKAGE_NAME;
 import static android.content.pm.LauncherApps.ShortcutQuery.FLAG_MATCH_DYNAMIC;
 import static android.content.pm.LauncherApps.ShortcutQuery.FLAG_MATCH_MANIFEST;
 
-public class ApplicationInformationActivity extends Activity
+public class ApplicationInformationActivity extends Activity implements LocalServerListLoadListener
 {
   private VoiceUi voiceUi=null; //!< 语音交互对象。
   private DownloadFailureReporter downloadFailureReporter=new DownloadFailureReporter(); //!< download failur reporetr.
-  // View name of the header image. Used for activity scene transitions
+
   public static final String VIEW_NAME_HEADER_IMAGE = "detail:header:image";
   @BindView(R2.id.totalmbsionView) TextView totalmbsionView; //!< Total mb view.
   @BindView(R2.id.downloadedmbionView) TextView downloadedmbionView; //!< Downloade MB.
@@ -345,6 +345,16 @@ public class ApplicationInformationActivity extends Activity
     } // public void reportDownloadFinished(String packageName)
     
     /**
+     * 向应用程序注册本地服务器列表获取完毕的回调。
+     */
+    private void registerLocalServerListCallbackToApplication()
+    {
+      HxLauncherApplication baseApplication= HxLauncherApplication.getInstance(); //获取应用程序对象。
+
+      baseApplication.addLocalServerListLoadListener(this); //将本对象加入到回调列表中。
+    } //private void registerLocalServerListCallbackToApplication()
+
+    /**
     * 报告，下载失败。
     */
     public void  reportDownloadFailed(String packageName) 
@@ -454,33 +464,34 @@ public class ApplicationInformationActivity extends Activity
       mHeaderImageView.setTransitionName( VIEW_NAME_HEADER_IMAGE);
       mHeaderTitle.setTransitionName( VIEW_NAME_HEADER_TITLE);
 
+      registerLocalServerListCallbackToApplication(); // Register data update.
+
       Intent intent=getIntent(); // 获取意图。
 
       processIntent(intent);
     } //protected void onCreate(Bundle savedInstanceState)
 
-    private void processIntent(Intent intent) 
+    /**
+     * 处理事件，软件包列表载入完毕。
+     */
+    @Override
+    public void onLoadPackageInfoList()
     {
-      String title=intent.getStringExtra(EXTRA_PACKAGE_NAME);
+      checkUpgrade(packagename); // 检查这个软件包是否可以升级。
+      
+      showApplicationInformation(); // Show appliccation information.
+    } //public void onLoadPackageInfoList()
 
-      activityName = intent.getStringExtra(EXTRA_COMPONENT_NAME); // 获取活动名字。陈欣。
+    /**
+    * Show application information.
+    */
+    private void showApplicationInformation()
+    {
+      HxLauncherApplication application = HxLauncherApplication.getInstance(); //获取应用程序对象。
 
-      packagename=title; // 记录包名。陈欣。
-
-      mHeaderTitle.setText(title);
-
-      Log.w(TAG, "onCreate, 353, timestamp: " + System.currentTimeMillis()); //Debug.
-
-      checkUpgrade(title); // 检查这个软件包是否可以升级。
-
-      HxLauncherApplication hxlauncherApplication=HxLauncherApplication.getInstance(); // 获取应用对象。
-      String currentVersionName=hxlauncherApplication.getVersionName(packagename); // 获取版本名字。
+      String currentVersionName= application.getVersionName(packagename); // 获取版本名字。
       
       statustextView.setText(currentVersionName); // Show curent version name.
-
-      HxLauncherApplication application=HxLauncherApplication.getInstance(); //获取应用程序对象。
-
-      // HashMap<String, Drawable> launchIconMap=application.getLaunchIconMap(); //获取启动图标缓存。
 
       Drawable result = null; //获取缓存绘图对象。
       String iconUrl=application.getIconForPackage(packagename); // Get icon url.
@@ -503,6 +514,17 @@ public class ApplicationInformationActivity extends Activity
       Log.d(TAG, "showApplicationInformation. 556. package name: " + packagename + ", appliactoin name: " + applicationName); // Debug.
 
       applicationName2.setText(applicationName); // Show application name.
+    } // private void showApplicationInformation()
+
+    private void processIntent(Intent intent) 
+    {
+      packagename = intent.getStringExtra(EXTRA_PACKAGE_NAME); // 记录包名。陈欣。
+
+      mHeaderTitle.setText(packagename);
+
+      checkUpgrade(packagename); // 检查这个软件包是否可以升级。
+      
+      showApplicationInformation(); // Show appliccation information.
     }
 
     /**
@@ -513,13 +535,9 @@ public class ApplicationInformationActivity extends Activity
     {
       HxLauncherApplication hxlauncherApplication=HxLauncherApplication.getInstance(); // 获取应用对象。
 
-//       String currentVersionName=hxlauncherApplication.getHighestVersionName(packageName); // 获取版本名字。 The highest in package cluster.
       String currentVersionName=hxlauncherApplication.getHighestVersionNameByType(packageName, Constants.VersionNameType.Existing); // 获取版本名字。 The highest in package cluster.
-//       String currentVersionName=hxlauncherApplication.getHighestVersionNameByType(packageName, Constants.VersionNameType.Existing); // 获取版本名字。 Highest version name in package cluster.
 
-//       String availableVersonName = hxlauncherApplication.getAvailableVersionName(packageName); // 获取可用的版本名字。
       String availableVersonName = hxlauncherApplication.getHighestVersionNameByType(packageName, Constants.VersionNameType.Available); // 获取可用的版本名字。
-//       String availableVersonName = hxlauncherApplication.getHighestVersionNameByType(packageName, Constants.VersionNameType.Available); // 获取可用的版本名字。
 
       Log.d(TAG, "checkUpgrade. avaialable version: " + availableVersonName + ", current version: " + currentVersionName); //Debug.
 

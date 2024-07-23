@@ -523,6 +523,8 @@ public class HxLauncherApplication extends Application implements PackageNameUrl
 		{
 			this.packageNameVersionNameMap.putAll(packageNameVersionNameMap);
 		}
+
+		applicationListData.notifyApplicationList(); // Notify version change.
 	} //public void setPackageNameVersionNameMap (HashMap<String, String> packageNameVersionNameMap)
 
   @Override
