@@ -360,7 +360,7 @@ public class ApkInstallActivity extends Activity
             break;
 
           case PackageInstaller.STATUS_SUCCESS:
-            statustextView.setText(R2.string.installFinished); // Show install finished.
+            statustextView.setText(R.string.installFinished); // Show install finished.
             changeApplicationButtonion.setVisibility(View.VISIBLE);
             doneButtonn.setVisibility(View.VISIBLE);
             String mWordSeparators = getResources().getString(R2.string.installFinished); // 读取 说明 字符串。download failed
