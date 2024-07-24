@@ -115,15 +115,14 @@ import android.os.Process;
 import java.util.Random;
 import com.stupidbeauty.hxlauncher.manager.ActiveUserReportManager;
 import android.os.Debug;
-import com.stupidbeauty.grebe.DownloadRequestor;
+
 import com.stupidbeauty.hxlauncher.application.HxLauncherApplication;
 import com.stupidbeauty.hxlauncher.service.DownloadNotificationService; 
 import com.stupidbeauty.farmingbookapp.PreferenceManagerUtil;
-import com.stupidbeauty.grebe.DownloadRequestor;
-import com.stupidbeauty.hxlauncher.bean.ApplicationNameInternationalizationData;
-import com.stupidbeauty.grebe.DownloadRequestorInterface;
 
-public class RandomApplicationActivity extends Activity implements  LocalServerListLoadListener, DownloadRequestorInterface
+import com.stupidbeauty.hxlauncher.bean.ApplicationNameInternationalizationData;
+
+public class RandomApplicationActivity extends Activity implements  LocalServerListLoadListener
 {
   private int scoreSum; //!< The score sum of installed packages.
   private ArrayList<String> installedPackageNameList; //!< Installed package name list.
@@ -136,7 +135,7 @@ public class RandomApplicationActivity extends Activity implements  LocalServerL
   private HashMap<String, Long> packageItemLastLaunchTimestampMap=new HashMap<>(); //!<包名加类名的字符串与最后一次启动时间戳之间的映射。
   private HashMap<String, Integer> packageNameItemNamePositionMap=new HashMap<>(); //!<包名加类名的字符串与图标位置之间的映射。
   private HashMap<String, Integer> packageNamePositionMap=new HashMap<>(); //!<包名字符串与图标位置之间的映射。
-  private final DownloadRequestor downloadRequestor = new DownloadRequestor();
+
   PowerManager.WakeLock wakeLock=null; //!<游戏辅助唤醒锁。
   private boolean activityHasBeenResumed=false; //!<活动是否处于被继续的状态，即正常的运行状态。
   private boolean sentVoiceAssociationData=false; //!<是否已经成功发送语音指令关联应用程序数据。
@@ -150,48 +149,6 @@ public class RandomApplicationActivity extends Activity implements  LocalServerL
     
     stopService(serviceIntent); // Stop the service.
   } // private void stopDownloadNotification()
-    
-  @Override
-  /**
-  * 报告，下载 finished。
-  */
-  public void reportDownloadFinished(String packageName)
-  {
-    // launchRipple.setVisibility(View.INVISIBLE); // Hide the downloading icon.
-    // circularProgressBar.setProgress(0); // Reset progress.
-    
-    stopDownloadNotification(); // Stop the download notification.
-  } // public void reportDownloadFinished(String packageName)
-  
-  @Override
-  /**
-  * 报告，下载 progress。
-  */
-  public void reportDownloadProgress(String packageName, long downloaded, long total) 
-  {
-    // circularProgressBar.setProgressMax(total);
-
-    // circularProgressBar.setProgressWithAnimation(downloaded, 323l);
-  } // public void reportDownloadProgress(String packageName, long downloaded, long total)
-    
-  @Override
-  /**
-  * 报告，下载失败。
-  */
-  public void  reportDownloadFailed(String packageName) 
-  {
-    HxLauncherApplication application=HxLauncherApplication.getInstance(); //获取应用程序对象。
-    
-    application.startCheckUpgrade(); // Start check upgrade again.
-
-    // Chen xin. Voice ui download failec.
-    // String mWordSeparators = getResources().getString(R.string.downloadFailed); // load explain text string. download failed
-
-    // voiceUi.say(mWordSeparators); // say , download failed.
-    // launchRipple.setVisibility(View.INVISIBLE); // Hide donwloading progress float icon.
-    // circularProgressBar.setProgress(0); // Reset progress.
-    stopDownloadNotification(); // Stop the download notification.
-  } // public void  reportDownloadFailed(String packageName)
     
   public void setSentVoiceShortcutAssociationData(boolean sentVoiceShortcutAssociationData) 
   {
@@ -209,56 +166,6 @@ public class RandomApplicationActivity extends Activity implements  LocalServerL
 
     startService(serviceIntent); //启动服务。
 	} //private void startTimeCheckService()
-
-    /**
-     * 下载应用程序安装包。
-     * @param internationalizationName 安装包路径。
-     */
-    private void requestDownloadPackage(String internationalizationName, String applicationName, String packageName)
-    {
-      boolean installed=checkInstalled(packageName); // 检查该应用是不是已经安装了。
-
-      Log.d(TAG,"requestDownloadPackage, installed: "+ installed + ", url: " + internationalizationName + ", appliation name: " + applicationName + ", package name: " + packageName); //Debug.
-
-      if (installed) // 该应用已经安装。
-      {
-      } // if (installed) // 该应用已经安装。
-      else // 该应用尚未安装。
-      {
-        String string="Downloading " + applicationName; // 通知字符串，正在下载。陈欣。
-          
-        startTimeCheckService(applicationName); // 启动下载通知服务。陈欣。
-        
-        // launchRipple.setVisibility(View.VISIBLE); // Show donwloading progress float icon.
-        // circularProgressBar.setProgress(0); // Reset progress.
-
-        HxLauncherApplication application=HxLauncherApplication.getInstance(); //获取应用程序对象。
-        
-        if (packageName==null) // The package name does not exist
-        {
-          Map<String, String> apkUrlPackageNameMap = application.getApkUrlPackageNameMap(); // Get the map of apk url to package name.
-          
-          if (apkUrlPackageNameMap!=null) // The url to package name map exists
-          {
-            packageName = apkUrlPackageNameMap.get(internationalizationName); // Get the package name from apk url.
-          } // if (apkUrlPackageNameMap!=null) // The url to package name map exists
-        } // if (iconUrl==null) // The icon url does not exist
-        
-        if (packageName!=null) // The package name exists
-        {
-          String iconUrl=application.getIconForPackage(packageName); // Get icon url.
-          Log.d(TAG, CodePosition.newInstance().toString()+  ", packgage name: " + packageName + ", icon url: " + iconUrl); // Debug.
-          
-          // Glide.with(application).load(iconUrl).placeholder(R.drawable.vector_66_11).into(applicationIconrightimageView2); //显示图标。
-
-          Map<String, String> packageNameApplicationMap=application.getPackageNameApplicationNameMap(); // 获取包名与应用程序名字的映射
-
-          // rightTextoperationMethodactTitletextView2.setText(applicationName); // Show applicaiton name.
-
-          downloadRequestor.requestDownloadUrl(internationalizationName, internationalizationName, applicationName, packageName, this); //要求下载网址
-        } // if (packageName!=null) // The package name exists
-      } // else // 该应用尚未安装。
-    } //private void requestDownloadPackage(String internationalizationName)
 
   /**
   * Check whether one package is installed.

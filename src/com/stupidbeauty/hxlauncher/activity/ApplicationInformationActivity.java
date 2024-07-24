@@ -72,9 +72,6 @@ import com.stupidbeauty.threeupgrade.DownloadRequestor;
 import com.stupidbeauty.hxlauncher.ApplicationInformationAdapter;
 import com.stupidbeauty.hxlauncher.Constants;
 import com.stupidbeauty.placeholder.R2;
-// import com.stupidbeauty.hxlauncher.VoicePackageMapItemMessageProtos;
-// import com.stupidbeauty.hxlauncher.VoicePackageMapMessageProtos;
-// import com.stupidbeauty.hxlauncher.bean.VoiceCommandHitDataObject;
 import com.android.volley.RequestQueue;
 import com.google.gson.Gson;
 import com.google.protobuf.ByteString;
@@ -193,38 +190,15 @@ public class ApplicationInformationActivity extends Activity implements LocalSer
       HxLauncherApplication application=HxLauncherApplication.getInstance(); // 获取应用程序对象。
 
       Map<String,String> packageNameUrlMap=application.getPackageNameUrlMap(); // 获取国际化数据对象。
-      Map<String,String> packageNameInstallyerTypeMap=application.getPackageNameInstallyerTypeMap(); // 获取 map of package name to installyer type.
       Map<String, String> packageNameApplicationMap=application.getPackageNameApplicationNameMap(); // 获取包名与应用程序名字的映射
-      Map<String,String> packageNameInforamtionUrlMap=application.getPackageNameInformationUrlMap(); // 获取 map of package name to information url.
 
-      String intalleryTye=packageNameInstallyerTypeMap.get(packagename); // Get installer type.
-      
-      Log.d(TAG,"triggerUpgrade, installerType: "+ intalleryTye+ ", package name: " + packagename); // Debug.
-      
-      if ("XAPK".equals(intalleryTye)) // It is xapk
-      {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) // java.io.File toPath
-        {
-          triggerDownload(packageNameUrlMap, intalleryTye, packageNameApplicationMap); // Trigger download
-        } // if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) // java.io.File toPath
-        else // Old version
-        {
-          String informationUrl=packageNameInforamtionUrlMap.get(packagename); // 获取 information url.
-          Log.d(TAG,"triggerUpgrade, informationUrl: "+ informationUrl + ", package name: " + packagename); // Debug.
-
-          requestApkPureInstall(informationUrl); // Request apkpure to show the information url.
-        } // else // Old version
-      } // if ("XAPK".equals(intalleryTye)) // It is xapk
-      else // not xapk
-      {
-        triggerDownload(packageNameUrlMap, intalleryTye, packageNameApplicationMap); // Trigger download
-      } // else // not xapk
+      triggerDownload(packageNameUrlMap, packageNameApplicationMap); // Trigger download
     } // public void manualStartVoiceRecognize()
     
     /**
     * Trigger download
     */
-    private void triggerDownload(Map<String,String> packageNameUrlMap, String intalleryTye, Map<String, String> packageNameApplicationMap)
+    private void triggerDownload(Map<String,String> packageNameUrlMap, Map<String, String> packageNameApplicationMap)
     {
       if (packageNameUrlMap!=null) // 数据存在。
       {
@@ -238,7 +212,7 @@ public class ApplicationInformationActivity extends Activity implements LocalSer
 
           String applicationName=packageNameApplicationMap.get(packagename); // 应用程序名字
 
-          requestDownloadPackage(installerUrl, applicationName, intalleryTye); // 下载应用程序安装包。
+          requestDownloadPackage(installerUrl, applicationName); // 下载应用程序安装包。
         } //if (installerUrl!=null) // 有国际化名字。
       } //if (packageNameUrlMap!=null) // 数据存在。
     } // private void triggerDownload(Map<String,String> packageNameUrlMap, String intalleryTye)
@@ -396,12 +370,15 @@ public class ApplicationInformationActivity extends Activity implements LocalSer
      * 下载应用程序安装包。
      * @param internationalizationName 安装包路径。
      */
-    private void requestDownloadPackage(String internationalizationName, String applicationName, String installerType)
+    private void requestDownloadPackage(String internationalizationName, String applicationName)
     {
       Log.w(TAG, "requestDownloadPackage, 200, timestamp: " + System.currentTimeMillis()); // Debug.
 
       downloadRequestor.setLauncherActivity(this); // Set calling activity.
-      downloadRequestor.requestDownloadUrl(internationalizationName, internationalizationName, applicationName, packagename, installerType); // 要求下载网址
+      
+      Uri packageUri = Uri.parse(internationalizationName); // Parse the uri.
+      
+      downloadRequestor.requestDownloadUrl(packageUri, internationalizationName, applicationName, packagename); // 要求下载网址
       
       hitApplicationIcon.setVisibility(View.VISIBLE);
       microphoneIcon.setVisibility(View.INVISIBLE);

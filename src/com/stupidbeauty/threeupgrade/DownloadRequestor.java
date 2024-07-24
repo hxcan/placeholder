@@ -550,8 +550,9 @@ public class DownloadRequestor implements DownloadConnectCallbackInterface
   /**
   * 请求下载指定网址的安装包。
   */
-  void requestDownloadUrl(Uri uri, String refererUrl, String applicationName, String packageName)
+  public void requestDownloadUrl(Uri uri, String refererUrl, String applicationName, String packageName)
   {
+    this.packageName=packageName;
     HxLauncherApplication baseApplication = HxLauncherApplication.getInstance(); //获取应用程序对象。
 
     HashMap<String, String> apkFilePathMap=baseApplication.getApkFilePathMap(); // 获取 APK 安装包路径映射。
