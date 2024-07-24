@@ -55,7 +55,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.LocaleList;
-import android.os.Vibrator;
+// import android.os.Vibrator;
 import android.provider.Settings;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.ViewCompat;
