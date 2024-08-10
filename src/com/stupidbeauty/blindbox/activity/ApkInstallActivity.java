@@ -436,7 +436,7 @@ public class ApkInstallActivity extends Activity
       
       String statusText = statusTextMap.get(status); // Get the status text.
       
-      statustextView.setText(getResources().getString(R2.string.installFailed) + ": " + statusText); // Show install failed.
+      statustextView.setText(getResources().getString(R.string.installFailed) + ": " + statusText); // Show install failed.
       doneButtonn.setVisibility(View.VISIBLE);
     } // private void handleFailed()
 
