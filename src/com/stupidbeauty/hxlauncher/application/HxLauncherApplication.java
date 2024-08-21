@@ -23,8 +23,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.ComponentName;
-import com.stupidbeauty.hxlauncher.PackageItemLaunchCoolDownMapItemMessageProtos;
-import com.stupidbeauty.hxlauncher.PackageItemLaunchCoolDownMapMessageProtos;
+// import com.stupidbeauty.hxlauncher.PackageItemLaunchCoolDownMapItemMessageProtos;
+// import com.stupidbeauty.hxlauncher.PackageItemLaunchCoolDownMapMessageProtos;
 import com.stupidbeauty.hxlauncher.bean.ApplicationListData;
 import java.util.HashSet;
 import com.stupidbeauty.blindbox.asynctask.StorageCleanerTask;
@@ -70,19 +70,13 @@ import java.lang.reflect.Field;
 import com.upokecenter.cbor.CBORObject;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import com.stupidbeauty.hxlauncher.PackageItemLaunchCoolDownMapItemMessageProtos;
+// import com.stupidbeauty.hxlauncher.PackageItemLaunchCoolDownMapItemMessageProtos;
 import android.util.Log;
 import com.stupidbeauty.upgrademanager.listener.PackageNameUrlMapDataListener;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import com.stupidbeauty.hxlauncher.PackageItemLaunchCoolDownMapItemMessageProtos;
-import com.stupidbeauty.hxlauncher.PackageItemLaunchCoolDownMapMessageProtos;
-// import com.stupidbeauty.hxlauncher.bean.ApplicationNameInternationalizationData;
-// import com.stupidbeauty.hxlauncher.bean.VoicePackageUrlMapData;
-// import com.stupidbeauty.hxlauncher.bean.WakeLockPackageNameSetData;
-// import com.stupidbeauty.hxlauncher.datastore.RuntimeInformationStore;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -94,7 +88,6 @@ import java.util.Timer;
 /**
  * 应用程序对象。
  * @author root 蔡火胜。
- *
  */
 public class HxLauncherApplication extends Application implements PackageNameUrlMapDataListener
 {
@@ -854,7 +847,7 @@ public class HxLauncherApplication extends Application implements PackageNameUrl
     );
 
 		loadVoicePackageUrlMap(); //载入语音识别结果与包下载地址之间的映射。
-    loadPackageItemLaunchCoolDownMap(); //载入包条目的启动冷却时间数据。
+
 		loadApplicationList(); //载入应用程序列表。
 
     initializeSeekBarValueCoolDownTimeMap(); //初始化映射。
@@ -938,49 +931,6 @@ public class HxLauncherApplication extends Application implements PackageNameUrl
 	} //private void initializeSeekBarValueCoolDownTimeMap()
 
 	/**
-	 * 载入语音识别结果与包名之间的映射。
-	 */
-	private void loadPackageItemLaunchCoolDownMap()
-	{
-		File photoFile=findRandomPhotoFile(); //随机寻找一个照片文件。
-
-		packageItemLaunchCoolDownMap=new HashMap<>(); //创建映射。
-
-		if (photoFile!=null) //不是空指针。
-		{
-			if (photoFile.exists()) //文件存在。
-			{
-				try
-				{
-					byte[] photoBytes= FileUtils.readFileToByteArray(photoFile); //将照片文件内容全部读取。
-
-					PackageItemLaunchCoolDownMapMessageProtos.PackageItemLaunchCoolDownMapMessage translateRequestMessage=PackageItemLaunchCoolDownMapMessageProtos.PackageItemLaunchCoolDownMapMessage.parseFrom(photoBytes); //创建一个消息对象。
-
-					List<PackageItemLaunchCoolDownMapItemMessageProtos.PackageItemLaunchCoolDownMapItemMessage> relationships=translateRequestMessage.getMapList(); //获取关系列表。
-
-					for(PackageItemLaunchCoolDownMapItemMessageProtos.PackageItemLaunchCoolDownMapItemMessage currentRelationship: relationships) //一个个地加入映射中。
-					{
-						Log.i(TAG, "loadVoicePackageNameMap, package name: "+ currentRelationship.getPackageItemName() + ", auto run: " + currentRelationship.getLaunchCoolDown()); //Debug.
-
-
-						packageItemLaunchCoolDownMap.put(currentRelationship.getPackageItemName(), currentRelationship.getLaunchCoolDown()); //加入映射。
-					} //for(TranslateRequestMessageProtos.TranslateRequestMessage currentRelationship: relationships) //一个个地加入映射中。
-
-
-				}
-				catch (IOException e)
-				{
-					e.printStackTrace();
-				} //catch (IOException e)
-
-			} //if (photoFile.exists()) //文件存在。
-
-		} //if (photoFile!=null) //不是空指针。
-
-	} //private void loadVoicePackageNameMap()
-
-
-	/**
 	 * 获取应用程序上下文。
 	 * @return 应用程序上下文。
 	 */
@@ -988,41 +938,6 @@ public class HxLauncherApplication extends Application implements PackageNameUrl
 	{ 
 		return mContext; 
 	}  //public static Context getAppContext()
-
-	/**
-	 * 保存映射。包条目字符串，与实际冷却时间之间的映射。
-	 */
-	public void savePackageItemLaunchCoolDownMap()
-	{
-		PackageItemLaunchCoolDownMapMessageProtos.PackageItemLaunchCoolDownMapMessage.Builder translateRequestMessage= PackageItemLaunchCoolDownMapMessageProtos.PackageItemLaunchCoolDownMapMessage.newBuilder(); //创建一个消息对象。
-
-		for(String currentVoiceRecognizeResult: packageItemLaunchCoolDownMap.keySet()) //一个个地保存。
-		{
-			Integer currentPackageName=packageItemLaunchCoolDownMap.get(currentVoiceRecognizeResult); //获取包名。
-
-			Log.i(TAG,"savePackageNameAutoRunMap, package name: "+currentVoiceRecognizeResult+ ", auto run: " + currentPackageName); //Debug.
-
-
-			PackageItemLaunchCoolDownMapItemMessageProtos.PackageItemLaunchCoolDownMapItemMessage.Builder translateRequestMessageBuilder= PackageItemLaunchCoolDownMapItemMessageProtos.PackageItemLaunchCoolDownMapItemMessage.newBuilder();
-
-			translateRequestMessageBuilder.setLaunchCoolDown(currentPackageName).setPackageItemName(currentVoiceRecognizeResult); //设置字段。
-
-			translateRequestMessage.addMap(translateRequestMessageBuilder); //添加映射关系。
-		} //for(String currentVoiceRecognizeResult: voicePackageNameMap.keySet()) //一个个地保存。
-
-		byte[] serializedContent=translateRequestMessage.build().toByteArray(); //序列化成字节数组。
-
-		File photoFile=findRandomPhotoFile(); //随机寻找一个照片文件。
-
-		try
-		{
-          FileUtils.writeByteArrayToFile(photoFile, serializedContent); //写入内容。
-		}
-		catch (IOException e)
-		{
-          e.printStackTrace();
-		}
-	} //public void savePackageItemLaunchCoolDownMap()
 
 	/**
 	 * 随机寻找一个照片文件。

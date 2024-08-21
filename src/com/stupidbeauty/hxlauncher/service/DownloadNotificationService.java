@@ -41,13 +41,13 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
-import com.google.protobuf.InvalidProtocolBufferException;
+// import com.google.protobuf.InvalidProtocolBufferException;
 import com.koushikdutta.async.http.server.AsyncHttpServer;
 import com.koushikdutta.async.http.server.AsyncHttpServerRequest;
 import com.koushikdutta.async.http.server.AsyncHttpServerResponse;
 import com.koushikdutta.async.http.server.HttpServerRequestCallback;
-import com.stupidbeauty.exist.ExistMessageContainer;
-import com.stupidbeauty.exist.ServicePublisher;
+// import com.stupidbeauty.exist.ExistMessageContainer;
+// import com.stupidbeauty.exist.ServicePublisher;
 import com.stupidbeauty.lanime.Constants;
 import com.stupidbeauty.shutdownat2100.Sda2FunctionName;
 import com.stupidbeauty.shutdownat2100.Sda2Message;
@@ -57,7 +57,6 @@ import com.stupidbeauty.hxlauncher.RandomApplicationActivity;
 public class DownloadNotificationService extends Service
 {
   private Notification continiusNotification=null; //!<记录的通知
-
   private int NOTIFICATION = 163731;
 
   private NotificationManager mNM;
@@ -68,7 +67,7 @@ public class DownloadNotificationService extends Service
   private static final String TAG = "DownloadNotificationService"; //!< 输出调试信息时使用的标记。
   private static final String LanServiceName = "com.stupidbeauty.shutdownat2100.android"; //!<局域网服务名字。
   private static final int LanServicePort = 9521; //!<局域网服务的端口号。
-  private static final ExistMessageContainer.ServicePublishMessage.ServiceProtocolType LanServiceProtocolType = ExistMessageContainer.ServicePublishMessage.ServiceProtocolType.UDP; //!<服务协议类型是UDP。
+  // private static final ExistMessageContainer.ServicePublishMessage.ServiceProtocolType LanServiceProtocolType = ExistMessageContainer.ServicePublishMessage.ServiceProtocolType.UDP; //!<服务协议类型是UDP。
 
   @Override
   public IBinder onBind(Intent intent) 

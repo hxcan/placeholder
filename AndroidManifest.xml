@@ -27,11 +27,9 @@
     </activity>
     <activity android:name="com.stupidbeauty.hxlauncher.activity.ApplicationInformationActivity"
       android:screenOrientation="portrait" 
-      android:theme="@style/AppTheme"
       android:launchMode="singleInstance"
     />
     <activity android:name="com.stupidbeauty.blindbox.activity.ApkInstallActivity"
-      android:theme="@style/AppTheme"
       android:launchMode="singleInstance" 
     />
   </application>

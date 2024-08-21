@@ -37,67 +37,9 @@ public class AutoRunManager
 
         if (firstRun) //是初次运行。
         {
-            loadVoicePackageNameMap(); //载入语音识别结果与包名之间的映射。
-
             baseApplication.setFirstRunAfterBoot(false); //不再是初次运行了。
         } //if (firstRun) //是初次运行。
     } //private void assessAutoRun()
-
-    /**
-     * 载入语音识别结果与包名之间的映射。
-     */
-    private void loadVoicePackageNameMap()
-    {
-        File photoFile=findRandomPhotoFile(); //随机寻找一个照片文件。
-
-        Map<String, Boolean> packageNameAutoRunMap=new HashMap<>(); //!<应用程序包名与是否要自动启动的映射。
-
-        packageNameAutoRunMap=new HashMap<>(); //创建映射。
-
-        if (photoFile!=null) //不是空指针。
-        {
-            if (photoFile.exists()) //文件存在。
-            {
-                try
-                {
-                    byte[] photoBytes= FileUtils.readFileToByteArray(photoFile); //将照片文件内容全部读取。
-
-                    PackageAutoRunMapMessageProtos.PackageAutoRunMapMessage translateRequestMessage=PackageAutoRunMapMessageProtos.PackageAutoRunMapMessage.parseFrom(photoBytes); //创建一个消息对象。
-
-                    List<PackageAutoRunMapItemMessageProtos.PackageAutoRunMapItemMessage> relationships=translateRequestMessage.getMapList(); //获取关系列表。
-
-                    PackageManager packageManager=context.getPackageManager(); //获取软件包管理器。
-
-
-                    for(PackageAutoRunMapItemMessageProtos.PackageAutoRunMapItemMessage currentRelationship: relationships) //一个个地加入映射中。
-                    {
-                        Log.i(TAG, "loadVoicePackageNameMap, package name: "+ currentRelationship.getPackageName() + ", auto run: " + currentRelationship.getAutoRun()); //Debug.
-
-                        if (currentRelationship.getAutoRun()) //应当自动启动。
-                        {
-                            String packageName=currentRelationship.getPackageName(); //获取包名。
-                            Intent launchIntent= packageManager.getLaunchIntentForPackage(packageName); //获取当前软件包的启动意图。
-
-                            context.launchApplication(launchIntent); //启动应用。
-                        } //if (currentRelationship.getAutoRun()) //应当自动启动。
-
-
-                        packageNameAutoRunMap.put(currentRelationship.getPackageName(), currentRelationship.getAutoRun()); //加入映射。
-                    } //for(TranslateRequestMessageProtos.TranslateRequestMessage currentRelationship: relationships) //一个个地加入映射中。
-
-
-                }
-                catch (IOException e)
-                {
-                    e.printStackTrace();
-                } //catch (IOException e)
-
-            } //if (photoFile.exists()) //文件存在。
-
-        } //if (photoFile!=null) //不是空指针。
-
-    } //private void loadVoicePackageNameMap()
-
 
     /**
      * 随机寻找一个照片文件。

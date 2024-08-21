@@ -20,11 +20,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.KeyEvent;
-// import com.stupidbeauty.hxlauncher.logic.ShutDownAt2100Logic;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.google.protobuf.InvalidProtocolBufferException;
+// import com.google.protobuf.InvalidProtocolBufferException;
 import com.stupidbeauty.codeposition.CodePosition;
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
@@ -53,14 +52,11 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import com.stupidbeauty.hxlauncher.asynctask.VoicePackageNameMapSaveTask;
+// import com.stupidbeauty.hxlauncher.asynctask.VoicePackageNameMapSaveTask;
 import com.stupidbeauty.farmingbookapp.PreferenceManagerUtil;
-// import com.stupidbeauty.hxlauncher.AndroidApplicationMessage;
-// import com.stupidbeauty.hxlauncher.BuildConfig;
 import com.upokecenter.cbor.CBORException;
 import com.android.volley.RequestQueue;
 import com.google.gson.Gson;
-import com.google.protobuf.ByteString;
 import android.Manifest;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
@@ -322,8 +318,6 @@ public class RandomApplicationActivity extends Activity implements  LocalServerL
       {
         Log.d(TAG, CodePosition.newInstance().toString()+","+System.currentTimeMillis()); //Debug.
         saveLastPackageName(); // Save last package name launched.
-
-        savePackageScoreList(); // Save package score list.
       } // if (launchResult) // Launch success
       else // launch failed. usually, that package got removed
       {
@@ -516,16 +510,6 @@ public class RandomApplicationActivity extends Activity implements  LocalServerL
       } //if (photoFile!=null) //不是空指针。
     } // private void loadPackageScoreList()
     
-    /**
-    * Save package score list.
-    */
-    private void savePackageScoreList() 
-    {
-      VoicePackageNameMapSaveTask translateRequestSendTask =new VoicePackageNameMapSaveTask(); //创建异步任务。
-
-      translateRequestSendTask.execute(voicePackageNameMap); //执行任务。
-    } // private void savePackageScoreList()
-
     /**
     * 创建管理器，活跃用户统计。陈欣
     */
