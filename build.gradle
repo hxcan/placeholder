@@ -52,12 +52,11 @@ dependencies
   implementation 'com.github.hxcan:builtinftp:2022.4.26'
   implementation 'com.github.hxcan:upgrademanager:2023.5.8'
   implementation 'androidx.multidex:multidex:2.0.1'
-  implementation 'com.github.hxcan:ShutDownAt2100Helper:2023.10.16'
+  implementation 'com.github.hxcan:ShutDownAt2100Helper:2024.8.25'
   implementation 'com.github.hxcan:rotatingactiveuser:2021.11.29'
   implementation group: 'com.squareup.okhttp', name: 'okhttp', version: '1.6.0'
   implementation group: 'com.koushikdutta.ion', name: 'ion', version: '3.1.0'
   implementation 'com.github.hxcan:voiceui:2023.6.27'
-//   implementation 'com.github.warkiz.tickseekbar:tickseekbar:0.1.4'
   implementation 'com.github.hxcan:RippleEffect:2024.8.21'
   implementation("io.github.g00fy2:versioncompare:1.4.1")
   implementation group: 'org.apache.commons', name: 'commons-collections4', version: '4.4'
@@ -119,7 +118,7 @@ afterEvaluate
         from components.release
         groupId = 'com.github.hxcan'
         artifactId = 'placeholder'
-        version = '2024.8.21'
+        version = '2024.8.22'
       }
     }
   }
