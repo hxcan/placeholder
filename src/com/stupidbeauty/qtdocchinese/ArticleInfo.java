@@ -1,61 +1,61 @@
 package com.stupidbeauty.qtdocchinese;
 
+
 import android.content.Intent;
 
+public class ArticleInfo {
+    private boolean autoRun = false;
+    private String packageName;
+    private String activityName;
+    private Intent launchIntent;
+    private CharSequence applicationLabel;
+    private long size; // New attribute for the app size
 
-/**
- * @author root Hxcan <caihuosheng@gmail.com>
- *
- */
-public class ArticleInfo
-{
-  public boolean isAutoRun() {
-    return autoRun;
-  }
+    public boolean isAutoRun() {
+        return autoRun;
+    }
 
-  public void setAutoRun(boolean autoRun) {
-    this.autoRun = autoRun;
-  }
+    public void setAutoRun(boolean autoRun) {
+        this.autoRun = autoRun;
+    }
 
-  public String getActivityName() {
-    return activityName;
-  }
+    public String getActivityName() {
+        return activityName;
+    }
 
-  public void setActivityName(String activityName) {
-    this.activityName = activityName;
-  }
+    public void setActivityName(String activityName) {
+        this.activityName = activityName;
+    }
 
-  private boolean autoRun=false; //!<是否自动启动。
+    public String getPackageName() {
+        return packageName;
+    }
 
-  private String packageName; //!<应用程序包名。
-  private String activityName; //!<活动名字。
+    public void setPackageName(String packageName) {
+        this.packageName = packageName;
+    }
 
-  public String getPackageName() {
-    return packageName;
-  }
+    public Intent getLaunchIntent() {
+        return launchIntent;
+    }
 
-  public void setPackageName(String packageName) {
-    this.packageName = packageName;
-  }
+    public void setLaunchIntent(Intent launchIntent) {
+        this.launchIntent = launchIntent;
+    }
 
-  private Intent launchIntent; //!<启动意图。
+    public CharSequence getApplicationLabel() {
+        return applicationLabel;
+    }
 
-  public Intent getLaunchIntent() {
-    return launchIntent;
-  }
+    public void setApplicationLabel(CharSequence applicationLabel) {
+        this.applicationLabel = applicationLabel;
+    }
 
-  public void setLaunchIntent(Intent launchIntent) {
-    this.launchIntent = launchIntent;
-  }
+    public long getSize() {
+        return size;
+    }
 
-  private CharSequence applicationLabel; //!<应用程序名字标签。
-
-  public CharSequence getApplicationLabel() {
-    return applicationLabel;
-  }
-
-  public void setApplicationLabel(CharSequence applicationLabel) {
-    this.applicationLabel = applicationLabel;
-  }
-
+    public void setSize(long size) {
+        this.size = size;
+    }
 }

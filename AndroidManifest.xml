@@ -8,6 +8,7 @@
   <supports-screens android:largeScreens="true" android:normalScreens="true" android:anyDensity="true" android:smallScreens="true"/>
   <uses-permission android:name="android.permission.INTERNET" />
   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+  <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS" />
   <application
     android:allowBackup="true"
     android:supportsRtl="true"
@@ -30,6 +31,9 @@
       android:launchMode="singleInstance"
     />
     <activity android:name="com.stupidbeauty.blindbox.activity.ApkInstallActivity"
+      android:launchMode="singleInstance" 
+    />
+    <activity android:name="com.stupidbeauty.placeholder.activity.RemoveSimilarApplicaitonsActivity"
       android:launchMode="singleInstance" 
     />
   </application>

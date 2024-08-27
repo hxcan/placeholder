@@ -805,6 +805,11 @@ public class HxLauncherApplication extends Application implements PackageNameUrl
 
 	private static HxLauncherApplication mInstance = null;
 
+	public HashMap<String, Drawable> getLaunchIconMap()
+	{
+		return applicationListData.getLaunchIconMap();
+	}
+	
 	public static HxLauncherApplication getInstance() 
 	{
       if (mInstance == null) 

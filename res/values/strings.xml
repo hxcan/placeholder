@@ -85,7 +85,7 @@
   <string name="productTypeName">Product type:</string>
   <string name="usedPrompt">Used:</string>
   <string name="balance">Balance:</string>
-  <string name="youCanShareWlan">You can share your wlan</string>
+  <string name="removeSimilarApplications">Remove similar applications</string>
   <string name="queryq">Query</string>
   <string name="charge">Charge</string>
   <string name="about">About</string>
@@ -135,6 +135,7 @@ Please go to 3Gmate and click "Menu &gt; Advance &gt; Reset admin" to release cu
   <string name="installFailed">Install failed</string>
   <string name="mb">MB</string>
   <string name="openApplication">Open application</string>
-
+  <string name="uninstall">Uninstall</string>
+  <string name="close">Close</string>
 
 </resources>

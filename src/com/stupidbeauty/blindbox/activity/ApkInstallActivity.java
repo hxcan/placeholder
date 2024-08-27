@@ -1,5 +1,6 @@
 package com.stupidbeauty.blindbox.activity;
 
+import com.stupidbeauty.placeholder.activity.RemoveSimilarApplicaitonsActivity;
 import com.stupidbeauty.blindbox.manager.ShareManager;
 import com.stupidbeauty.voiceui.VoiceUi;
 import com.stupidbeauty.codeposition.CodePosition;
@@ -27,7 +28,6 @@ import android.view.View;
 import com.stupidbeauty.hxlauncher.manager.ActiveUserReportManager;
 import com.stupidbeauty.hxlauncher.asynctask.LoadVoicePackageNameMapTask;
 import 	java.util.Timer;
-// import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 // import android.app.ActivityOptions;
@@ -178,6 +178,19 @@ public class ApkInstallActivity extends Activity
 
         return result;
     } //private void launchApplicationByPackageName(String packageName)
+    
+    /**
+    * remove similiar applicaitons in another activity.
+    */
+    @OnClick(R2.id.removeSimilarApplicationsButtonon)
+    public void removeSimilarApplicationsButtonon()
+    {
+      Intent launchIntent=new Intent(this, LauncherActivity.class); //启动意图。
+
+      startActivity(launchIntent); //启动活动。
+      
+      // finish();
+    } // public void removeSimilarApplicationsButtonon()
 
     @OnClick(R2.id.doneButtonn)
     /**
@@ -187,7 +200,7 @@ public class ApkInstallActivity extends Activity
      */
     public void finishInstallOk()
     {
-      Intent launchIntent=new Intent(this, LauncherActivity.class); //启动意图。
+      Intent launchIntent=new Intent(this, RemoveSimilarApplicaitonsActivity.class); //启动意图。
 
       startActivity(launchIntent); //启动活动。
       
