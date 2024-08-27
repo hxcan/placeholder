@@ -1,5 +1,10 @@
 package com.stupidbeauty.placeholder.adapter;
 
+import android.net.Uri;
+import com.stupidbeauty.hxlauncher.manager.ActiveUserReportManager;
+import android.os.UserHandle;
+import android.app.Activity;
+import android.content.Context;
 import com.stupidbeauty.victoriafresh.VFile;
 import static com.stupidbeauty.hxlauncher.datastore.LauncherIconType.ActivityIconType;
 import static com.stupidbeauty.hxlauncher.datastore.LauncherIconType.ShortcutIconType;
@@ -236,16 +241,32 @@ public class ApplicationAdapter extends RecyclerView.Adapter<ApplicationAdapter.
           
           
           // 使用这个函数来格式化应用的大小
-long appSizeInBytes = app.getSize(); // 假设 getSize() 返回的是字节
-String formattedSize = formatFileSize(appSizeInBytes);
-appSize.setText(formattedSize);
+          long appSizeInBytes = app.getSize(); // 假设 getSize() 返回的是字节
+          String formattedSize = formatFileSize(appSizeInBytes);
+          appSize.setText(formattedSize);
           // appSize.setText(String.format("%d MB", app.getSize()));
         }
 
         @OnClick(R2.id.uninstall_button)
-        public void onUninstallButtonClick() {
-            ArticleInfo app = mApplications.get(getAdapterPosition());
-            // Uninstall logic goes here
+        public void onUninstallButtonClick() 
+        {
+          ArticleInfo app = mApplications.get(getAdapterPosition());
+          // Uninstall logic goes here
+            
+            
+          // 假设您已经有了一个 ArticleInfo 对象，它包含应用的信息
+          // ArticleInfo app = mApplications.get(getAdapterPosition());
+
+          // 获取应用的包名，这通常是用于标识应用的唯一 ID
+          String packageName = app.getPackageName() ; // 假设 ArticleInfo 有一个名为 packageName 的字段
+
+          // 创建一个 Intent 并设置 ACTION_DELETE 动作以及应用的包名
+          Intent intent = new Intent(Intent.ACTION_DELETE);
+          intent.setData(Uri.parse("package:" + packageName));
+
+          // 启动卸载流程
+          HxLauncherApplication application=HxLauncherApplication.getInstance(); //获取应用程序对象。
+          application.startActivity(intent);
         }
     }
 }

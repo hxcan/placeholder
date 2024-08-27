@@ -27,7 +27,8 @@ public class ArticleInfo {
         this.activityName = activityName;
     }
 
-    public String getPackageName() {
+    public String getPackageName() 
+    {
         return packageName;
     }
 
