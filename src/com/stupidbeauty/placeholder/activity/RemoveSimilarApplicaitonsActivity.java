@@ -1,5 +1,6 @@
 package com.stupidbeauty.placeholder.activity;
 
+import android.app.usage.UsageStatsManager;
 import android.provider.Settings;
 import org.apache.commons.collections4.SetValuedMap;
 import android.util.Pair;
@@ -178,7 +179,7 @@ public class RemoveSimilarApplicaitonsActivity extends Activity
     }
 
     private void requestUsageStatsPermission() {
-        if (checkSelfPermission(Manifest.permission.PACKAGE_USAGE_STATS) != PackageManager.PERMISSION_GRANTED) {
+        if (!hasUsageStatsPermission()) {
             // 如果权限未被授予，则引导用户前往设置页面
             showSettingsScreen();
         } else {
@@ -187,28 +188,42 @@ public class RemoveSimilarApplicaitonsActivity extends Activity
         }
     }
 
+private boolean hasUsageStatsPermission() {
+    UsageStatsManager usageStatsManager = (UsageStatsManager) getSystemService(Context.USAGE_STATS_SERVICE);
+    if (usageStatsManager == null) {
+        return false;
+    }
+
+    long currentTimeMillis = System.currentTimeMillis();
+    long time10MinutesAgo = currentTimeMillis - (10 * 60 * 1000); // 10 minutes ago
+
+    try {
+        // 尝试调用需要权限的方法
+        usageStatsManager.queryAndAggregateUsageStats(time10MinutesAgo, currentTimeMillis);
+        return true;
+    } catch (SecurityException e) {
+        // 捕获 SecurityException 表明权限未被授予
+        return false;
+    }
+}
+
     private void showSettingsScreen() 
     {
       // 打开应用设置页面
       Intent intent = new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS);
-      startActivity(intent);
+        startActivityForResult(intent, REQUEST_CODE_USAGE_STATS);
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) 
-    {
-      super.onActivityResult(requestCode, resultCode, data);
-      if (requestCode == REQUEST_CODE_USAGE_STATS) 
-      {
-        if (checkSelfPermission(Manifest.permission.PACKAGE_USAGE_STATS) == PackageManager.PERMISSION_GRANTED) 
-        {
-          onPermissionGranted();
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_USAGE_STATS) {
+            if (hasUsageStatsPermission()) {
+                onPermissionGranted();
+            } else {
+                onPermissionDenied();
+            }
         }
-        else 
-        {
-          onPermissionDenied();
-        }
-      }
     }
 
     private void onPermissionGranted() 
