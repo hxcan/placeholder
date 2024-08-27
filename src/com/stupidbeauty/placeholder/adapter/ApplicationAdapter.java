@@ -253,16 +253,13 @@ public class ApplicationAdapter extends RecyclerView.Adapter<ApplicationAdapter.
           ArticleInfo app = mApplications.get(getAdapterPosition());
           // Uninstall logic goes here
             
-            
-          // 假设您已经有了一个 ArticleInfo 对象，它包含应用的信息
-          // ArticleInfo app = mApplications.get(getAdapterPosition());
-
           // 获取应用的包名，这通常是用于标识应用的唯一 ID
           String packageName = app.getPackageName() ; // 假设 ArticleInfo 有一个名为 packageName 的字段
 
           // 创建一个 Intent 并设置 ACTION_DELETE 动作以及应用的包名
           Intent intent = new Intent(Intent.ACTION_DELETE);
           intent.setData(Uri.parse("package:" + packageName));
+          intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
           // 启动卸载流程
           HxLauncherApplication application=HxLauncherApplication.getInstance(); //获取应用程序对象。
