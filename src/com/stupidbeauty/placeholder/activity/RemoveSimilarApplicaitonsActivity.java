@@ -59,8 +59,8 @@ import java.util.Collections;
 import java.util.List;
 import com.stupidbeauty.placeholder.adapter.ApplicationAdapter;
 
-public class RemoveSimilarApplicaitonsActivity extends AppCompatActivity {
-
+public class RemoveSimilarApplicaitonsActivity extends Activity 
+{
     @BindView(R2.id.recycler_view)
     RecyclerView recyclerView;
 
