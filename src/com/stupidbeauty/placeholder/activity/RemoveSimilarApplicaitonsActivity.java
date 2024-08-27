@@ -1,5 +1,15 @@
 package com.stupidbeauty.placeholder.activity;
 
+import android.provider.Settings;
+import org.apache.commons.collections4.SetValuedMap;
+import android.util.Pair;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.ActivityInfo;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
 import android.app.usage.StorageStats;
 import android.os.storage.StorageManager;
 import android.os.Process;
@@ -61,24 +71,26 @@ import com.stupidbeauty.placeholder.adapter.ApplicationAdapter;
 
 public class RemoveSimilarApplicaitonsActivity extends Activity 
 {
-    @BindView(R2.id.recycler_view)
-    RecyclerView recyclerView;
+  private static final int REQUEST_CODE_USAGE_STATS = 1;
+  
+  @BindView(R2.id.recycler_view) RecyclerView recyclerView;
 
-    private ApplicationAdapter mAdapter;
+  private ApplicationAdapter mAdapter;
 
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_remove_similar_applications);
-        ButterKnife.bind(this);
+  @Override
+  protected void onCreate(@Nullable Bundle savedInstanceState) 
+  {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_remove_similar_applications);
+    ButterKnife.bind(this);
 
-        mAdapter = new ApplicationAdapter();
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(mAdapter);
+    mAdapter = new ApplicationAdapter();
+    recyclerView.setLayoutManager(new LinearLayoutManager(this));
+    recyclerView.setAdapter(mAdapter);
 
-        // Load the applications on startup
-        loadApplications();
-    }
+    // Load the applications on startup
+    loadApplications();
+  }
 
     @OnClick(R2.id.close_button)
     public void onCloseButtonClick() {
@@ -165,46 +177,98 @@ public class RemoveSimilarApplicaitonsActivity extends Activity
       return targetAppInfo;
     }
 
-    private long getAppSize(String packageName, PackageManager packageManager) {
-        // Check if the permission is granted
-        if (checkSelfPermission(Manifest.permission.PACKAGE_USAGE_STATS) != PackageManager.PERMISSION_GRANTED) 
-        {
-            // If you need to request the permission, do so here.
-            // For simplicity, we'll just return 0L if the permission is not granted.
-            return 0L;
+    private void requestUsageStatsPermission() {
+        if (checkSelfPermission(Manifest.permission.PACKAGE_USAGE_STATS) != PackageManager.PERMISSION_GRANTED) {
+            // 如果权限未被授予，则引导用户前往设置页面
+            showSettingsScreen();
+        } else {
+            // 如果权限已经被授予，则可以开始使用它
+            onPermissionGranted();
         }
+    }
 
-        StorageStatsManager storageStatsManager = (StorageStatsManager) getSystemService(Context.STORAGE_STATS_SERVICE);
-        PackageInfo packageInfo;
-        long result = 0; // Result;
+    private void showSettingsScreen() 
+    {
+      // 打开应用设置页面
+      Intent intent = new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS);
+      startActivity(intent);
+    }
 
-        try 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) 
+    {
+      super.onActivityResult(requestCode, resultCode, data);
+      if (requestCode == REQUEST_CODE_USAGE_STATS) 
+      {
+        if (checkSelfPermission(Manifest.permission.PACKAGE_USAGE_STATS) == PackageManager.PERMISSION_GRANTED) 
         {
-            packageInfo = packageManager.getPackageInfo(packageName, 0);
-          // Query the stats for the given package
-          StorageStats storageStats = storageStatsManager.queryStatsForPackage(
-              // Environment.getDefaultStorageUuid(),
-              StorageManager.UUID_DEFAULT,
-              packageName,
-              // new UserHandle(UserHandle.myUserId())
-              Process.myUserHandle()
-          );
-          
-          // Return the total bytes used by the application
-          
-          result =  storageStats.getDataBytes() + storageStats.getAppBytes();
+          onPermissionGranted();
         }
-        catch (PackageManager.NameNotFoundException e) 
+        else 
         {
-            e.printStackTrace();
+          onPermissionDenied();
         }
-        catch (IOException e) 
-        {
-            e.printStackTrace();
-        }
+      }
+    }
+
+    private void onPermissionGranted() 
+    {
+      // 权限已被用户授予，可以继续使用
+      // 在这里添加你需要执行的操作
+      loadApplications();
+    }
+
+    private void onPermissionDenied() {
+        // 权限被用户拒绝
+        // 可以提示用户为什么需要这个权限
+    }
+
+    private long getAppSize(String packageName, PackageManager packageManager) 
+    {
+      // Check if the permission is granted
+      if (checkSelfPermission(Manifest.permission.PACKAGE_USAGE_STATS) != PackageManager.PERMISSION_GRANTED) 
+      {
+        // If you need to request the permission, do so here.
+        // For simplicity, we'll just return 0L if the permission is not granted.
+        
+                // 请求 PACKAGE_USAGE_STATS 权限
+        requestUsageStatsPermission();
+
+        
+        return 0L;
+      }
+
+      StorageStatsManager storageStatsManager = (StorageStatsManager) getSystemService(Context.STORAGE_STATS_SERVICE);
+      PackageInfo packageInfo;
+      long result = 0; // Result;
+
+      try 
+      {
+          packageInfo = packageManager.getPackageInfo(packageName, 0);
+        // Query the stats for the given package
+        StorageStats storageStats = storageStatsManager.queryStatsForPackage(
+            // Environment.getDefaultStorageUuid(),
+            StorageManager.UUID_DEFAULT,
+            packageName,
+            // new UserHandle(UserHandle.myUserId())
+            Process.myUserHandle()
+        );
+        
+        // Return the total bytes used by the application
+        
+        result =  storageStats.getDataBytes() + storageStats.getAppBytes();
+      }
+      catch (PackageManager.NameNotFoundException e) 
+      {
+          e.printStackTrace();
+      }
+      catch (IOException e) 
+      {
+          e.printStackTrace();
+      }
 
 
-        return result;
+      return result;
     }
 
 
