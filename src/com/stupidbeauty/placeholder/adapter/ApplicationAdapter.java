@@ -212,6 +212,18 @@ public class ApplicationAdapter extends RecyclerView.Adapter<ApplicationAdapter.
         return result;
     } //private Drawable getSystemProvidedApplicationIcon(ArticleInfo articleInfo)
 
+    private String formatFileSize(long sizeInBytes) {
+    if (sizeInBytes < 1024) {
+        return String.format("%d B", sizeInBytes);
+    } else if (sizeInBytes < 1024 * 1024) {
+        return String.format("%.2f KB", sizeInBytes / 1024.0);
+    } else if (sizeInBytes < 1024 * 1024 * 1024) {
+        return String.format("%.2f MB", sizeInBytes / (1024.0 * 1024));
+    } else {
+        return String.format("%.2f GB", sizeInBytes / (1024.0 * 1024 * 1024));
+    }
+}
+
 
         public void bind(ArticleInfo app) 
         {
@@ -221,7 +233,13 @@ public class ApplicationAdapter extends RecyclerView.Adapter<ApplicationAdapter.
 
           // appIcon.setImageResource(R.drawable.ic_launcher_background); // Placeholder
           appName.setText(app.getApplicationLabel());
-          appSize.setText(String.format("%d MB", app.getSize()));
+          
+          
+          // 使用这个函数来格式化应用的大小
+long appSizeInBytes = app.getSize(); // 假设 getSize() 返回的是字节
+String formattedSize = formatFileSize(appSizeInBytes);
+appSize.setText(formattedSize);
+          // appSize.setText(String.format("%d MB", app.getSize()));
         }
 
         @OnClick(R2.id.uninstall_button)
