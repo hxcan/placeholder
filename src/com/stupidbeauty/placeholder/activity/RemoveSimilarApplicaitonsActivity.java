@@ -241,7 +241,7 @@ private boolean hasUsageStatsPermission() {
     private long getAppSize(String packageName, PackageManager packageManager) 
     {
       // Check if the permission is granted
-      if (checkSelfPermission(Manifest.permission.PACKAGE_USAGE_STATS) != PackageManager.PERMISSION_GRANTED) 
+      if (!hasUsageStatsPermission()) // We do not have the permission.
       {
         // If you need to request the permission, do so here.
         // For simplicity, we'll just return 0L if the permission is not granted.
@@ -251,7 +251,7 @@ private boolean hasUsageStatsPermission() {
 
         
         return 0L;
-      }
+      } // if (!hasUsageStatsPermission()) // We do not have the permission.
 
       StorageStatsManager storageStatsManager = (StorageStatsManager) getSystemService(Context.STORAGE_STATS_SERVICE);
       PackageInfo packageInfo;
