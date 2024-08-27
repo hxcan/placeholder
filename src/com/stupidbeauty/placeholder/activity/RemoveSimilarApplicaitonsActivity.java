@@ -137,15 +137,18 @@ public class RemoveSimilarApplicaitonsActivity extends Activity
         }
     }
 
-private ArticleInfo getApplicationInfo(String packageName, PackageManager packageManager) {
-    ApplicationInfo appInfo;
-    try {
+    private ArticleInfo getApplicationInfo(String packageName, PackageManager packageManager) 
+    {
+      ApplicationInfo appInfo;
+      ArticleInfo targetAppInfo = new ArticleInfo();
+      
+      try 
+      {
         appInfo = packageManager.getApplicationInfo(packageName, 0);
-        Drawable icon = getDrawable(appInfo.icon);
+        // Drawable icon = getDrawable(appInfo.icon);
         String appName = (String) packageManager.getApplicationLabel(appInfo);
         long size = getAppSize(packageName, packageManager); // Placeholder for getting app size
 
-        ArticleInfo targetAppInfo = new ArticleInfo();
         targetAppInfo.setApplicationLabel(appName); // Using setApplicationLabel instead of constructor
         targetAppInfo.setPackageName(packageName);
         targetAppInfo.setActivityName(packageName); // Assuming the activity name is the same as the package name
@@ -153,11 +156,14 @@ private ArticleInfo getApplicationInfo(String packageName, PackageManager packag
         targetAppInfo.setApplicationLabel(appName); // Reusing appName as applicationLabel, as it's already a CharSequence
         targetAppInfo.setAutoRun(false);
 
-        return targetAppInfo;
-    } catch (PackageManager.NameNotFoundException e) {
-        throw new RuntimeException("Could not find package: " + packageName, e);
+      }
+      catch (PackageManager.NameNotFoundException e) 
+      {
+        // throw new RuntimeException("Could not find package: " + packageName, e);
+        e.printStackTrace();
+      }
+      return targetAppInfo;
     }
-}
 
     private long getAppSize(String packageName, PackageManager packageManager) {
         // Check if the permission is granted
