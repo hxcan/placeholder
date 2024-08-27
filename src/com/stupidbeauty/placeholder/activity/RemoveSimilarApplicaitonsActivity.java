@@ -41,6 +41,7 @@ import android.os.StatFs;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import android.net.Uri;
 import com.stupidbeauty.hxlauncher.manager.ActiveUserReportManager;
 import android.os.UserHandle;
@@ -51,6 +52,7 @@ import android.content.pm.PackageManager;
 import android.os.Environment;
 import android.os.StatFs;
 import android.app.usage.StorageStatsManager;
+import android.app.usage.UsageStats;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.LauncherApps;
 import android.content.pm.PackageInfo;
@@ -226,9 +228,19 @@ public class RemoveSimilarApplicaitonsActivity extends Activity
         try 
         {
           // 尝试调用需要权限的方法
-          usageStatsManager.queryAndAggregateUsageStats(time10MinutesAgo, currentTimeMillis);
+          Map<String, UsageStats> usageMap = usageStatsManager.queryAndAggregateUsageStats(time10MinutesAgo, currentTimeMillis);
           Log.d(TAG, CodePosition.newInstance().toString()); //Debug.
-          result = true;
+          
+          if (usageMap!=null) // Got the map successfully.
+          {
+            if (usageMap.size() > 0) // Their are items in the map.
+            {
+              Log.d(TAG, CodePosition.newInstance().toString()); //Debug.
+              result = true;
+            } // if (usageMap.size() > 0) // Their are items in the map.
+          } // if (usageMap!=null) // Got the map successfully.
+          
+          Log.d(TAG, CodePosition.newInstance().toString()); //Debug.
         }
         catch (SecurityException e) 
         {
