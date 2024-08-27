@@ -100,14 +100,13 @@ import org.apache.commons.io.filefilter.TrueFileFilter;
 import static android.content.Intent.ACTION_PACKAGE_CHANGED;
 import static android.content.Intent.ACTION_PACKAGE_REPLACED;
 import static android.content.Intent.EXTRA_PACKAGE_NAME;
-// import static android.content.pm.LauncherApps.ShortcutQuery.FLAG_MATCH_DYNAMIC;
-// import static android.content.pm.LauncherApps.ShortcutQuery.FLAG_MATCH_MANIFEST;
 import static android.content.pm.LauncherApps.ShortcutQuery.FLAG_MATCH_PINNED;
 import static com.stupidbeauty.hxlauncher.Constants.LanImeAction.PackageNameOfInputting;
 import android.os.Process;
 
 public class ApkInstallActivity extends Activity
 {
+  private static final String TAG="ApkInstallActivity"; //!< 输出调试信息时使用的标记。
   private VoiceUi voiceUi=null; //!< 语音交互对象。
   private static final String PACKAGE_INSTALLED_ACTION = "com.example.android.apis.content.SESSION_API_PACKAGE_INSTALLED"; //!< The aciton of package installed.
   private String packageName=""; //!< package name
@@ -304,7 +303,6 @@ public class ApkInstallActivity extends Activity
 
     @BindView(R2.id.articleListmy_recycler_view) RecyclerView mRecyclerView; //!<回收视图。
 
-    private static final String TAG="ApkInstallActivity"; //!< 输出调试信息时使用的标记。
     
     /**
      * 要求显示系统的墙纸在本活动后面。

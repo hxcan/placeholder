@@ -1,5 +1,15 @@
 package com.stupidbeauty.placeholder.activity;
 
+import android.util.Log;
+import android.view.KeyEvent;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import com.stupidbeauty.codeposition.CodePosition;
+import java.io.FileDescriptor;
+import java.io.FileInputStream;
+import java.io.BufferedReader;
+import com.koushikdutta.async.future.FutureCallback;
 import android.app.usage.UsageStatsManager;
 import android.provider.Settings;
 import org.apache.commons.collections4.SetValuedMap;
@@ -72,8 +82,8 @@ import com.stupidbeauty.placeholder.adapter.ApplicationAdapter;
 
 public class RemoveSimilarApplicaitonsActivity extends Activity 
 {
+  private static final String TAG="RemoveSimilarApplicaitonsActivity"; //!< 输出调试信息时使用的标记。
   private static final int REQUEST_CODE_USAGE_STATS = 1;
-  
   @BindView(R2.id.recycler_view) RecyclerView recyclerView;
 
   private ApplicationAdapter mAdapter;
@@ -179,34 +189,58 @@ public class RemoveSimilarApplicaitonsActivity extends Activity
       return targetAppInfo;
     }
 
-    private void requestUsageStatsPermission() {
-        if (!hasUsageStatsPermission()) {
-            // 如果权限未被授予，则引导用户前往设置页面
-            showSettingsScreen();
-        } else {
-            // 如果权限已经被授予，则可以开始使用它
-            onPermissionGranted();
+    private void requestUsageStatsPermission() 
+    {
+      Log.d(TAG, CodePosition.newInstance().toString()); //Debug.
+      if (!hasUsageStatsPermission()) 
+      {
+        // 如果权限未被授予，则引导用户前往设置页面
+        showSettingsScreen();
+        Log.d(TAG, CodePosition.newInstance().toString()); //Debug.
+      }
+      else 
+      {
+        // 如果权限已经被授予，则可以开始使用它
+        Log.d(TAG, CodePosition.newInstance().toString()); //Debug.
+        onPermissionGranted();
+      }
+      Log.d(TAG, CodePosition.newInstance().toString()); //Debug.
+    }
+
+    private boolean hasUsageStatsPermission() 
+    {
+      boolean result = false; // The result;
+      Log.d(TAG, CodePosition.newInstance().toString()); //Debug.
+      UsageStatsManager usageStatsManager = (UsageStatsManager) getSystemService(Context.USAGE_STATS_SERVICE);
+      if (usageStatsManager == null) 
+      {
+      }
+      else // The usage stats manager exists.
+      {
+        Log.d(TAG, CodePosition.newInstance().toString()); //Debug.
+
+        long currentTimeMillis = System.currentTimeMillis();
+        long time10MinutesAgo = currentTimeMillis - (10 * 60 * 1000); // 10 minutes ago
+
+        Log.d(TAG, CodePosition.newInstance().toString()); //Debug.
+        try 
+        {
+          // 尝试调用需要权限的方法
+          usageStatsManager.queryAndAggregateUsageStats(time10MinutesAgo, currentTimeMillis);
+          Log.d(TAG, CodePosition.newInstance().toString()); //Debug.
+          result = true;
         }
-    }
-
-private boolean hasUsageStatsPermission() {
-    UsageStatsManager usageStatsManager = (UsageStatsManager) getSystemService(Context.USAGE_STATS_SERVICE);
-    if (usageStatsManager == null) {
-        return false;
-    }
-
-    long currentTimeMillis = System.currentTimeMillis();
-    long time10MinutesAgo = currentTimeMillis - (10 * 60 * 1000); // 10 minutes ago
-
-    try {
-        // 尝试调用需要权限的方法
-        usageStatsManager.queryAndAggregateUsageStats(time10MinutesAgo, currentTimeMillis);
-        return true;
-    } catch (SecurityException e) {
-        // 捕获 SecurityException 表明权限未被授予
-        return false;
-    }
-}
+        catch (SecurityException e) 
+        {
+          Log.d(TAG, CodePosition.newInstance().toString()); //Debug.
+          // 捕获 SecurityException 表明权限未被授予
+          // return false;
+        }
+        Log.d(TAG, CodePosition.newInstance().toString()); //Debug.
+      } // else // The usage stats manager exists.
+      
+      return result;
+    } // private boolean hasUsageStatsPermission() 
 
     private void showSettingsScreen() 
     {
@@ -281,6 +315,12 @@ private boolean hasUsageStatsPermission() {
       catch (IOException e) 
       {
           e.printStackTrace();
+      }
+      catch (SecurityException e) 
+      {
+        // 捕获 SecurityException 表明权限未被授予
+        // return false;
+        requestUsageStatsPermission(); // Request the permission.
       }
 
 
