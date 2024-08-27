@@ -30,7 +30,7 @@ import com.stupidbeauty.hxlauncher.asynctask.LoadVoicePackageNameMapTask;
 import 	java.util.Timer;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-// import android.app.ActivityOptions;
+import com.stupidbeauty.hxlauncher.RandomApplicationActivity;
 import android.app.WallpaperManager;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
@@ -185,7 +185,7 @@ public class ApkInstallActivity extends Activity
     @OnClick(R2.id.removeSimilarApplicationsButtonon)
     public void removeSimilarApplicationsButtonon()
     {
-      Intent launchIntent=new Intent(this, LauncherActivity.class); //启动意图。
+      Intent launchIntent=new Intent(this, RemoveSimilarApplicaitonsActivity.class); //启动意图。
 
       startActivity(launchIntent); //启动活动。
       
@@ -200,7 +200,7 @@ public class ApkInstallActivity extends Activity
      */
     public void finishInstallOk()
     {
-      Intent launchIntent=new Intent(this, RemoveSimilarApplicaitonsActivity.class); //启动意图。
+      Intent launchIntent=new Intent(this, RandomApplicationActivity.class); //启动意图。
 
       startActivity(launchIntent); //启动活动。
       
