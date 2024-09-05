@@ -26,6 +26,10 @@
         <category android:name="android.intent.category.LAUNCHER"/>
         <category android:name="android.intent.category.DEFAULT"/>
       </intent-filter>
+      <meta-data
+        android:name="android.app.shortcuts"
+        android:resource="@xml/shortcuts" 
+      />
     </activity>
     <activity android:name="com.stupidbeauty.hxlauncher.activity.ApplicationInformationActivity"
       android:screenOrientation="portrait" 
@@ -36,10 +40,6 @@
     />
     <activity android:name="com.stupidbeauty.placeholder.activity.RemoveSimilarApplicaitonsActivity"
       android:launchMode="singleInstance" 
-    />
-    <meta-data
-      android:name="android.app.shortcuts"
-      android:resource="@xml/shortcuts" 
     />
   </application>
 </manifest>
