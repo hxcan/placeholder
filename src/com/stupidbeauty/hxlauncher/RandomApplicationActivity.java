@@ -289,7 +289,8 @@ public class RandomApplicationActivity extends Activity implements  LocalServerL
          
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) 
       {
-        ShortcutUtils.updateUninstallShortcut(this);
+        // ShortcutUtils.updateUninstallShortcut(this);
+           ShortcutUtils.createUninstallShortcut(this);
       }
     } //protected void onCreate(Bundle savedInstanceState)
  

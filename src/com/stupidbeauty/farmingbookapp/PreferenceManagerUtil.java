@@ -21,7 +21,8 @@ import com.stupidbeauty.hxlauncher.application.HxLauncherApplication;
 public class PreferenceManagerUtil 
 {
   private static final String TAG = "PreferenceManagerUtil"; //!<输出调试代码时使用的标记。
-  private static final String KEY_SHORTCUT_UPDATED = "shortcut_updated";
+  // private static final String KEY_SHORTCUT_UPDATED = "shortcut_updated";
+    private static final String KEY_SHORTCUT_UPDATED = "shortcut_created";
 
     /** 
      * 保存快捷方式是否已更新的状态

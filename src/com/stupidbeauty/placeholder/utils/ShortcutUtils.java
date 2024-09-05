@@ -43,6 +43,24 @@ public class ShortcutUtils {
         }
         return null;
     }
+    
+        /** 
+     * 获取目标应用程序的标题
+     * @param context 应用上下文
+     * @param packageName 目标应用程序的包名
+     * @return 目标应用程序的标题
+     */
+    private static String getTargetAppTitle(Context context, String packageName) {
+        try {
+            PackageManager packageManager = context.getPackageManager();
+            ApplicationInfo applicationInfo = packageManager.getApplicationInfo(packageName, 0);
+            return packageManager.getApplicationLabel(applicationInfo).toString();
+        } catch (PackageManager.NameNotFoundException e) {
+            Log.e(TAG, "Failed to get application title", e);
+        }
+        return null;
+    }
+
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public static void updateUninstallShortcut(Context context) {
@@ -73,4 +91,46 @@ public class ShortcutUtils {
             }
         }
     }
+    
+        @RequiresApi(api = Build.VERSION_CODES.O)
+    public static void createUninstallShortcut(Context context) {
+        // 检查是否已经创建过快捷方式
+        if (!PreferenceManagerUtil.isShortcutUpdated()) {
+            ShortcutManager shortcutManager = context.getSystemService(ShortcutManager.class);
+
+            if (shortcutManager != null) {
+                String targetPackageName = getTargetPackageName(context);
+                if (targetPackageName == null) {
+                    Log.e(TAG, "Target package name is null. Cannot create uninstall shortcut.");
+                    return;
+                }
+
+                String targetAppTitle = getTargetAppTitle(context, targetPackageName);
+                if (targetAppTitle == null) {
+                    Log.e(TAG, "Target app title is null. Cannot create uninstall shortcut.");
+                    return;
+                }
+
+                String shortcutLabel = "卸载 " + targetAppTitle;
+
+                // 创建卸载Intent
+                Intent uninstallIntent = new Intent(Intent.ACTION_DELETE, Uri.parse("package:" + targetPackageName));
+
+                // 创建ShortcutInfo对象
+                ShortcutInfo shortcut = new ShortcutInfo.Builder(context, "uninstall_shortcut_id")
+                        .setShortLabel(shortcutLabel)
+                        .setLongLabel(shortcutLabel)
+                        .setIcon(Icon.createWithResource(context, R.drawable.ic_uninstall)) // 请确保你有一个名为ic_uninstall的图标资源
+                        .setIntent(uninstallIntent)
+                        .build();
+
+                // 添加动态快捷方式
+                shortcutManager.addDynamicShortcuts(Collections.singletonList(shortcut));
+
+                // 记录已经创建快捷方式的状态
+                PreferenceManagerUtil.setShortcutUpdated(true);
+            }
+        }
+    }
+
 }
