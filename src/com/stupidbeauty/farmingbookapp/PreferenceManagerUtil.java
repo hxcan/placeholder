@@ -21,6 +21,27 @@ import com.stupidbeauty.hxlauncher.application.HxLauncherApplication;
 public class PreferenceManagerUtil 
 {
   private static final String TAG = "PreferenceManagerUtil"; //!<输出调试代码时使用的标记。
+  private static final String KEY_SHORTCUT_UPDATED = "shortcut_updated";
+
+    /** 
+     * 保存快捷方式是否已更新的状态
+     * @param isUpdated 是否已更新
+     */
+    public static void setShortcutUpdated(boolean isUpdated) {
+        Context ct = HxLauncherApplication.getAppContext(); // 获取应用程序上下文。
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(ct); // 获取共享配置对象。
+        sp.edit().putBoolean(KEY_SHORTCUT_UPDATED, isUpdated).commit(); // 保存。
+    }
+
+    /**
+     * 获取快捷方式是否已更新的状态
+     * @return 是否已更新
+     */
+    public static boolean isShortcutUpdated() {
+        Context ct = HxLauncherApplication.getAppContext(); // 获取应用程序上下文。
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(ct); // 获取共享配置对象。
+        return sp.getBoolean(KEY_SHORTCUT_UPDATED, false); // 获取并返回状态，默认为false。
+    }
 
   /**
   * 获取历史数据的版本号

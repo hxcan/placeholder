@@ -137,5 +137,6 @@ Please go to 3Gmate and click "Menu &gt; Advance &gt; Reset admin" to release cu
   <string name="openApplication">Open application</string>
   <string name="uninstall">Uninstall</string>
   <string name="close">Close</string>
-
+  <string name="shortcut_uninstall_short_label">Uninstall</string>
+  <string name="shortcut_uninstall_long_label">Uninstall</string>
 </resources>

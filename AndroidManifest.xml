@@ -37,5 +37,9 @@
     <activity android:name="com.stupidbeauty.placeholder.activity.RemoveSimilarApplicaitonsActivity"
       android:launchMode="singleInstance" 
     />
+    <meta-data
+      android:name="android.app.shortcuts"
+      android:resource="@xml/shortcuts" 
+    />
   </application>
 </manifest>

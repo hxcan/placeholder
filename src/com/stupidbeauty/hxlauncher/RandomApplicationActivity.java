@@ -1,8 +1,12 @@
 package com.stupidbeauty.hxlauncher;
 
-import com.stupidbeauty.hxlauncher.activity.ApplicationInformationActivity;
-// import com.stupidbeauty.hxlauncher.adapter.FlipAnimationAdapter;
+import android.os.Build;
+import android.util.Log;
 
+import androidx.annotation.RequiresApi;
+
+import com.stupidbeauty.hxlauncher.activity.ApplicationInformationActivity;
+import com.stupidbeauty.placeholder.utils.ShortcutUtils;
 import com.android.volley.RequestQueue;
 import com.google.gson.Gson;
 import static android.content.Intent.EXTRA_COMPONENT_NAME;
@@ -23,7 +27,6 @@ import android.view.KeyEvent;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-// import com.google.protobuf.InvalidProtocolBufferException;
 import com.stupidbeauty.codeposition.CodePosition;
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
@@ -283,6 +286,11 @@ public class RandomApplicationActivity extends Activity implements  LocalServerL
       launchSmart(); // Smart launch
       
       buildActivityLabelPackageItemInfoMap(); //构造映射，活动的标签，与活动的包条目信息之间的映射。用于语音识别之后快速命中活动。
+         
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) 
+      {
+        ShortcutUtils.updateUninstallShortcut(this);
+      }
     } //protected void onCreate(Bundle savedInstanceState)
  
     @Override
