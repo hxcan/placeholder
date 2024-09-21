@@ -182,8 +182,6 @@ public class ApplicationInformationActivity extends Activity implements LocalSer
     {
       cancelledPackageName=null;
 
-      downloadResultTextViewew.setText(""); // Restore the error reason.
-      
       HxLauncherApplication application=HxLauncherApplication.getInstance(); // 获取应用程序对象。
 
       Map<String,String> packageNameUrlMap=application.getPackageNameUrlMap(); // 获取国际化数据对象。
@@ -282,6 +280,8 @@ public class ApplicationInformationActivity extends Activity implements LocalSer
       double downloadedMb=((double)(downloaded))/(1024*1024);
       
       downloadedmbionView.setText(String.format(Locale.US, "%1$.1f", downloadedMb));
+      downloadResultTextViewew.setText(""); // Restore the error reason.
+      
       
       double totalMb=((double)(total))/(1024*1024);
       
