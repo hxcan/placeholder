@@ -275,13 +275,7 @@ public class AddApkToInstallSessionTask extends AsyncTask<Object, Void, Object>
     }
     else // Failed
     {
-      launcherActivity.notifyDownloadFail(); // notify download failed.
+      launcherActivity.notifyDownloadFail(Constants.DownloadFailureReason.InstallRequestError); // notify download failed.
     } // else // Failed
-//     launcherActivity.setPackageNameUrlMap(packageNameUrlMap);
-//     launcherActivity.setPackageNameIconUrlMap(packageNameIconUrlMap); // Set the map of package name and icon url.
-//     launcherActivity.setPackageNameInstallerTypeMap(packageNameInstallerTypeMap); // Set package name installer type map.
-//     launcherActivity.setPackageNameInformationUrlMap(packageNameInformationUrlMap); // 设置包名与信息页面地址之间的映射。
-//     launcherActivity.setPackageNameVersionNameMap(packageNameVersionNameMap);
-//     launcherActivity.setPackageNameApplicationNameMap(packageNameApplicationNameMap);
   } //protected void onPostExecute(Boolean result)
 }

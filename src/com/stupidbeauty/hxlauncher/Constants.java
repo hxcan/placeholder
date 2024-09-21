@@ -16,6 +16,22 @@ public class Constants
   }
 
   /**
+   * 下载失败原因。
+   * @author root 蔡火胜。
+   */
+  public static final class DownloadFailureReason
+  {
+    public static final String Unknown = "com.stupidbeauty.threeupgrade.downloadfailurereason.unknown"; // 未知错误
+    public static final String NetworkError = "com.stupidbeauty.threeupgrade.downloadfailurereason.networkerror"; // 网络错误
+    public static final String DownloadError = "com.stupidbeauty.threeupgrade.downloadfailurereason.downloderror"; // 下载错误
+    public static final String InstallRequestError = "com.stupidbeauty.threeupgrade.downloadfailurereason.installrequesterror"; // 安装请求错误
+    public static final String FileError = "com.stupidbeauty.threeupgrade.downloadfailurereason.fileerror"; // 文件错误
+    public static final String NotApk = "com.stupidbeauty.threeupgrade.downloadfailurereason.notapk"; // 不是APK文件
+    // 可以根据需要添加更多枚举值
+  } // public static final class DownloadFailureReason
+
+
+  /**
     * Operations。
     * @author root 蔡火胜。
     *

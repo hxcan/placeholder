@@ -55,7 +55,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.LocaleList;
-// import android.os.Vibrator;
+
 import android.provider.Settings;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.ViewCompat;
@@ -103,17 +103,13 @@ public class ApplicationInformationActivity extends Activity implements LocalSer
 {
   private VoiceUi voiceUi=null; //!< 语音交互对象。
   private DownloadFailureReporter downloadFailureReporter=new DownloadFailureReporter(); //!< download failur reporetr.
-
+  @BindView(R2.id.downloadResultTextViewew) TextView downloadResultTextViewew; //!< The text view of showing download result.
   public static final String VIEW_NAME_HEADER_IMAGE = "detail:header:image";
   @BindView(R2.id.totalmbsionView) TextView totalmbsionView; //!< Total mb view.
   @BindView(R2.id.downloadedmbionView) TextView downloadedmbionView; //!< Downloade MB.
   @BindView(R2.id.textProgresstantLayout) RelativeLayout textProgresstantLayout; //!< Txt progress layout.
   private String applicationName=""; //!< 应用程序名字
   @BindView(R2.id.applicationName2) TextView applicationName2; //!< Application name text view.
-
-  // View name of the header title. Used for activity scene transitions
-  public static final String VIEW_NAME_HEADER_TITLE = "detail:header:title";
-
   private     AnimationDrawable rocketAnimation; //!<录音按钮变暗
 
   @BindView(R2.id.hitApplicationIcon) ImageView hitApplicationIcon; //!<命中的应用的图标。
@@ -186,6 +182,8 @@ public class ApplicationInformationActivity extends Activity implements LocalSer
     {
       cancelledPackageName=null;
 
+      downloadResultTextViewew.setText(""); // Restore the error reason.
+      
       HxLauncherApplication application=HxLauncherApplication.getInstance(); // 获取应用程序对象。
 
       Map<String,String> packageNameUrlMap=application.getPackageNameUrlMap(); // 获取国际化数据对象。
@@ -330,7 +328,7 @@ public class ApplicationInformationActivity extends Activity implements LocalSer
     /**
     * 报告，下载失败。
     */
-    public void  reportDownloadFailed(String packageName) 
+    public void  reportDownloadFailed(String packageName, String failureReason)
     {
       textProgresstantLayout.setVisibility(View.INVISIBLE);
 
@@ -338,6 +336,7 @@ public class ApplicationInformationActivity extends Activity implements LocalSer
       Log.d(TAG,"reportDownloadFailed, 360, request check upgrade: "); //Debug.
       application.startCheckUpgrade(); // Start check upgrade again.
       microphoneIcon.setVisibility(View.VISIBLE);
+      downloadResultTextViewew.setText(failureReason); // Show the failure reason.
 
       String mWordSeparators = getResources().getString(R.string.downloadFailed); // load explain text string. download failed
 
@@ -352,12 +351,7 @@ public class ApplicationInformationActivity extends Activity implements LocalSer
 
         if (internationalizationData!=null) //数据存在。
         {
-          String internationalizationName=internationalizationData.get(packageName); //获取国际化名字。
-
-          Log.d(TAG,"reportDownloadFailed, 372, package information url: "+ internationalizationName+ ","); //Debug.
-
           hitApplicationIcon.setVisibility(View.INVISIBLE); // hide stop button.
-          
           
           downloadFailureReporter.reportDownloadFailure(packageName, RabbitMQUserName, RabbitMQPassword, TRANSLATE_REQUEST_QUEUE_NAME); // report download failure.
         } //if (internationalizationData!=null) //数据存在。
@@ -438,7 +432,6 @@ public class ApplicationInformationActivity extends Activity implements LocalSer
       mHeaderTitle = findViewById(R.id.rightTextoperationMethodactTitletextView2);
 
       mHeaderImageView.setTransitionName( VIEW_NAME_HEADER_IMAGE);
-      mHeaderTitle.setTransitionName( VIEW_NAME_HEADER_TITLE);
 
       registerLocalServerListCallbackToApplication(); // Register data update.
 

@@ -426,7 +426,7 @@ public class DownloadConnectCallback implements HttpConnectCallback
     showNotification(contentText);
     if (launcherActivity!=null)
     {
-      launcherActivity.reportDownloadFailed(packageName); // 报告，下载失败。
+      launcherActivity.reportDownloadFailed(packageName, Constants.DownloadFailureReason.DownloadError); // 报告，下载失败。
     } // if (launcherActivity!=null)
     fullUrl=null; // Clear download full url.
   } //private void  notifyDownloadFail()

@@ -160,6 +160,18 @@
       android:text="@string/mb"
       android:textSize="18sp" />
   </RelativeLayout>
+  <TextView
+    android:id="@+id/downloadResultTextViewew"
+    android:layout_below="@+id/progressBar"
+    android:textColor="@color/red"
+    android:layout_centerHorizontal="true"
+    android:textSize="28sp" 
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentStart="false"
+    android:layout_alignParentLeft="false"
+    android:layout_alignParentTop="false"
+  />
   <androidx.recyclerview.widget.RecyclerView
     android:id="@+id/articleListmy_recycler_view"
     android:layout_width="match_parent"

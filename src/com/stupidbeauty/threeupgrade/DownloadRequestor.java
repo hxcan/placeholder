@@ -344,7 +344,7 @@ public class DownloadRequestor implements DownloadConnectCallbackInterface
       // deleteApkFile(downloadFilePath); // Delete the apk file.
       deleteApkFile(); // Delete the apk file for this package.
 
-      notifyDownloadFail(); // NOtify download failed.
+      notifyDownloadFail(Constants.DownloadFailureReason.InstallRequestError); // NOtify download failed.
     }
   } //private void requestInstall(String downloadFilePath)
 
@@ -517,7 +517,7 @@ public class DownloadRequestor implements DownloadConnectCallbackInterface
   /**
   * 通知，下载失败。
   */
-  public void  notifyDownloadFail() 
+  public void  notifyDownloadFail(String failureReason)
   {
     String contentText="Failed to download";
     HxLauncherApplication baseApplication = HxLauncherApplication.getInstance(); // 获取应用程序对象。
@@ -536,9 +536,7 @@ public class DownloadRequestor implements DownloadConnectCallbackInterface
         */
         public void run()
         {
-          // launcherActivity.reportDownloadProgress(packageName, downloaded, total); // 报告，下载 progress。
-          // launcherActivity.reportDownloadFinished(packageName); // 报告，下载 finished。
-          launcherActivity.reportDownloadFailed(packageName); // 报告，下载失败。
+          launcherActivity.reportDownloadFailed(packageName, failureReason); // 报告，下载失败。
         } //public void run()
       };
 
@@ -632,7 +630,7 @@ public class DownloadRequestor implements DownloadConnectCallbackInterface
     if (ex != null) // There is exception
     {
       Log.d(TAG, CodePosition.newInstance().toString()+ ", download fail: "+ wholePath); //Debug.
-      notifyDownloadFail(); // 报告下载失败。
+      notifyDownloadFail(Constants.DownloadFailureReason.DownloadError); // 报告下载失败。
     } // if (ex != null) // There is exception
     else  // No exception.
     {
@@ -647,7 +645,7 @@ public class DownloadRequestor implements DownloadConnectCallbackInterface
       else // 不是安装包。
       {
         Log.d(TAG, CodePosition.newInstance().toString()+ ", whole path: "+ wholePath); //Debug.
-        notifyDownloadFail(); // 报告下载失败。
+        notifyDownloadFail(Constants.DownloadFailureReason.NotApk); // 报告下载失败。
       } // else // 不是安装包。
     } // else  // No exception.
     Log.d(TAG, CodePosition.newInstance().toString()+ ", whole path: "+ wholePath); //Debug.
@@ -798,8 +796,7 @@ public class DownloadRequestor implements DownloadConnectCallbackInterface
             Log.d(TAG,"download error:"); //Debug.
             e.printStackTrace(); //Report error.
                             
-            //                             陈欣
-            notifyDownloadFail(); // 报告下载失败。
+            notifyDownloadFail(Constants.DownloadFailureReason.DownloadError); // 报告下载失败。
           } //if (e!=null) //Some error occured.
           else // 下载完毕
           {
@@ -812,7 +809,7 @@ public class DownloadRequestor implements DownloadConnectCallbackInterface
             } // if (checkIsApkFile(wholePath)) // 是安装包文件。
             else // 不是安装包。
             {
-              notifyDownloadFail(); // 报告下载失败。
+              notifyDownloadFail(Constants.DownloadFailureReason.NotApk); // 报告下载失败。
             } // else // 不是安装包。
           } //else // 下载完毕
         }
@@ -827,7 +824,6 @@ public class DownloadRequestor implements DownloadConnectCallbackInterface
     boolean result=false;
     
     if (Constants.InstallerType.XAPK.equals( installerType)) // XAPK. not check
-//     if (installerType.equals("XAPK")) // XAPK. not check
     {
       result=true;
     }  // if (installerType.equals("XAPK")) // XAPK. not check
@@ -839,7 +835,6 @@ public class DownloadRequestor implements DownloadConnectCallbackInterface
       
       PackageInfo packageInfo=packageManager.getPackageArchiveInfo(apkFilePath, 0);
       
-//       String expectedVersionName = baseApplication.getAvailableVersionName(packageName).trim(); // 获取可用的版本名字。 Trim trailing space.
       String expectedVersionName = baseApplication.getHighestVersionNameByType(packageName, Constants.VersionNameType.Available).trim(); // 获取可用的版本名字。 Trim trailing space.
 
       if (packageInfo!=null) // 有有效的包信息。
