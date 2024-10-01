@@ -1,9 +1,11 @@
 package com.stupidbeauty.hxlauncher.application;
 
 import com.stupidbeauty.hxlauncher.asynctask.LoadVoicePackageUrlMapTask;
-// import com.stupidbeauty.hxlauncher.asynctask.LoadApplicationLockSetTask;
-// import com.stupidbeauty.hxlauncher.asynctask.LoadApplicationNameInternationalFileTask;
-// import com.stupidbeauty.hxlauncher.asynctask.LoadPackageItemAliasMapTask;
+import com.stupidbeauty.appstore.bean.AndroidPackageInformation;
+import com.stupidbeauty.upgrademanager.parser.TimeStampParser;
+import com.stupidbeauty.codeposition.CodePosition;
+import java.io.FileDescriptor;
+import java.io.FileInputStream;
 import com.google.gson.Gson;
 import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
@@ -91,6 +93,7 @@ import java.util.Timer;
  */
 public class HxLauncherApplication extends Application implements PackageNameUrlMapDataListener
 {
+	private List<AndroidPackageInformation> packages = null; //!< package list.
   private BuiltinFtpServerErrorListener builtinFtpServerErrorListener=null; //!< the builtin ftp server error listener.  Chen xin.
   private BuiltinFtpServer builtinFtpServer=null; //!< The builtin ftp server.
 	private  HashMap<String, String > packageNameApplicationNameMap; //!<包名与应用程序名的映射
@@ -154,6 +157,27 @@ public class HxLauncherApplication extends Application implements PackageNameUrl
 
     return result;
   } //private Drawable getApplicationIcon(ArticleInfo articleInfo)
+
+  /**
+  * 设置包名与下载地址之间的映射关系。
+  */
+  @Override
+  public void setApkUrlPackageNameMap (HashMap<String, String> packageNameUrlMap) 
+  {
+    this.apkUrlPackageNameMap=packageNameUrlMap;
+  } //public void setPackageNameUrlMap (HashMap<String, String> packageNameUrlMap)
+
+	@Override
+	/**
+	* Set the package list.
+	*/
+	public void setPackages(List<AndroidPackageInformation> packageList)
+	{
+    if (packageList.size() > 0) // The package contains inforamtion
+    {
+      this.packages = packageList;
+    } // if (packageList.size()) // The package contains inforamtion
+	} // public void setPackages(List<AndroidPackageInformation> packageList)
 
 	/**
 	* Start the storage cleaner.
