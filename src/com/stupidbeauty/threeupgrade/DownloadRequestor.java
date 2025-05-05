@@ -125,6 +125,7 @@ public class DownloadRequestor implements DownloadConnectCallbackInterface
   private VoiceUi voiceUi=null; //!< 语音交互对象。
   private int NOTIFICATION = 84951; //!< 通知编号。陈欣
   private long MinimalApkSize = 250; //!< minimal accepted apk file size.
+  private long apkFileLength = 0; //!< The target apk file legnth.
   private String packageName=null; //!< 包名。
   public Future<File> fileDownloadFuture; //!< The file download future.
   public Future<AsyncHttpResponse> fileDownloadFutureAndroidAsync; //!< The file download future.
@@ -470,6 +471,8 @@ public class DownloadRequestor implements DownloadConnectCallbackInterface
   */
   private void notifyDownloadProgress(long downloaded, long total) 
   {
+    apkFileLength = total; // Remember the file length.
+  
     if (launcherActivity!=null)
     {
       Handler uiHandler = new Handler(Looper.getMainLooper());
@@ -875,7 +878,7 @@ public class DownloadRequestor implements DownloadConnectCallbackInterface
         long fileSize=targetApkFile.length(); // 文件尺寸。
         Log.d(TAG, "checkIsApkFile, 608, file size: " + fileSize + ", file path: " + apkFilePath); // Debug.
 
-        if (fileSize < MinimalApkSize) // File too small
+        if (fileSize != apkFileLength) // the File length is not correct
         {
           targetApkFile.delete(); // Delete the cache file.
           
