@@ -575,14 +575,7 @@ public class DownloadRequestor implements DownloadConnectCallbackInterface
         // 检查是否是有效的安装包文件：
         if (isApkFile) // 是APK文件
         {
-//           if (baseApplication.isPackageInWhiteList(packageName)) // It is in white list. re download
-//           {
-//             shouldDownload=true; // 应当下载。
-//           } // if (baseApplication.isPackageInWhitelist(packageName)) // It is in white list. re download
-//           else // preceed as normal
-          {
-            requestInstall(apkFilePath); // 要求安装。
-          } // else // preceed as normal
+          requestInstall(apkFilePath); // 要求安装。
         } // if (isApkFile) // 是APK文件
         else //不是APK文件。
         {
@@ -620,11 +613,10 @@ public class DownloadRequestor implements DownloadConnectCallbackInterface
     
         voiceUi.say(mWordSeparators); // 说话，需要解锁。
 
-        // downloadByIon(uri); // 使用离子下载来下载。
         downloadByAndroidAsync(uri); // Downlaod by android async
       } //else //尚未包含这个网址。
     } // if (shouldDownload) // We should download it
-  }
+  } // public void requestDownloadUrl(Uri uri, String refererUrl, String applicationName, String packageName)
 
   @Override
   public void processCompleted(Exception ex, String wholePath ) 
@@ -655,7 +647,7 @@ public class DownloadRequestor implements DownloadConnectCallbackInterface
   } // public void processCompleted(Exception ex) 
   
   /**
-  * Downlaod by android async
+  * Download by android async
   */
   private void downloadByAndroidAsync(Uri uri)
   {
@@ -667,11 +659,19 @@ public class DownloadRequestor implements DownloadConnectCallbackInterface
         
     File downloadFolder = baseApplication.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
 
-    String wholePath =downloadFolder.getPath()+ File.separator  + fileName;
+    // 修改点：使用缓存目录而不是下载目录
+    File cacheDir = baseApplication.getCacheDir(); // 获取应用专属缓存目录
+    File apkCacheDir = new File(cacheDir, "apk_cache"); // 创建专门存放APK的子目录
     
-    File targetFile=new File(wholePath); // The target file.
+    if (!apkCacheDir.exists()) {
+        apkCacheDir.mkdirs();
+    }
     
-    AsyncHttpRequest requestObject=new AsyncHttpGet(uri);
+    String wholePath = new File(apkCacheDir, fileName).getAbsolutePath(); // 使用缓存目录下的新路径
+
+    File targetFile = new File(wholePath); // The target file.
+    
+    AsyncHttpRequest requestObject = new AsyncHttpGet(uri);
     requestObject.setTimeout(15000);
     requestObject.setLogging(TAG+".AndroidAsync", Log.DEBUG);
     
@@ -680,9 +680,6 @@ public class DownloadRequestor implements DownloadConnectCallbackInterface
     long fileSize=targetFile.length(); // 文件尺寸。
     boolean appendTrue=true; // Append file.
     
-    // QString Range="bytes="+QString::number(DownedSize)+"-";//告诉服务器从DownedSize起开始传输
-    // 
-    // networkRequest.setRawHeader ("Range",Range.toUtf8 ()); //Set the range header.
     requestObject.setHeader("Range", "bytes="+ fileSize + "-"); // Tell the range start.
     Log.d(TAG, CodePosition.newInstance().toString()+ ", request object: "+ requestObject.toString()); //Debug.
     
@@ -694,52 +691,12 @@ public class DownloadRequestor implements DownloadConnectCallbackInterface
     catch (FileNotFoundException e) 
     {
       e.printStackTrace();
-      // fout=null;
     } // catch (FileNotFoundException e) 
     
     HttpConnectCallback connectCallback=new DownloadConnectCallback(fout, this, wholePath, launcherActivity, fileSize);
     // connectCallback.setLauncherActivity(launcherActivity);
     
     fileDownloadFutureAndroidAsync=AsyncHttpClient.getDefaultInstance().execute(requestObject, connectCallback);
-    
-
-    // cx.fileDownloadFuture= Ion.with(baseApplication)
-    //   .load(targetUrl)
-    //   .setTimeout(15000) //Set the time out to be 15s.
-    //   .progress(new ProgressCallback() 
-    //   {
-    //     @Override
-    //     public void onProgress(long downloaded, long total) 
-    //     {
-    //       Log.d(TAG, "downloadByIon, progress: " + downloaded + "/" + total + ", " + targetUrl); // 报告进度。
-    //       notifyDownloadProgress(downloaded, total); // Notify download progress.
-    //     }
-    //   })
-    //   .setLogging(TAG, Log.DEBUG)
-    //   .write(new File( wholePath));
-      
-      
-//       cx.fileDownloadFuture.setCallback(new FutureCallback<File>() 
-//       {
-//         @Override
-//         public void onCompleted(Exception e, File file) 
-//         {
-//           if (e!=null) //Some error occured.
-//           {
-//             notifyDownloadFail(); // 报告下载失败。
-//           } //if (e!=null) //Some error occured.
-//           else // 下载完毕
-//           {
-//             {
-//               requestInstall(wholePath); // 要求安装。陈欣。
-//             } // if (checkIsApkFile(wholePath)) // 是安装包文件。
-//             else // 不是安装包。
-//             {
-//               notifyDownloadFail(); // 报告下载失败。
-//             } // else // 不是安装包。
-//           } //else // 下载完毕
-//         }
-//       });
   } // private void downloadByAndroidAsync(Uri uri)
 
   /**
