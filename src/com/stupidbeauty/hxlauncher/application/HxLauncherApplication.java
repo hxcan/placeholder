@@ -698,22 +698,25 @@ public class HxLauncherApplication extends Application implements PackageNameUrl
     //解析消息：
     try
     {
-      CBORObject videoStreamMessage= CBORObject.DecodeFromBytes(payloadData); //解析消息。
-      
-      java.util.Collection<java.util.Map.Entry<CBORObject,CBORObject>> entries=  videoStreamMessage.getEntries(); // 获取条目列表。
-      
-      for(java.util.Map.Entry<CBORObject,CBORObject> entry: entries) // 一个个地加入。
+      if (payloadData!=null) // The data object exists
       {
-        CBORObject keyObject=entry.getKey();
-        CBORObject valueObject=entry.getValue();
+        CBORObject videoStreamMessage= CBORObject.DecodeFromBytes(payloadData); //解析消息。
         
-        apkFilePathMap.put(keyObject.AsString(), valueObject.AsString()); // 加入映射。
-      } //for(entry: entries) // 一个个地加入。
-    }
+        java.util.Collection<java.util.Map.Entry<CBORObject,CBORObject>> entries=  videoStreamMessage.getEntries(); // 获取条目列表。
+        
+        for(java.util.Map.Entry<CBORObject,CBORObject> entry: entries) // 一个个地加入。
+        {
+          CBORObject keyObject=entry.getKey();
+          CBORObject valueObject=entry.getValue();
+          
+          apkFilePathMap.put(keyObject.AsString(), valueObject.AsString()); // 加入映射。
+        } //for(entry: entries) // 一个个地加入。
+      } // if (payloadData!=null) // The data object exists
+    } // try
     catch (CBORException e)
     {
       e.printStackTrace(); // 报告错误。
-    }
+    } // catch (CBORException e)
 	} //private void loadApkFilePathMap()
 
 	/**
