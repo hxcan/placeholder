@@ -1,0 +1,12 @@
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="uninstall_shortcut"
+        android:enabled="true"
+        android:icon="@drawable/ic_uninstall"
+        android:shortcutShortLabel="@string/shortcut_uninstall_short_label"
+        android:shortcutLongLabel="@string/shortcut_uninstall_long_label">
+        <intent
+            android:action="android.intent.action.DELETE"
+            android:data="package:com.example.myapp" />
+    </shortcut>
+</shortcuts>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <color name="loadingbgcolor">#0256AC</color>
+  <color name="candidate_normal">#FF000000</color>
+  <color name="candidate_recommended">#FFE35900</color>
+  <color name="candidate_other">#ff808080</color>
+  <color name="candidate_background">#bbffffff</color>
+  <color name="possible_result_points">#c0ffff00</color>
+  <color name="result_minor_text">#ffc0c0c0</color>
+  <color name="result_text">#ffffffff</color>
+  <color name="result_view">#b0000000</color>
+  <color name="status_text">#ffffffff</color>
+  <color name="transparent">#00000000</color>
+  <color name="viewfinder_laser">#ffff0000</color>
+  <color name="viewfinder_mask">#60000000</color>
+  <color name="color_white">#ffffffff</color>
+  <color name="huise">#ff777777</color>
+  <color name="textDownloadProgress">#BE9029</color>
+</resources>
