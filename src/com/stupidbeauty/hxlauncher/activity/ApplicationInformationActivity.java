@@ -1,5 +1,10 @@
 package com.stupidbeauty.hxlauncher.activity;
 
+import com.stupidbeauty.placeholder.activity.RemoveSimilarApplicaitonsActivity;
+import com.stupidbeauty.blindbox.manager.ShareManager;
+import com.stupidbeauty.voiceui.VoiceUi;
+import com.stupidbeauty.codeposition.CodePosition;
+import java.io.FileDescriptor;
 import io.github.g00fy2.versioncompare.Version;
 import com.stupidbeauty.hxlauncher.interfaces.LocalServerListLoadListener;
 import org.apache.commons.collections4.MultiMap;
@@ -55,7 +60,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.LocaleList;
-
 import android.provider.Settings;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.ViewCompat;
@@ -411,6 +415,20 @@ public class ApplicationInformationActivity extends Activity implements LocalSer
 
       processIntent(intent); // 处理意图。陈欣。
     }
+
+    /**
+    * remove similiar applicaitons in another activity.
+    */
+    @OnClick(R2.id.removeSimilarApplicationsButtonon)
+    public void removeSimilarApplicationsButtonon()
+    {
+      Intent launchIntent=new Intent(this, RemoveSimilarApplicaitonsActivity.class); //启动意图。
+
+      startActivity(launchIntent); //启动活动。
+      
+      // finish();
+    } // public void removeSimilarApplicationsButtonon()
+
 
     @Override
     /**
