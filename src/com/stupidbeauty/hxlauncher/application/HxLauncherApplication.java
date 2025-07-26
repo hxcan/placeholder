@@ -25,8 +25,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.ComponentName;
-// import com.stupidbeauty.hxlauncher.PackageItemLaunchCoolDownMapItemMessageProtos;
-// import com.stupidbeauty.hxlauncher.PackageItemLaunchCoolDownMapMessageProtos;
+import java.util.Random;
 import com.stupidbeauty.hxlauncher.bean.ApplicationListData;
 import java.util.HashSet;
 import com.stupidbeauty.blindbox.asynctask.StorageCleanerTask;
@@ -914,16 +913,28 @@ public class HxLauncherApplication extends Application implements PackageNameUrl
     translateRequestSendTask.execute(this); //执行任务。
 	} //private void loadVoicePackageUrlMap()
 
-    /**
-    * 选择随机端口。
-    */
-    private int chooseRandomPort() 
-    {
-      int randomIndex=2005; //随机选择一个文件。
 
-      return randomIndex;
-    } //private int chooseRandomPort()
+  /**
+  * 选择随机端口。
+  */
+  private int chooseRandomPort() 
+  {
+    // 定义合法端口范围
+    int minPort = 1024;
+    int maxPort = 65535;
 
+    // 创建随机数生成器
+    Random random = new Random();
+
+    // 在指定范围内生成一个随机端口
+    int randomIndex = random.nextInt(maxPort - minPort + 1) + minPort;
+
+    // 打印日志，方便调试
+    Log.d(TAG, CodePosition.newInstance().toString() + ", chosen port: " + randomIndex);
+
+    return randomIndex;
+  }
+  
     /**
     * 启动内置 FTP 服务器。
     */
