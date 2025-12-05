@@ -13,7 +13,7 @@ import com.koushikdutta.async.future.FutureCallback;
 import android.app.usage.UsageStatsManager;
 import android.provider.Settings;
 import org.apache.commons.collections4.SetValuedMap;
-import android.util.Pair;
+// import android.util.Pair;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import android.content.Intent;
@@ -48,7 +48,7 @@ import android.os.UserHandle;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
+// import android.content.pm.PackageManager;
 import android.os.Environment;
 import android.os.StatFs;
 import android.app.usage.StorageStatsManager;
@@ -128,29 +128,33 @@ public class RemoveSimilarApplicaitonsActivity extends Activity
      * @param metadataKey The metadata key to search for.
      * @return A list of ArticleInfo objects containing information about the installed applications.
      */
-    private List<ArticleInfo> findSimilarApplications(String metadataKey) {
-        List<ArticleInfo> similarApps = new ArrayList<>();
-        PackageManager packageManager = getPackageManager(); // Get the package manager for the current context
+    private List<ArticleInfo> findSimilarApplications(String metadataKey)
+    {
+      List<ArticleInfo> similarApps = new ArrayList<>();
+      PackageManager packageManager = getPackageManager(); // Get the package manager for the current context
 
-        // Get all installed applications
-        List<ApplicationInfo> installedApps = packageManager.getInstalledApplications(PackageManager.GET_META_DATA);
+      // Get all installed applications
+      List<ApplicationInfo> installedApps = packageManager.getInstalledApplications(PackageManager.GET_META_DATA);
 
-        for (ApplicationInfo appInfo : installedApps) {
-            // Check if the application contains the metadata key
-            if (appInfo.metaData != null && appInfo.metaData.containsKey(metadataKey)) {
-                // Extract the target package name from the metadata value
-                String targetPackageName = appInfo.metaData.getString(metadataKey);
+      for (ApplicationInfo appInfo : installedApps)
+      {
+        // Check if the application contains the metadata key
+        if (appInfo.metaData != null && appInfo.metaData.containsKey(metadataKey))
+        {
+          // Extract the target package name from the metadata value
+          String targetPackageName = appInfo.metaData.getString(metadataKey);
 
-                // Check if the target application is installed
-                if (isPackageInstalled(targetPackageName, packageManager)) {
-                    // Get the target application's information
-                    ArticleInfo targetAppInfo = getApplicationInfo(targetPackageName, packageManager);
-                    similarApps.add(targetAppInfo);
-                }
-            }
+          // Check if the target application is installed
+          if (isPackageInstalled(targetPackageName, packageManager))
+          {
+            // Get the target application's information
+            ArticleInfo targetAppInfo = getApplicationInfo(targetPackageName, packageManager);
+            similarApps.add(targetAppInfo);
+          }
         }
+      }
 
-        return similarApps;
+      return similarApps;
     }
 
     private boolean isPackageInstalled(String packageName, PackageManager packageManager) {
@@ -262,15 +266,20 @@ public class RemoveSimilarApplicaitonsActivity extends Activity
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE_USAGE_STATS) {
-            if (hasUsageStatsPermission()) {
-                onPermissionGranted();
-            } else {
-                onPermissionDenied();
-            }
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+      super.onActivityResult(requestCode, resultCode, data);
+      if (requestCode == REQUEST_CODE_USAGE_STATS)
+      {
+        if (hasUsageStatsPermission())
+        {
+          onPermissionGranted();
         }
+        else
+        {
+          onPermissionDenied();
+        }
+      }
     }
 
     private void onPermissionGranted() 
@@ -293,9 +302,8 @@ public class RemoveSimilarApplicaitonsActivity extends Activity
         // If you need to request the permission, do so here.
         // For simplicity, we'll just return 0L if the permission is not granted.
         
-                // 请求 PACKAGE_USAGE_STATS 权限
+        // 请求 PACKAGE_USAGE_STATS 权限
         requestUsageStatsPermission();
-
         
         return 0L;
       } // if (!hasUsageStatsPermission()) // We do not have the permission.
@@ -306,38 +314,37 @@ public class RemoveSimilarApplicaitonsActivity extends Activity
 
       try 
       {
-          packageInfo = packageManager.getPackageInfo(packageName, 0);
+        packageInfo = packageManager.getPackageInfo(packageName, 0);
         // Query the stats for the given package
         StorageStats storageStats = storageStatsManager.queryStatsForPackage(
-            // Environment.getDefaultStorageUuid(),
-            StorageManager.UUID_DEFAULT,
-            packageName,
-            // new UserHandle(UserHandle.myUserId())
-            Process.myUserHandle()
-        );
+        // Environment.getDefaultStorageUuid(),
+        StorageManager.UUID_DEFAULT,
+        packageName,
+        // new UserHandle(UserHandle.myUserId())
+        Process.myUserHandle()
+      );
         
-        // Return the total bytes used by the application
+      // Return the total bytes used by the application
         
-        result =  storageStats.getDataBytes() + storageStats.getAppBytes();
-      }
-      catch (PackageManager.NameNotFoundException e) 
-      {
-          e.printStackTrace();
-      }
-      catch (IOException e) 
-      {
-          e.printStackTrace();
-      }
-      catch (SecurityException e) 
-      {
-        // 捕获 SecurityException 表明权限未被授予
-        // return false;
-        requestUsageStatsPermission(); // Request the permission.
-      }
-
-
-      return result;
+      result =  storageStats.getDataBytes() + storageStats.getAppBytes();
     }
+    catch (PackageManager.NameNotFoundException e)
+    {
+      e.printStackTrace();
+    }
+    catch (IOException e)
+    {
+      e.printStackTrace();
+    }
+    catch (SecurityException e)
+    {
+      // 捕获 SecurityException 表明权限未被授予
+      // return false;
+      requestUsageStatsPermission(); // Request the permission.
+    }
+
+    return result;
+  }
 
 
 }

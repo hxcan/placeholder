@@ -216,14 +216,6 @@ public class ApplicationInformationActivity extends Activity implements LocalSer
       } //if (packageNameUrlMap!=null) // 数据存在。
     } // private void triggerDownload(Map<String,String> packageNameUrlMap, String intalleryTye)
     
-  @OnClick(R2.id.shareIcon)
-  public void shareViaText()
-  {
-    ShareManager shareManager=new ShareManager();
-    
-    shareManager.shareViaText(this, applicationName, packagename); // Share via text.
-  } // public void shareViaText()
-
   /**
   * Request apkpure to show the information url.
   */
