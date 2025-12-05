@@ -179,7 +179,7 @@ public class RemoveSimilarApplicaitonsActivity extends Activity
         targetAppInfo.setActivityName(packageName); // Assuming the activity name is the same as the package name
         targetAppInfo.setLaunchIntent(packageManager.getLaunchIntentForPackage(packageName));
         targetAppInfo.setApplicationLabel(appName); // Reusing appName as applicationLabel, as it's already a CharSequence
-        targetAppInfo.setAutoRun(false);
+        // targetAppInfo.setAutoRun(false);
         targetAppInfo.setSize(size); // Set the size.
 
       }
