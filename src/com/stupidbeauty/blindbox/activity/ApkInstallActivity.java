@@ -257,24 +257,6 @@ public class ApkInstallActivity extends Activity
       return result;
     } //private void launchApplication(Intent launchIntent)
 
-    @OnClick(R2.id.shareIcon)
-    public void shareViaText()
-    {
-      ShareManager shareManager=new ShareManager();
-      
-      shareManager.shareViaText(this, applicationName, packageName); // Share via text.
-    
-//       //       Chen xin
-// 
-//       /*Create an ACTION_SEND Intent*/
-//       Intent intent = new Intent(android.content.Intent.ACTION_SEND);
-// 
-//       /*This will be the actual content you wish you share.*/
-// 
-//       String shareBody = getString(R.string.sharing_application) + applicationName + "\n" + getString(R.string.copyingTextAndOpenBlindBox) + "\n " + constructBlindBoxUrl(packagename) + " \n" + getString(R.string.blindBoxCanBeDownloadedAt);
-// 
-    } // public void shareViaText()
-
     /**
     * Show application information.
     */
