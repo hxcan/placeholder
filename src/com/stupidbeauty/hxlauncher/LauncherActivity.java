@@ -13,7 +13,7 @@ import android.os.Debug;
 import com.stupidbeauty.hxlauncher.asynctask.LoadPreferenceTask;
 import com.stupidbeauty.hxlauncher.asynctask.ReqGameDataTask;
 import com.stupidbeauty.hxlauncher.asynctask.BindAdapterTask;
-import com.stupidbeauty.hxlauncher.asynctask.LoadVoicePackageNameMapTask;
+// import com.stupidbeauty.hxlauncher.asynctask.LoadVoicePackageNameMapTask;
 import 	java.util.Timer;
 import java.util.TimerTask;
 import android.Manifest;
